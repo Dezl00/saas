@@ -71,6 +71,7 @@ export default async function SettingsPage() {
               </button>
             </div>
             {store.subdomain && (
+              <div className="mt-4 p-4 bg-success-50 text-success-800 rounded-xl border border-success-200 text-sm">
                 متجرك متاح حالياً للعملاء عبر الرابط: <br/>
                 <a href={`https://${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`} target="_blank" className="font-bold underline mt-1 inline-block" dir="ltr">
                   https://{store.subdomain}.{process.env.NEXT_PUBLIC_ROOT_DOMAIN || "yourdomain.com"}
