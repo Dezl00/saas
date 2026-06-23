@@ -1,0 +1,24 @@
+"use client";
+
+import { ShoppingBag } from "lucide-react";
+import { useCart } from "./CartProvider";
+
+export function CartHeaderButton() {
+  const { items, setIsCartOpen } = useCart();
+  
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  return (
+    <button
+      onClick={() => setIsCartOpen(true)}
+      className="relative p-2 rounded-xl hover:bg-surface-100 transition-colors"
+    >
+      <ShoppingBag className="w-6 h-6 text-surface-700" />
+      {totalQuantity > 0 && (
+        <span className="absolute top-0 end-0 -mt-1 -me-1 w-5 h-5 rounded-full bg-error-500 text-white text-xs font-bold flex items-center justify-center shadow-sm animate-fade-in">
+          {totalQuantity}
+        </span>
+      )}
+    </button>
+  );
+}

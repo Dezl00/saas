@@ -41,9 +41,9 @@ export default function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // It's a subdomain → rewrite to /store path with subdomain header
+  // It's a subdomain → rewrite to /store/[subdomain] path
   const url = req.nextUrl.clone();
-  url.pathname = `/store${pathname}`;
+  url.pathname = `/store/${subdomain}${pathname}`;
 
   const response = NextResponse.rewrite(url);
   response.headers.set("x-subdomain", subdomain);

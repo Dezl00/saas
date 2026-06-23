@@ -70,7 +70,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-primary-700 mt-1">شارك هذا الرابط مع عملائك لاستقبال الطلبات</p>
           </div>
           <Link
-            href={`http://${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
+            href={`${process.env.NODE_ENV === 'development' ? 'http' : 'https'}://${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
             target="_blank"
             className="px-6 py-2 bg-white text-primary-600 font-bold rounded-xl shadow-sm hover:shadow-md transition-shadow border border-primary-100"
           >
