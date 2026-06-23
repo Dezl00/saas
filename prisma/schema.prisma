@@ -79,7 +79,6 @@ model Store {
   name        String
   description String?
   logo        String?
-  cover       String?
   type        StoreType   @default(RESTAURANT)
   subdomain   String?     @unique
   status      StoreStatus @default(ACTIVE)
@@ -88,9 +87,7 @@ model Store {
   currency    String      @default("EGP")
 
   // Social & Contact & Branding
-  primaryColor         String?     @default("#000000")
-  coverOverlayColor    String?     @default("#000000")
-  coverOverlayOpacity  Int?        @default(50)
+  primaryColor         String?
   whatsappNumber       String?
   enableWhatsappOrders Boolean @default(true)
   facebookUrl          String?

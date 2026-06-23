@@ -103,86 +103,37 @@ export default async function SettingsPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-3">
-                {store.logo && (
-                  <div className="w-10 h-10 rounded-full border border-surface-200 overflow-hidden shrink-0 bg-surface-100">
-                    <img src={store.logo} alt="Logo" className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <label htmlFor="logo" className="block text-sm font-medium text-surface-950 mb-1">رابط الشعار (Logo)</label>
-                  <input
-                    type="url"
-                    id="logo"
-                    name="logo"
-                    defaultValue={store.logo || ""}
-                    placeholder="https://example.com/logo.png"
-                    dir="ltr"
-                    className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
+            <div className="flex items-center gap-3">
+              {store.logo && (
+                <div className="w-10 h-10 rounded-full border border-surface-200 overflow-hidden shrink-0 bg-surface-100">
+                  <img src={store.logo} alt="Logo" className="w-full h-full object-cover" />
                 </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                {store.cover && (
-                  <div className="w-16 h-10 rounded border border-surface-200 overflow-hidden shrink-0 bg-surface-100">
-                    <img src={store.cover} alt="Cover" className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <label htmlFor="cover" className="block text-sm font-medium text-surface-950 mb-1">رابط صورة الغلاف (Cover)</label>
-                  <input
-                    type="url"
-                    id="cover"
-                    name="cover"
-                    defaultValue={store.cover || ""}
-                    placeholder="https://example.com/cover.jpg"
-                    dir="ltr"
-                    className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
-                </div>
+              )}
+              <div className="flex-1">
+                <label htmlFor="logo" className="block text-sm font-medium text-surface-950 mb-1">رابط الشعار (Logo)</label>
+                <input
+                  type="url"
+                  id="logo"
+                  name="logo"
+                  defaultValue={store.logo || ""}
+                  placeholder="https://example.com/logo.png"
+                  dir="ltr"
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label htmlFor="primaryColor" className="block text-sm font-medium text-surface-950 mb-1">اللون الرئيسي للمتجر</label>
-                <div className="flex items-center gap-3 bg-surface-50 p-2 rounded-xl border border-surface-200">
-                  <input
-                    type="color"
-                    id="primaryColor"
-                    name="primaryColor"
-                    defaultValue={store.primaryColor || "#000000"}
-                    className="w-8 h-8 rounded cursor-pointer border-0 p-0 shrink-0"
-                  />
-                  <span className="text-sm font-medium text-surface-600" dir="ltr">{store.primaryColor || "#000000"}</span>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="coverOverlayColor" className="block text-sm font-medium text-surface-950 mb-1">لون طبقة الغلاف (Overlay)</label>
-                <div className="flex items-center gap-3 bg-surface-50 p-2 rounded-xl border border-surface-200">
-                  <input
-                    type="color"
-                    id="coverOverlayColor"
-                    name="coverOverlayColor"
-                    defaultValue={(store as any).coverOverlayColor || "#000000"}
-                    className="w-8 h-8 rounded cursor-pointer border-0 p-0 shrink-0"
-                  />
-                  <span className="text-sm font-medium text-surface-600" dir="ltr">{(store as any).coverOverlayColor || "#000000"}</span>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="coverOverlayOpacity" className="block text-sm font-medium text-surface-950 mb-1">شفافية لون الغلاف (%)</label>
+            <div>
+              <label htmlFor="primaryColor" className="block text-sm font-medium text-surface-950 mb-1">اللون الرئيسي للمتجر</label>
+              <div className="flex items-center gap-3 bg-surface-50 p-2 rounded-xl border border-surface-200">
                 <input
-                  type="number"
-                  id="coverOverlayOpacity"
-                  name="coverOverlayOpacity"
-                  min="0"
-                  max="100"
-                  defaultValue={(store as any).coverOverlayOpacity || 50}
-                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                  type="color"
+                  id="primaryColor"
+                  name="primaryColor"
+                  defaultValue={store.primaryColor || "#000000"}
+                  className="w-8 h-8 rounded cursor-pointer border-0 p-0 shrink-0"
                 />
+                <span className="text-sm font-medium text-surface-600" dir="ltr">{store.primaryColor || "#000000"}</span>
               </div>
             </div>
 
