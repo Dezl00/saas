@@ -11,6 +11,8 @@ export const metadata = {
   title: "إدارة المنيو | لوحة التحكم",
 };
 
+export const maxDuration = 60;
+
 export default async function MenuPage() {
   const session = await auth();
   
