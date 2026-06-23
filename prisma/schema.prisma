@@ -89,6 +89,8 @@ model Store {
 
   // Social & Contact & Branding
   primaryColor         String?     @default("#000000")
+  coverOverlayColor    String?     @default("#000000")
+  coverOverlayOpacity  Int?        @default(50)
   whatsappNumber       String?
   enableWhatsappOrders Boolean @default(true)
   facebookUrl          String?

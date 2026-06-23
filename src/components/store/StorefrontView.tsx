@@ -33,6 +33,7 @@ export function StorefrontView({
   const [gridCols, setGridCols] = useState<1 | 2>(2);
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [sortBy, setSortBy] = useState<"default" | "price_desc" | "price_asc" | "popular">("default");
 
   // Modal State
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
@@ -178,24 +179,24 @@ export function StorefrontView({
           {isFilterOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
-              <div className="absolute top-12 end-0 w-48 bg-white border border-surface-200 rounded-2xl shadow-xl z-50 py-2 animate-zoom-in">
-                <h4 className="px-4 py-2 text-xs font-bold text-surface-500 border-b border-surface-100 mb-1">انتقال سريع</h4>
-                <div className="max-h-64 overflow-y-auto">
-                  {categories.map(cat => (
+              <div className="absolute top-12 end-0 w-40 bg-white border border-surface-200 rounded-xl shadow-xl z-50 py-1 animate-zoom-in">
+                <h4 className="px-3 py-1.5 text-[10px] font-bold text-surface-400 border-b border-surface-100 mb-1">ترتيب حسب</h4>
+                <div className="flex flex-col">
+                  {[
+                    { id: 'default', label: 'الافتراضي' },
+                    { id: 'price_desc', label: 'الأعلى سعراً' },
+                    { id: 'price_asc', label: 'الأقل سعراً' },
+                    { id: 'popular', label: 'الأكثر طلباً' }
+                  ].map(option => (
                     <button
-                      key={`filter-${cat.id}`}
+                      key={option.id}
                       onClick={() => {
-                        setActiveTab(cat.id);
+                        setSortBy(option.id as any);
                         setIsFilterOpen(false);
-                        const el = document.getElementById(`category-${cat.id}`);
-                        if (el) {
-                          const y = el.getBoundingClientRect().top + window.scrollY - 100;
-                          window.scrollTo({ top: y, behavior: 'smooth' });
-                        }
                       }}
-                      className={`w-full text-start px-4 py-2.5 text-sm transition-colors ${activeTab === cat.id ? 'bg-primary-500 text-white font-bold' : 'text-surface-700 hover:bg-surface-50'}`}
+                      className={`w-full text-start px-3 py-2 text-xs transition-colors ${sortBy === option.id ? 'bg-primary-50 text-primary-700 font-bold' : 'text-surface-700 hover:bg-surface-50'}`}
                     >
-                      {cat.name}
+                      {option.label}
                     </button>
                   ))}
                 </div>
@@ -215,8 +216,14 @@ export function StorefrontView({
       {/* Menu Items */}
       <div className="space-y-12">
         {categories.map((category) => {
-          const items = menuItems.filter((item) => item.categoryId === category.id);
+          let items = menuItems.filter((item) => item.categoryId === category.id);
           if (items.length === 0) return null;
+
+          if (sortBy === 'price_asc') {
+            items = [...items].sort((a, b) => Number(a.price) - Number(b.price));
+          } else if (sortBy === 'price_desc') {
+            items = [...items].sort((a, b) => Number(b.price) - Number(a.price));
+          }
 
           return (
             <div key={category.id} id={`category-${category.id}`} className="scroll-mt-32">

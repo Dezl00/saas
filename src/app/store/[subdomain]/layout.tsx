@@ -108,9 +108,24 @@ export default async function StoreLayout({
         </header>
 
         {/* Hero Section */}
-        <section className="bg-white border-b border-surface-200 py-10 px-4">
-          <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5 relative z-10">
+        <section className="relative bg-surface-950 py-10 px-4">
+          {(store as any).cover && (
+            <>
+              <div 
+                className="absolute inset-0 z-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${(store as any).cover})` }}
+              />
+              <div 
+                className="absolute inset-0 z-0"
+                style={{ 
+                  backgroundColor: (store as any).coverOverlayColor || '#000000',
+                  opacity: ((store as any).coverOverlayOpacity ?? 50) / 100 
+                }}
+              />
+            </>
+          )}
+          <div className="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5">
               {store.logo ? (
                 <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
               ) : (
@@ -118,7 +133,7 @@ export default async function StoreLayout({
               )}
             </div>
             
-            <h1 className="text-3xl sm:text-4xl font-black text-surface-950 mb-3">{store.name}</h1>
+            <h1 className="text-3xl sm:text-4xl font-black text-white mb-3">{store.name}</h1>
             
             {/* Social Media Icons in Hero */}
             <div className="flex items-center justify-center gap-3 mt-4">
@@ -163,7 +178,7 @@ export default async function StoreLayout({
             <p className="text-blue-100 mb-6 max-w-lg">
               أنشئ متجرك الإلكتروني الخاص في دقائق وابدأ في استقبال الطلبات عبر الواتساب مباشرة وبدون عمولات!
             </p>
-            <a href="/" target="_blank" className="bg-white text-blue-700 font-bold py-3 px-8 rounded-2xl hover:bg-surface-50 transition-colors shadow-lg hover:shadow-xl">
+            <a href="https://menura.site" target="_blank" className="bg-white text-blue-700 font-bold py-3 px-8 rounded-2xl hover:bg-surface-50 transition-colors shadow-lg hover:shadow-xl">
               أنشئ متجرك مجاناً
             </a>
           </div>
@@ -208,7 +223,7 @@ export default async function StoreLayout({
             </div>
             
             <div className="text-xs text-surface-400 mt-10 pt-6 border-t border-surface-100 flex items-center justify-center gap-2">
-              مدعوم بواسطة <a href="/" target="_blank" className="font-bold text-surface-950 hover:text-surface-700">منصتك</a> &copy; {new Date().getFullYear()}
+              مدعوم بواسطة <a href="https://menura.site" target="_blank" className="font-bold text-surface-950 hover:text-surface-700">منصتك</a> &copy; {new Date().getFullYear()}
             </div>
           </div>
         </footer>
