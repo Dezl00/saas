@@ -29,7 +29,8 @@ export default function proxy(req: NextRequest) {
     subdomain === rootDomain ||
     subdomain === "localhost" ||
     hostname === rootDomain ||
-    hostname.startsWith("localhost")
+    hostname.startsWith("localhost") ||
+    hostname.endsWith(".vercel.app")
   ) {
     // Protect dashboard routes
     if (pathname.startsWith("/dashboard") || pathname.startsWith("/admin")) {
