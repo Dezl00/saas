@@ -125,8 +125,8 @@ export async function scanMenuWithAI(formData: FormData) {
     revalidatePath("/dashboard/menu");
     return { success: `تم مسح المنيو بنجاح! إضافة ${addedItemsCount} صنف جديد.` };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI Scan Error:", error);
-    return { error: "حدث خطأ أثناء الاتصال بالذكاء الاصطناعي." };
+    return { error: `خطأ أثناء الاتصال: ${error.message || "سبب غير معروف"}` };
   }
 }
