@@ -75,12 +75,6 @@ export async function registerAction(prevState: any, formData: FormData) {
       },
     });
 
-    await signIn("credentials", {
-      email: validatedData.email,
-      password: validatedData.password,
-      redirect: false,
-    });
-
     shouldRedirect = true;
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -94,6 +88,6 @@ export async function registerAction(prevState: any, formData: FormData) {
   }
 
   if (shouldRedirect) {
-    redirect("/dashboard");
+    redirect("/login");
   }
 }
