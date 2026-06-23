@@ -80,3 +80,39 @@ export async function updateSubdomain(formData: FormData) {
     return { error: "حدث خطأ أثناء حجز الرابط" };
   }
 }
+
+export async function updateContactSettings(formData: FormData) {
+  const session = await auth();
+  if (!session?.user?.storeId) {
+    return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  const whatsappNumber = formData.get("whatsappNumber") as string;
+  const enableWhatsappOrders = formData.get("enableWhatsappOrders") === "on";
+  const facebookUrl = formData.get("facebookUrl") as string;
+  const instagramUrl = formData.get("instagramUrl") as string;
+  const twitterUrl = formData.get("twitterUrl") as string;
+  const tiktokUrl = formData.get("tiktokUrl") as string;
+  const snapchatUrl = formData.get("snapchatUrl") as string;
+
+  try {
+    await prisma.store.update({
+      where: { id: session.user.storeId },
+      data: {
+        whatsappNumber,
+        enableWhatsappOrders,
+        facebookUrl,
+        instagramUrl,
+        twitterUrl,
+        tiktokUrl,
+        snapchatUrl,
+      },
+    });
+
+    revalidatePath("/dashboard/settings");
+    return { success: "تم حفظ إعدادات التواصل بنجاح" };
+  } catch (error) {
+    console.error("Update Contact Error:", error);
+    return { error: "حدث خطأ أثناء حفظ إعدادات التواصل" };
+  }
+}

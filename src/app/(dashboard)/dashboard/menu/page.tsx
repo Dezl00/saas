@@ -2,7 +2,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/dashboard/Header";
 import { Plus, Trash2, CheckCircle2, XCircle, Image as ImageIcon } from "lucide-react";
-import { createMenuItem, toggleMenuItemStatus, deleteMenuItem } from "./actions";
+import { toggleMenuItemStatus, deleteMenuItem } from "./actions";
+import { MenuItemForm } from "@/components/dashboard/MenuItemForm";
 
 export const metadata = {
   title: "إدارة المنيو | لوحة التحكم",
@@ -48,87 +49,7 @@ export default async function MenuPage() {
                 يجب إضافة "قسم" واحد على الأقل قبل إضافة الأصناف. يرجى الذهاب لصفحة الأقسام أولاً.
               </div>
             ) : (
-              <form action={createMenuItem as any} className="space-y-4">
-                <div>
-                  <label htmlFor="categoryId" className="block text-sm font-medium text-surface-950 mb-1">
-                    القسم *
-                  </label>
-                  <select
-                    id="categoryId"
-                    name="categoryId"
-                    required
-                    className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  >
-                    <option value="">اختر القسم...</option>
-                    {categories.map(c => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-surface-950 mb-1">
-                    اسم الصنف *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    placeholder="مثال: برجر لحم مشوي"
-                    className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="price" className="block text-sm font-medium text-surface-950 mb-1">
-                    السعر *
-                  </label>
-                  <input
-                    type="number"
-                    id="price"
-                    name="price"
-                    step="0.01"
-                    required
-                    placeholder="0.00"
-                    className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="description" className="block text-sm font-medium text-surface-950 mb-1">
-                    الوصف (اختياري)
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    rows={2}
-                    className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="image" className="block text-sm font-medium text-surface-950 mb-1">
-                    رابط الصورة (URL)
-                  </label>
-                  <input
-                    type="url"
-                    id="image"
-                    name="image"
-                    placeholder="https://..."
-                    dir="ltr"
-                    className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors text-left"
-                  />
-                  <p className="text-xs text-surface-500 mt-1">ضع رابطاً مباشراً للصورة حالياً (اختياري)</p>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-2.5 px-4 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-500/20"
-                >
-                  حفظ الصنف
-                </button>
-              </form>
+              <MenuItemForm categories={categories.map(c => ({ id: c.id, name: c.name }))} />
             )}
           </div>
         </div>

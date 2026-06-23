@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/dashboard/Header";
-import { Globe, Store, Save } from "lucide-react";
-import { updateStoreSettings, updateSubdomain } from "./actions";
+import { Globe, Store, Save, Share2, MessageCircle } from "lucide-react";
+import { updateStoreSettings, updateSubdomain, updateContactSettings } from "./actions";
 
 export const metadata = {
   title: "إعدادات المتجر | لوحة التحكم",
@@ -169,6 +169,139 @@ export default async function SettingsPage() {
             >
               <Save className="w-5 h-5" />
               حفظ التغييرات
+            </button>
+          </form>
+        </div>
+
+        {/* بيانات التواصل والسوشيال ميديا */}
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 lg:col-span-2">
+          <h3 className="text-xl font-bold text-surface-950 mb-6 flex items-center gap-2">
+            <Share2 className="w-6 h-6 text-surface-700" />
+            بيانات التواصل والسوشيال ميديا
+          </h3>
+
+          <form action={updateContactSettings as any} className="space-y-6">
+            
+            <div className="bg-success-50/50 p-6 rounded-2xl border border-success-100">
+              <h4 className="font-bold text-surface-950 mb-4 flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-success-600" />
+                استقبال الطلبات عبر واتساب
+              </h4>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="whatsappNumber" className="block text-sm font-medium text-surface-950 mb-1">
+                    رقم الواتساب (متضمن كود الدولة)
+                  </label>
+                  <input
+                    type="text"
+                    id="whatsappNumber"
+                    name="whatsappNumber"
+                    placeholder="201012345678"
+                    defaultValue={store.whatsappNumber || ""}
+                    dir="ltr"
+                    className="w-full px-3 py-2 bg-white border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-success-500/20 focus:border-success-500 transition-colors"
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 pt-6">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      name="enableWhatsappOrders" 
+                      defaultChecked={store.enableWhatsappOrders}
+                      className="sr-only peer" 
+                    />
+                    <div className="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success-500"></div>
+                    <span className="ms-3 text-sm font-medium text-surface-700">تفعيل توجيه الزبون للواتساب بعد إتمام الطلب</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label htmlFor="facebookUrl" className="block text-sm font-medium text-surface-950 mb-1">
+                  رابط فيسبوك
+                </label>
+                <input
+                  type="url"
+                  id="facebookUrl"
+                  name="facebookUrl"
+                  defaultValue={store.facebookUrl || ""}
+                  dir="ltr"
+                  placeholder="https://facebook.com/..."
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="instagramUrl" className="block text-sm font-medium text-surface-950 mb-1">
+                  رابط انستجرام
+                </label>
+                <input
+                  type="url"
+                  id="instagramUrl"
+                  name="instagramUrl"
+                  defaultValue={store.instagramUrl || ""}
+                  dir="ltr"
+                  placeholder="https://instagram.com/..."
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="twitterUrl" className="block text-sm font-medium text-surface-950 mb-1">
+                  رابط X (تويتر)
+                </label>
+                <input
+                  type="url"
+                  id="twitterUrl"
+                  name="twitterUrl"
+                  defaultValue={store.twitterUrl || ""}
+                  dir="ltr"
+                  placeholder="https://x.com/..."
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="tiktokUrl" className="block text-sm font-medium text-surface-950 mb-1">
+                  رابط تيك توك
+                </label>
+                <input
+                  type="url"
+                  id="tiktokUrl"
+                  name="tiktokUrl"
+                  defaultValue={store.tiktokUrl || ""}
+                  dir="ltr"
+                  placeholder="https://tiktok.com/@..."
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="snapchatUrl" className="block text-sm font-medium text-surface-950 mb-1">
+                  رابط سناب شات
+                </label>
+                <input
+                  type="url"
+                  id="snapchatUrl"
+                  name="snapchatUrl"
+                  defaultValue={store.snapchatUrl || ""}
+                  dir="ltr"
+                  placeholder="https://snapchat.com/add/..."
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="mt-4 py-2.5 px-6 bg-surface-950 hover:bg-surface-800 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+            >
+              <Save className="w-5 h-5" />
+              حفظ بيانات التواصل
             </button>
           </form>
         </div>

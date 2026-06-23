@@ -11,6 +11,10 @@ import {
   Settings,
   LogOut,
   Store,
+  LogOut,
+  Store,
+  MapPin,
+  Map,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +25,8 @@ export function Sidebar() {
     { href: "/dashboard", icon: LayoutDashboard, label: "الرئيسية" },
     { href: "/dashboard/categories", icon: FolderTree, label: "الأقسام" },
     { href: "/dashboard/menu", icon: UtensilsCrossed, label: "المنيو" },
+    { href: "/dashboard/branches", icon: MapPin, label: "الفروع" },
+    { href: "/dashboard/delivery-areas", icon: Map, label: "مناطق التوصيل" },
     { href: "/dashboard/orders", icon: ShoppingBag, label: "الطلبات" },
     { href: "/dashboard/coupons", icon: Ticket, label: "الكوبونات" },
     { href: "/dashboard/settings", icon: Settings, label: "الإعدادات" },
@@ -30,8 +36,8 @@ export function Sidebar() {
     <aside className="hidden lg:flex lg:flex-col w-64 bg-white border-e border-surface-200">
       <div className="p-6 border-b border-surface-100">
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-            <Store className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-primary-100 flex items-center justify-center transition-transform">
+            <Store className="w-5 h-5 text-primary-600" />
           </div>
           <div>
             <h2 className="font-bold text-surface-950">لوحة التحكم</h2>
@@ -48,10 +54,10 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-xl transition-all group",
+                "flex items-center gap-3 px-4 py-3 transition-colors",
                 isActive
-                  ? "bg-primary-50 text-primary-700"
-                  : "text-surface-800/70 hover:bg-surface-50 hover:text-surface-950"
+                  ? "bg-primary-50 text-primary-700 border-r-4 border-primary-600"
+                  : "text-surface-600 hover:bg-surface-50 hover:text-surface-950 border-r-4 border-transparent"
               )}
             >
               <item.icon
@@ -77,7 +83,7 @@ export function Sidebar() {
         >
             <Link
                 href="/api/auth/signout"
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-error-500 hover:bg-red-50 transition-all"
+                className="flex items-center gap-3 w-full px-4 py-3 text-error-600 hover:bg-error-50 transition-colors border-r-4 border-transparent"
             >
               <LogOut className="w-5 h-5" />
               <span className="font-medium">تسجيل الخروج</span>

@@ -55,6 +55,11 @@ enum CouponType {
   FIXED
 }
 
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
 // ===== MODELS =====
 
 model User {
@@ -82,6 +87,15 @@ model Store {
   address     String?
   currency    String      @default("EGP")
 
+  // Social & Contact
+  whatsappNumber       String?
+  enableWhatsappOrders Boolean @default(true)
+  facebookUrl          String?
+  instagramUrl         String?
+  twitterUrl           String?
+  tiktokUrl            String?
+  snapchatUrl          String?
+
   // Relations
   userId         String          @unique
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -90,12 +104,48 @@ model Store {
   orders         Order[]
   coupons        Coupon[]
   paymentMethods PaymentMethod[]
+  branches       Branch[]
+  deliveryAreas  DeliveryArea[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([subdomain])
   @@index([userId])
+}
+
+model Branch {
+  id           String  @id @default(cuid())
+  name         String
+  address      String?
+  phone        String?
+  workingHours String?
+  isActive     Boolean @default(true)
+
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders  Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model DeliveryArea {
+  id          String  @id @default(cuid())
+  name        String
+  deliveryFee Decimal @db.Decimal(10, 2)
+  isActive    Boolean @default(true)
+
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders  Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
 }
 
 model PaymentMethod {
@@ -146,12 +196,36 @@ model MenuItem {
   storeId    String
   store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
   orderItems OrderItem[]
+  sizes      MenuItemSize[]
+  addons     MenuItemAddon[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([storeId, categoryId])
   @@index([storeId])
+}
+
+model MenuItemSize {
+  id         String  @id @default(cuid())
+  name       String
+  price      Decimal @db.Decimal(10, 2)
+
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+
+  @@index([menuItemId])
+}
+
+model MenuItemAddon {
+  id         String  @id @default(cuid())
+  name       String
+  price      Decimal @db.Decimal(10, 2)
+
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+
+  @@index([menuItemId])
 }
 
 model Coupon {
@@ -191,6 +265,12 @@ model Order {
   paymentStatus PaymentStatus @default(PENDING)
   paymentProof  String?
 
+  deliveryType   DeliveryType @default(DELIVERY)
+  branchId       String?
+  branch         Branch?      @relation(fields: [branchId], references: [id])
+  deliveryAreaId String?
+  deliveryArea   DeliveryArea? @relation(fields: [deliveryAreaId], references: [id])
+
   subtotal    Decimal @db.Decimal(10, 2)
   discount    Decimal @default(0) @db.Decimal(10, 2)
   deliveryFee Decimal @default(0) @db.Decimal(10, 2)
@@ -216,6 +296,10 @@ model OrderItem {
   quantity Int
   price    Decimal @db.Decimal(10, 2)
   notes    String?
+  
+  // JSON to store selected size and addons to preserve historical data
+  selectedSize   String? 
+  selectedAddons String?
 
   orderId    String
   order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)

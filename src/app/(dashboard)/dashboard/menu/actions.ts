@@ -17,6 +17,18 @@ export async function createMenuItem(formData: FormData) {
   const categoryId = formData.get("categoryId") as string;
   const sortOrder = parseInt((formData.get("sortOrder") as string) || "0");
 
+  const sizesStr = formData.get("sizes") as string;
+  const addonsStr = formData.get("addons") as string;
+  
+  let sizes: any[] = [];
+  let addons: any[] = [];
+  try {
+    if (sizesStr) sizes = JSON.parse(sizesStr);
+    if (addonsStr) addons = JSON.parse(addonsStr);
+  } catch (e) {
+    // Ignore invalid JSON
+  }
+
   if (!name || isNaN(price) || !categoryId) {
     return { error: "الاسم، السعر، والقسم بيانات مطلوبة" };
   }
@@ -40,6 +52,18 @@ export async function createMenuItem(formData: FormData) {
         sortOrder,
         categoryId,
         storeId: session.user.storeId,
+        sizes: {
+          create: sizes.filter(s => s.name && s.price).map(s => ({
+            name: s.name,
+            price: parseFloat(s.price),
+          }))
+        },
+        addons: {
+          create: addons.filter(a => a.name && a.price).map(a => ({
+            name: a.name,
+            price: parseFloat(a.price),
+          }))
+        }
       },
     });
 
