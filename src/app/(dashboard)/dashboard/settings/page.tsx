@@ -59,7 +59,7 @@ export default async function SettingsPage() {
                     className="w-full px-3 py-2.5 bg-white border border-surface-200 text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                   />
                   <span className="px-4 py-2.5 bg-surface-100 border border-s-0 border-surface-200 rounded-e-xl text-surface-600 font-medium whitespace-nowrap">
-                    .yourdomain.com
+                    .{process.env.NEXT_PUBLIC_ROOT_DOMAIN || "yourdomain.com"}
                   </span>
                 </div>
               </div>
@@ -71,10 +71,9 @@ export default async function SettingsPage() {
               </button>
             </div>
             {store.subdomain && (
-              <div className="mt-4 p-4 bg-success-50 text-success-800 rounded-xl border border-success-200 text-sm">
                 متجرك متاح حالياً للعملاء عبر الرابط: <br/>
-                <a href={`http://${store.subdomain}.localhost:3000`} target="_blank" className="font-bold underline mt-1 inline-block" dir="ltr">
-                  https://{store.subdomain}.yourdomain.com
+                <a href={`https://${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`} target="_blank" className="font-bold underline mt-1 inline-block" dir="ltr">
+                  https://{store.subdomain}.{process.env.NEXT_PUBLIC_ROOT_DOMAIN || "yourdomain.com"}
                 </a>
               </div>
             )}
