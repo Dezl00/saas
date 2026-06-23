@@ -57,6 +57,8 @@ export default async function SettingsPage() {
                     defaultValue={store.subdomain || ""}
                     placeholder="my-restaurant"
                     required
+                    pattern="[a-z0-9-]+"
+                    title="الرابط يجب أن يحتوي على أحرف إنجليزية صغيرة وأرقام وشرطة فقط وبدون مسافات."
                     className="w-full px-3 py-2.5 bg-white border border-surface-200 text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                   />
                   <span className="px-4 py-2.5 bg-surface-100 border border-s-0 border-surface-200 rounded-e-xl text-surface-600 font-medium whitespace-nowrap">
