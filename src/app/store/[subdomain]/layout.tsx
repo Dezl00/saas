@@ -60,6 +60,10 @@ export default async function StoreLayout({
   const params = await paramsPromise;
   const store = await prisma.store.findUnique({
     where: { subdomain: params.subdomain },
+    include: {
+      branches: { where: { isActive: true } },
+      deliveryAreas: { where: { isActive: true } }
+    }
   });
 
   if (!store) {
