@@ -58,23 +58,21 @@ export async function registerAction(prevState: any, formData: FormData) {
 
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
-    await prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
-          name: validatedData.name,
-          email: validatedData.email,
-          password: hashedPassword,
-          role: "OWNER",
-        },
-      });
+    const user = await prisma.user.create({
+      data: {
+        name: validatedData.name,
+        email: validatedData.email,
+        password: hashedPassword,
+        role: "OWNER",
+      },
+    });
 
-      await tx.store.create({
-        data: {
-          name: validatedData.storeName,
-          type: validatedData.storeType as any,
-          userId: user.id,
-        },
-      });
+    await prisma.store.create({
+      data: {
+        name: validatedData.storeName,
+        type: validatedData.storeType as any,
+        userId: user.id,
+      },
     });
 
     await signIn("credentials", {
