@@ -13,19 +13,62 @@ export function AIMenuScanner() {
   const [successResult, setSuccessResult] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+          
+          const MAX_DIM = 1200;
+          if (width > height && width > MAX_DIM) {
+            height = Math.round((height * MAX_DIM) / width);
+            width = MAX_DIM;
+          } else if (height > MAX_DIM) {
+            width = Math.round((width * MAX_DIM) / height);
+            height = MAX_DIM;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              resolve(new File([blob], file.name, { type: "image/jpeg" }));
+            } else {
+              resolve(file);
+            }
+          }, "image/jpeg", 0.7);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       if (!selectedFile.type.startsWith("image/")) {
         toast.error("يرجى اختيار صورة صحيحة");
         return;
       }
-      setFile(selectedFile);
+      
+      setIsScanning(true); // Show loader while compressing
+      const compressedFile = await compressImage(selectedFile);
+      setFile(compressedFile);
+      
       const reader = new FileReader();
       reader.onload = (event) => {
         setImage(event.target?.result as string);
+        setIsScanning(false);
       };
-      reader.readAsDataURL(selectedFile);
+      reader.readAsDataURL(compressedFile);
     }
   };
 
