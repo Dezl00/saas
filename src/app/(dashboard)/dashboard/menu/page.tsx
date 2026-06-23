@@ -5,6 +5,7 @@ import { Plus, Trash2, ImageIcon } from "lucide-react";
 import { toggleMenuItemStatus, deleteMenuItem } from "./actions";
 import { MenuItemForm } from "@/components/dashboard/MenuItemForm";
 import { MenuItemEditButton } from "@/components/dashboard/MenuItemEditButton";
+import { AIMenuScanner } from "@/components/dashboard/AIMenuScanner";
 
 export const metadata = {
   title: "إدارة المنيو | لوحة التحكم",
@@ -35,6 +36,10 @@ export default async function MenuPage() {
   return (
     <div className="animate-fade-in pb-10">
       <Header title="إدارة المنيو" />
+      
+      <div className="flex justify-end mt-4 px-1">
+        <AIMenuScanner />
+      </div>
       
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
         {/* نموذج إضافة صنف */}
