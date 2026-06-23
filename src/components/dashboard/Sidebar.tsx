@@ -11,8 +11,6 @@ import {
   Settings,
   LogOut,
   Store,
-  LogOut,
-  Store,
   MapPin,
   Map,
 } from "lucide-react";
