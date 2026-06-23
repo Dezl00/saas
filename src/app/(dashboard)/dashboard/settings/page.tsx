@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/dashboard/Header";
 import { Globe, Store, Save, Share2, MessageCircle } from "lucide-react";
 import { updateStoreSettings, updateSubdomain, updateContactSettings } from "./actions";
+import { SubmitButton } from "@/components/dashboard/SubmitButton";
 
 export const metadata = {
   title: "إعدادات المتجر | لوحة التحكم",
@@ -63,12 +64,11 @@ export default async function SettingsPage() {
                   </span>
                 </div>
               </div>
-              <button
-                type="submit"
+              <SubmitButton
                 className="py-2.5 px-6 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-500/20 whitespace-nowrap"
               >
                 تحديث الرابط
-              </button>
+              </SubmitButton>
             </div>
             {store.subdomain && (
               <div className="mt-4 p-4 bg-success-50 text-success-800 rounded-xl border border-success-200 text-sm">
@@ -211,13 +211,12 @@ export default async function SettingsPage() {
               />
             </div>
 
-            <button
-              type="submit"
+            <SubmitButton
               className="w-full mt-2 py-2.5 px-4 bg-surface-950 hover:bg-surface-800 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" />
               حفظ التغييرات
-            </button>
+            </SubmitButton>
           </form>
         </div>
 
@@ -345,13 +344,12 @@ export default async function SettingsPage() {
               </div>
             </div>
 
-            <button
-              type="submit"
+            <SubmitButton
               className="mt-4 py-2.5 px-6 bg-surface-950 hover:bg-surface-800 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" />
               حفظ بيانات التواصل
-            </button>
+            </SubmitButton>
           </form>
         </div>
 

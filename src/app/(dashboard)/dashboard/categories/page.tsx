@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/dashboard/Header";
 import { Plus, Trash2, Edit2, CheckCircle2, XCircle } from "lucide-react";
 import { createCategory, toggleCategoryStatus, deleteCategory } from "./actions";
+import { SubmitButton } from "@/components/dashboard/SubmitButton";
 
 export const metadata = {
   title: "إدارة الأقسام | لوحة التحكم",
@@ -78,12 +79,11 @@ export default async function CategoriesPage() {
                 />
               </div>
 
-              <button
-                type="submit"
+              <SubmitButton
                 className="w-full py-2.5 px-4 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-500/20"
               >
                 حفظ القسم
-              </button>
+              </SubmitButton>
             </form>
           </div>
         </div>

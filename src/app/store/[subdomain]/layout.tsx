@@ -78,7 +78,16 @@ export default async function StoreLayout({
 
   return (
     <CartProvider>
-      <div className="min-h-screen bg-surface-50 pb-0 flex flex-col">
+      <div 
+        className="min-h-screen bg-surface-50 pb-0 flex flex-col"
+        style={store.primaryColor ? {
+          '--color-primary-50': `${store.primaryColor}1a`,
+          '--color-primary-100': `${store.primaryColor}33`,
+          '--color-primary-500': store.primaryColor,
+          '--color-primary-600': store.primaryColor,
+          '--color-primary-700': store.primaryColor,
+        } as React.CSSProperties : undefined}
+      >
         <header className="sticky top-0 z-30 bg-white border-b border-surface-200 shadow-sm">
           <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
             {/* Store Minimal Info */}
