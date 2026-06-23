@@ -157,7 +157,7 @@ export function StorefrontView({
               }}
               className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border rounded-2xl ${
                 activeTab === cat.id
-                  ? "bg-surface-950 text-white border-surface-950"
+                  ? "bg-primary-500 text-white border-primary-500"
                   : "bg-white text-surface-600 border-surface-200 hover:bg-surface-100"
               }`}
             >
@@ -193,7 +193,7 @@ export function StorefrontView({
                           window.scrollTo({ top: y, behavior: 'smooth' });
                         }
                       }}
-                      className={`w-full text-start px-4 py-2.5 text-sm transition-colors ${activeTab === cat.id ? 'bg-surface-50 text-surface-950 font-bold' : 'text-surface-700 hover:bg-surface-50'}`}
+                      className={`w-full text-start px-4 py-2.5 text-sm transition-colors ${activeTab === cat.id ? 'bg-primary-500 text-white font-bold' : 'text-surface-700 hover:bg-surface-50'}`}
                     >
                       {cat.name}
                     </button>
@@ -364,11 +364,10 @@ export function StorefrontView({
 
               <button 
                 onClick={handleAddToCart}
-                className="flex-[2] h-12 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 px-4 shadow-lg shadow-black/10"
-                style={{ backgroundColor: store.primaryColor || '#0a0a0a' }}
+                className="flex-[2] h-12 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 px-4 shadow-lg bg-primary-500 hover:bg-primary-600"
               >
                 <span>إضافة</span>
-                <span className="text-surface-400 font-normal">|</span>
+                <span className="text-white/50 font-normal">|</span>
                 <span>{formatPrice(calculateModalTotal(), store.currency)}</span>
               </button>
             </div>

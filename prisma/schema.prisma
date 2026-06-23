@@ -89,7 +89,6 @@ model Store {
 
   // Social & Contact & Branding
   primaryColor         String?     @default("#000000")
-  secondaryColor       String?     @default("#666666")
   whatsappNumber       String?
   enableWhatsappOrders Boolean @default(true)
   facebookUrl          String?

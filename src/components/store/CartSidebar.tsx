@@ -5,6 +5,7 @@ import { X, Plus, Minus, ShoppingBag, Truck, Store as StoreIcon, Loader2, Check 
 import { useCart } from "./CartProvider";
 import { formatPrice } from "@/lib/utils";
 import { placeOrderAction } from "@/app/store/[subdomain]/actions";
+import toast from "react-hot-toast";
 
 type Branch = { id: string; name: string; address: string | null };
 type DeliveryArea = { id: string; name: string; fee: number };
@@ -27,7 +28,6 @@ export function CartSidebar({
   const [selectedBranch, setSelectedBranch] = useState<string>("");
   
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   if (!isCartOpen) return null;
@@ -44,16 +44,15 @@ export function CartSidebar({
     if (!store) return;
 
     if (deliveryType === "DELIVERY" && !selectedArea) {
-      setError("يرجى اختيار منطقة التوصيل");
+      toast.error("يرجى اختيار منطقة التوصيل");
       return;
     }
     if (deliveryType === "PICKUP" && !selectedBranch) {
-      setError("يرجى اختيار الفرع");
+      toast.error("يرجى اختيار الفرع");
       return;
     }
 
     setIsSubmitting(true);
-    setError("");
     setValidationErrors({});
 
     const formData = new FormData(e.currentTarget);
@@ -85,7 +84,7 @@ export function CartSidebar({
       const res = await placeOrderAction(formData);
       
       if (res.error) {
-        setError(res.error);
+        toast.error(res.error);
         setIsSubmitting(false);
         return;
       }
@@ -118,7 +117,7 @@ export function CartSidebar({
       }
 
     } catch (err) {
-      setError("حدث خطأ أثناء إرسال الطلب");
+      toast.error("حدث خطأ أثناء إرسال الطلب");
       setIsSubmitting(false);
     }
   };
@@ -214,11 +213,6 @@ export function CartSidebar({
             ) : (
               // Checkout Form
               <form id="checkout-form" onSubmit={handleSubmitOrder} noValidate className="space-y-6 animate-fade-in pb-10">
-                {error && (
-                  <div className="p-3 bg-error-50 border border-error-200 text-error-600 rounded-xl text-sm font-bold">
-                    {error}
-                  </div>
-                )}
 
                 {/* Toggle Delivery / Pickup */}
                 <div className="flex bg-surface-100 p-1.5 rounded-2xl">
@@ -226,20 +220,20 @@ export function CartSidebar({
                     type="button"
                     onClick={() => { setDeliveryType("DELIVERY"); setValidationErrors({}); }}
                     className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-all rounded-xl ${
-                      deliveryType === "DELIVERY" ? "bg-white text-surface-950" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
+                      deliveryType === "DELIVERY" ? "bg-primary-500 text-white shadow-md shadow-primary-500/20" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
                     }`}
                   >
-                    <Truck className={`w-4 h-4 ${deliveryType === "DELIVERY" ? "text-primary-600" : ""}`} />
+                    <Truck className={`w-4 h-4 ${deliveryType === "DELIVERY" ? "text-white" : ""}`} />
                     توصيل للمنزل
                   </button>
                   <button
                     type="button"
                     onClick={() => { setDeliveryType("PICKUP"); setValidationErrors({}); }}
                     className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-all rounded-xl ${
-                      deliveryType === "PICKUP" ? "bg-white text-surface-950" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
+                      deliveryType === "PICKUP" ? "bg-primary-500 text-white shadow-md shadow-primary-500/20" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
                     }`}
                   >
-                    <StoreIcon className={`w-4 h-4 ${deliveryType === "PICKUP" ? "text-primary-600" : ""}`} />
+                    <StoreIcon className={`w-4 h-4 ${deliveryType === "PICKUP" ? "text-white" : ""}`} />
                     استلام من الفرع
                   </button>
                 </div>
@@ -337,22 +331,29 @@ export function CartSidebar({
             {!isCheckout ? (
               <button 
                 onClick={() => setIsCheckout(true)}
-                className="w-full py-4 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2"
-                style={{ backgroundColor: store?.primaryColor || 'var(--color-primary-600)' }}
+                className="w-full py-4 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600"
               >
                 المتابعة لإتمام الطلب
               </button>
             ) : (
-              <button 
-                type="submit"
-                form="checkout-form"
-                disabled={isSubmitting}
-                className="w-full py-4 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-                style={{ backgroundColor: store?.primaryColor || 'var(--color-primary-600)' }}
-              >
-                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
-                {isSubmitting ? "جاري الإرسال..." : "تأكيد وإرسال الطلب"}
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  type="button"
+                  onClick={() => setIsCheckout(false)}
+                  className="px-6 py-4 bg-surface-200 hover:bg-surface-300 text-surface-700 font-bold rounded-2xl transition-colors"
+                >
+                  رجوع
+                </button>
+                <button 
+                  type="submit"
+                  form="checkout-form"
+                  disabled={isSubmitting}
+                  className="flex-1 py-4 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 bg-primary-500 hover:bg-primary-600"
+                >
+                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
+                  {isSubmitting ? "جاري الإرسال..." : "تأكيد وإرسال الطلب"}
+                </button>
+              </div>
             )}
           </div>
         )}

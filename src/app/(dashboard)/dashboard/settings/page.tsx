@@ -124,7 +124,7 @@ export default async function SettingsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="primaryColor" className="block text-sm font-medium text-surface-950 mb-1">اللون الرئيسي (للأزرار)</label>
+                <label htmlFor="primaryColor" className="block text-sm font-medium text-surface-950 mb-1">اللون الرئيسي (لهوية المتجر)</label>
                 <div className="flex items-center gap-3 bg-surface-50 p-2 rounded-xl border border-surface-200">
                   <input
                     type="color"
@@ -134,19 +134,6 @@ export default async function SettingsPage() {
                     className="w-8 h-8 rounded cursor-pointer border-0 p-0 shrink-0"
                   />
                   <span className="text-sm font-medium text-surface-600" dir="ltr">{store.primaryColor || "#000000"}</span>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="secondaryColor" className="block text-sm font-medium text-surface-950 mb-1">اللون الثانوي (للأيقونات)</label>
-                <div className="flex items-center gap-3 bg-surface-50 p-2 rounded-xl border border-surface-200">
-                  <input
-                    type="color"
-                    id="secondaryColor"
-                    name="secondaryColor"
-                    defaultValue={store.secondaryColor || "#666666"}
-                    className="w-8 h-8 rounded cursor-pointer border-0 p-0 shrink-0"
-                  />
-                  <span className="text-sm font-medium text-surface-600" dir="ltr">{store.secondaryColor || "#666666"}</span>
                 </div>
               </div>
             </div>

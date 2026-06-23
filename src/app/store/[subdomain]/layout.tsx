@@ -123,27 +123,27 @@ export default async function StoreLayout({
             {/* Social Media Icons in Hero */}
             <div className="flex items-center justify-center gap-3 mt-4">
               {store.snapchatUrl && (
-                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 hover:bg-surface-100 flex items-center justify-center transition-transform hover:scale-110" style={{ color: (store as any).secondaryColor || '#666666' }}>
+                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <SnapchatIcon className="w-5 h-5" />
                 </a>
               )}
               {store.tiktokUrl && (
-                <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 hover:bg-surface-100 flex items-center justify-center transition-transform hover:scale-110" style={{ color: (store as any).secondaryColor || '#666666' }}>
+                <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <TiktokIcon className="w-5 h-5" />
                 </a>
               )}
               {store.twitterUrl && (
-                <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 hover:bg-surface-100 flex items-center justify-center transition-transform hover:scale-110" style={{ color: (store as any).secondaryColor || '#666666' }}>
+                <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <XIcon className="w-5 h-5" />
                 </a>
               )}
               {store.instagramUrl && (
-                <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 hover:bg-surface-100 flex items-center justify-center transition-transform hover:scale-110" style={{ color: (store as any).secondaryColor || '#666666' }}>
+                <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <InstagramIcon className="w-5 h-5" />
                 </a>
               )}
               {store.facebookUrl && (
-                <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 hover:bg-surface-100 flex items-center justify-center transition-transform hover:scale-110" style={{ color: (store as any).secondaryColor || '#666666' }}>
+                <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <FacebookIcon className="w-5 h-5" />
                 </a>
               )}
@@ -158,12 +158,12 @@ export default async function StoreLayout({
 
         {/* Promo Banner */}
         <div className="max-w-5xl mx-auto px-4 mt-16">
-          <div className="bg-gradient-to-r from-primary-600 to-primary-800 rounded-3xl p-8 text-center text-white shadow-xl flex flex-col items-center">
-            <h3 className="text-2xl font-black mb-2">هل تمتلك مطعماً أو متجراً؟</h3>
-            <p className="text-primary-100 mb-6 max-w-lg">
+          <div className="bg-gradient-to-r from-[#2563eb] to-[#1e40af] rounded-3xl p-8 text-center text-white shadow-xl flex flex-col items-center" style={{ '--color-primary-600': '#2563eb', '--color-primary-800': '#1e40af' } as any}>
+            <h3 className="text-2xl font-black mb-2 text-white">هل تمتلك مطعماً أو متجراً؟</h3>
+            <p className="text-blue-100 mb-6 max-w-lg">
               أنشئ متجرك الإلكتروني الخاص في دقائق وابدأ في استقبال الطلبات عبر الواتساب مباشرة وبدون عمولات!
             </p>
-            <a href="/" target="_blank" className="bg-white text-primary-700 font-bold py-3 px-8 rounded-2xl hover:bg-surface-50 transition-colors shadow-lg hover:shadow-xl">
+            <a href="/" target="_blank" className="bg-white text-blue-700 font-bold py-3 px-8 rounded-2xl hover:bg-surface-50 transition-colors shadow-lg hover:shadow-xl">
               أنشئ متجرك مجاناً
             </a>
           </div>
@@ -200,15 +200,15 @@ export default async function StoreLayout({
             </div>
 
             <div className="flex justify-center items-center gap-4 mt-8">
-              {store.facebookUrl && <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 flex items-center justify-center hover:bg-surface-100 transition-transform hover:scale-110" style={{ color: store.secondaryColor || '#666666' }}><FacebookIcon className="w-5 h-5" /></a>}
-              {store.instagramUrl && <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 flex items-center justify-center hover:bg-surface-100 transition-transform hover:scale-110" style={{ color: store.secondaryColor || '#666666' }}><InstagramIcon className="w-5 h-5" /></a>}
-              {store.twitterUrl && <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 flex items-center justify-center hover:bg-surface-100 transition-transform hover:scale-110" style={{ color: store.secondaryColor || '#666666' }}><XIcon className="w-5 h-5" /></a>}
-              {store.tiktokUrl && <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 flex items-center justify-center hover:bg-surface-100 transition-transform hover:scale-110" style={{ color: store.secondaryColor || '#666666' }}><TiktokIcon className="w-5 h-5" /></a>}
-              {store.snapchatUrl && <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-surface-50 flex items-center justify-center hover:bg-surface-100 transition-transform hover:scale-110" style={{ color: store.secondaryColor || '#666666' }}><SnapchatIcon className="w-5 h-5" /></a>}
+              {store.facebookUrl && <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><FacebookIcon className="w-5 h-5" /></a>}
+              {store.instagramUrl && <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><InstagramIcon className="w-5 h-5" /></a>}
+              {store.twitterUrl && <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><XIcon className="w-5 h-5" /></a>}
+              {store.tiktokUrl && <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><TiktokIcon className="w-5 h-5" /></a>}
+              {store.snapchatUrl && <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><SnapchatIcon className="w-5 h-5" /></a>}
             </div>
             
             <div className="text-xs text-surface-400 mt-10 pt-6 border-t border-surface-100 flex items-center justify-center gap-2">
-              مدعوم بواسطة <a href="/" className="font-bold text-primary-600 hover:text-primary-700">منصتك</a> &copy; {new Date().getFullYear()}
+              مدعوم بواسطة <a href="/" target="_blank" className="font-bold text-surface-950 hover:text-surface-700">منصتك</a> &copy; {new Date().getFullYear()}
             </div>
           </div>
         </footer>
@@ -246,8 +246,7 @@ export default async function StoreLayout({
             whatsappNumber: store.whatsappNumber,
             enableWhatsappOrders: store.enableWhatsappOrders,
             currency: store.currency,
-            primaryColor: store.primaryColor,
-            secondaryColor: store.secondaryColor
+            primaryColor: store.primaryColor
           }}
           branches={store.branches.map(b => ({ id: b.id, name: b.name, address: b.address }))}
           deliveryAreas={store.deliveryAreas.map(a => ({ id: a.id, name: a.name, fee: Number(a.deliveryFee) }))}
