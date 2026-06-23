@@ -59,7 +59,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const { quantity, ...itemWithoutQty } = newItem;
       return [...current, { ...itemWithoutQty, quantity: qtyToAdd }];
     });
-    setIsCartOpen(true);
   };
 
   const removeItem = (id: string) => {

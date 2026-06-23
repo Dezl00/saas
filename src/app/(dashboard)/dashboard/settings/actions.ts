@@ -12,6 +12,7 @@ export async function updateStoreSettings(formData: FormData) {
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
+  const logo = formData.get("logo") as string;
   const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
   const currency = formData.get("currency") as string || "EGP";
@@ -26,6 +27,7 @@ export async function updateStoreSettings(formData: FormData) {
       data: {
         name,
         description,
+        logo,
         phone,
         address,
         currency,

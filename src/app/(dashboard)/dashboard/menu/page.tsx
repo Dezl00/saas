@@ -1,9 +1,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/dashboard/Header";
-import { Plus, Trash2, CheckCircle2, XCircle, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, ImageIcon } from "lucide-react";
 import { toggleMenuItemStatus, deleteMenuItem } from "./actions";
 import { MenuItemForm } from "@/components/dashboard/MenuItemForm";
+import { MenuItemEditButton } from "@/components/dashboard/MenuItemEditButton";
 
 export const metadata = {
   title: "إدارة المنيو | لوحة التحكم",
@@ -23,7 +24,7 @@ export default async function MenuPage() {
         { category: { sortOrder: 'asc' } },
         { sortOrder: 'asc' }
       ],
-      include: { category: true }
+      include: { category: true, sizes: true, addons: true }
     }),
     prisma.category.findMany({
       where: { storeId: session.user.storeId },
@@ -101,22 +102,29 @@ export default async function MenuPage() {
                           <form action={toggleMenuItemStatus.bind(null, item.id, item.isAvailable) as any}>
                             <button
                               type="submit"
-                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors ${
-                                item.isAvailable 
-                                  ? "bg-success-50 text-success-700 hover:bg-success-100" 
-                                  : "bg-surface-100 text-surface-600 hover:bg-surface-200"
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                                item.isAvailable ? 'bg-success-500' : 'bg-surface-300'
                               }`}
                             >
-                              {item.isAvailable ? (
-                                <><CheckCircle2 className="w-3.5 h-3.5" /> متاح</>
-                              ) : (
-                                <><XCircle className="w-3.5 h-3.5" /> غير متاح</>
-                              )}
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  item.isAvailable ? '-translate-x-6' : '-translate-x-1'
+                                }`}
+                              />
                             </button>
                           </form>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
+                            <MenuItemEditButton 
+                              item={{
+                                ...item,
+                                price: item.price.toString(),
+                                sizes: item.sizes.map(s => ({ ...s, price: s.price.toString() })),
+                                addons: item.addons.map(a => ({ ...a, price: a.price.toString() }))
+                              }} 
+                              categories={categories.map(c => ({ id: c.id, name: c.name }))} 
+                            />
                             <form action={deleteMenuItem.bind(null, item.id) as any}>
                               <button
                                 type="submit"

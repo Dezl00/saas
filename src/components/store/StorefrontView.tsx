@@ -108,31 +108,35 @@ export function StorefrontView({
       
       {/* Toast Notification */}
       {toastItem && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border-2 border-primary-500 p-4 shadow-xl flex flex-col gap-3 animate-slide-in-top">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border border-surface-200 rounded-3xl p-4 shadow-2xl flex flex-col gap-3 animate-slide-in-top">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-success-100 text-success-600 flex items-center justify-center">
-              <Check className="w-5 h-5" />
+            <div className="w-12 h-12 bg-surface-100 rounded-2xl overflow-hidden flex items-center justify-center shrink-0 border border-surface-200">
+              {toastItem.image ? (
+                <img src={toastItem.image} alt={toastItem.name} className="w-full h-full object-cover" />
+              ) : (
+                <ShoppingBag className="w-5 h-5 text-surface-400" />
+              )}
             </div>
             <div className="flex-1">
-              <p className="font-bold text-surface-950 text-sm">تمت الإضافة للسلة بنجاح</p>
-              <p className="text-xs text-surface-500 line-clamp-1">{toastItem.name}</p>
+              <p className="font-bold text-success-600 text-sm flex items-center gap-1"><Check className="w-4 h-4"/> تمت الإضافة</p>
+              <p className="text-xs text-surface-600 line-clamp-1 mt-0.5">{toastItem.name}</p>
             </div>
-            <button onClick={() => setToastItem(null)} className="text-surface-400 hover:text-surface-950">
-              <X className="w-5 h-5" />
+            <button onClick={() => setToastItem(null)} className="text-surface-400 hover:text-surface-950 bg-surface-100 p-1.5 rounded-full transition-colors">
+              <X className="w-4 h-4" />
             </button>
           </div>
           <div className="flex items-center gap-2">
             <button 
               onClick={() => { setToastItem(null); setIsCartOpen(true); }}
-              className="flex-1 py-2 bg-primary-600 text-white font-bold text-sm"
+              className="flex-1 py-2 bg-primary-600 text-white font-bold text-sm rounded-xl transition-colors hover:bg-primary-700"
             >
               عرض السلة
             </button>
             <button 
               onClick={() => setToastItem(null)}
-              className="flex-1 py-2 bg-surface-100 text-surface-950 font-bold text-sm border border-surface-200"
+              className="flex-1 py-2 bg-surface-100 text-surface-950 font-bold text-sm border border-surface-200 rounded-xl transition-colors hover:bg-surface-200"
             >
-              إكمال التسوق
+              متابعة التسوق
             </button>
           </div>
         </div>
@@ -149,9 +153,9 @@ export function StorefrontView({
                 setActiveTab(cat.id);
                 document.getElementById(`category-${cat.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
-              className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border ${
+              className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border rounded-2xl ${
                 activeTab === cat.id
-                  ? "bg-primary-600 text-white border-primary-600"
+                  ? "bg-surface-950 text-white border-surface-950"
                   : "bg-white text-surface-600 border-surface-200 hover:bg-surface-100"
               }`}
             >
@@ -189,7 +193,7 @@ export function StorefrontView({
                   <div 
                     key={item.id} 
                     onClick={() => handleOpenProduct(item)}
-                    className="bg-white border border-surface-200 flex flex-col cursor-pointer hover:border-primary-500 transition-colors"
+                    className="bg-white border border-surface-200 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:border-surface-400 transition-colors shadow-sm hover:shadow-md"
                   >
                     {item.image ? (
                       <div className="aspect-video w-full overflow-hidden bg-surface-100 border-b border-surface-200">
@@ -227,18 +231,18 @@ export function StorefrontView({
 
       {/* Product Modal */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white w-full max-w-lg max-h-[90vh] flex flex-col animate-slide-in-bottom sm:animate-zoom-in overflow-hidden border border-surface-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-none p-4 animate-fade-in">
+          <div className="bg-white w-full max-w-md max-h-[85vh] flex flex-col animate-zoom-in overflow-hidden border border-surface-200 rounded-3xl shadow-2xl">
             {/* Modal Header Image */}
-            <div className="relative h-48 bg-surface-100 border-b border-surface-200">
+            <div className="relative h-32 sm:h-40 bg-surface-100 shrink-0">
               {selectedProduct.image ? (
                 <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center"><ShoppingBag className="w-12 h-12 text-surface-300" /></div>
+                <div className="w-full h-full flex items-center justify-center"><ShoppingBag className="w-10 h-10 text-surface-300" /></div>
               )}
               <button 
                 onClick={() => setSelectedProduct(null)}
-                className="absolute top-4 end-4 w-8 h-8 bg-black text-white flex items-center justify-center hover:bg-surface-800 transition-colors"
+                className="absolute top-4 end-4 w-8 h-8 bg-black/50 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-black/70 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -256,13 +260,12 @@ export function StorefrontView({
                 </div>
               </div>
 
-              {/* Sizes */}
               {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                 <div>
-                  <h3 className="font-bold text-surface-950 mb-3 bg-surface-100 p-2 border-s-4 border-primary-500">اختر الحجم (إجباري)</h3>
+                  <h3 className="font-bold text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">اختر الحجم (إجباري)</h3>
                   <div className="space-y-2">
                     {selectedProduct.sizes.map(size => (
-                      <label key={size.id} className={`flex items-center justify-between p-3 border cursor-pointer transition-colors ${selectedSize?.id === size.id ? 'border-primary-500 bg-primary-50' : 'border-surface-200 hover:bg-surface-50'}`}>
+                      <label key={size.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${selectedSize?.id === size.id ? 'border-primary-500 bg-primary-50' : 'border-surface-200 hover:bg-surface-50'}`}>
                         <div className="flex items-center gap-3">
                           <input 
                             type="radio" 
@@ -273,7 +276,7 @@ export function StorefrontView({
                           />
                           <span className="font-medium text-surface-950">{size.name}</span>
                         </div>
-                        <span className="font-bold text-primary-600">{formatPrice(size.price, store.currency)}</span>
+                        <span className="font-bold text-surface-950">{formatPrice(size.price, store.currency)}</span>
                       </label>
                     ))}
                   </div>
@@ -283,58 +286,54 @@ export function StorefrontView({
               {/* Addons */}
               {selectedProduct.addons && selectedProduct.addons.length > 0 && (
                 <div>
-                  <h3 className="font-bold text-surface-950 mb-3 bg-surface-100 p-2 border-s-4 border-primary-500">إضافات (اختياري)</h3>
+                  <h3 className="font-bold text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">إضافات (اختياري)</h3>
                   <div className="space-y-2">
                     {selectedProduct.addons.map(addon => {
                       const isSelected = selectedAddons.some(a => a.id === addon.id);
                       return (
-                        <label key={addon.id} className={`flex items-center justify-between p-3 border cursor-pointer transition-colors ${isSelected ? 'border-primary-500 bg-primary-50' : 'border-surface-200 hover:bg-surface-50'}`}>
+                        <label key={addon.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${isSelected ? 'border-primary-500 bg-primary-50' : 'border-surface-200 hover:bg-surface-50'}`}>
                           <div className="flex items-center gap-3">
                             <input 
                               type="checkbox" 
                               checked={isSelected}
                               onChange={() => handleToggleAddon(addon)}
-                              className="w-4 h-4 text-primary-600"
+                              className="w-4 h-4 text-primary-600 rounded"
                             />
                             <span className="font-medium text-surface-950">{addon.name}</span>
                           </div>
-                          <span className="font-bold text-primary-600">+{formatPrice(addon.price, store.currency)}</span>
+                          <span className="font-bold text-surface-500">+{formatPrice(addon.price, store.currency)}</span>
                         </label>
                       );
                     })}
                   </div>
                 </div>
               )}
-
-              {/* Quantity */}
-              <div className="flex items-center justify-between bg-surface-50 p-4 border border-surface-200">
-                <span className="font-bold text-surface-950">العدد:</span>
-                <div className="flex items-center gap-4">
-                  <button 
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 bg-white border border-surface-200 flex items-center justify-center hover:bg-surface-100 text-surface-600"
-                  >
-                    <Minus className="w-5 h-5" />
-                  </button>
-                  <span className="font-black text-xl w-6 text-center">{quantity}</span>
-                  <button 
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 bg-white border border-surface-200 flex items-center justify-center hover:bg-surface-100 text-surface-600"
-                  >
-                    <Plus className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-surface-200 bg-surface-50">
+            {/* Modal Footer (Quantity + Add to Cart) */}
+            <div className="p-4 border-t border-surface-200 bg-white flex items-center gap-3">
+              <div className="flex items-center bg-surface-100 rounded-2xl border border-surface-200">
+                <button 
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-12 h-12 flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-s-2xl transition-colors"
+                >
+                  <Minus className="w-5 h-5" />
+                </button>
+                <span className="font-black text-lg w-8 text-center text-surface-950">{quantity}</span>
+                <button 
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-12 h-12 flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-e-2xl transition-colors"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+              </div>
+
               <button 
                 onClick={handleAddToCart}
-                className="w-full py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-12 bg-surface-950 hover:bg-surface-800 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 px-4 shadow-lg shadow-surface-950/20"
               >
-                <span>إضافة للسلة</span>
-                <span>•</span>
+                <span>إضافة</span>
+                <span className="text-surface-400 font-normal">|</span>
                 <span>{formatPrice(calculateModalTotal(), store.currency)}</span>
               </button>
             </div>

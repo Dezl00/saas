@@ -2,13 +2,27 @@
 
 import { useState } from "react";
 import { Plus, X, Loader2 } from "lucide-react";
-import { createMenuItem } from "@/app/(dashboard)/dashboard/menu/actions";
+import { createMenuItem, updateMenuItem } from "@/app/(dashboard)/dashboard/menu/actions";
 
 type Category = { id: string; name: string };
+export type MenuItemData = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: string | number;
+  image: string | null;
+  categoryId: string;
+  sizes: { id?: string; name: string; price: string | number }[];
+  addons: { id?: string; name: string; price: string | number }[];
+};
 
-export function MenuItemForm({ categories }: { categories: Category[] }) {
-  const [sizes, setSizes] = useState<{ name: string; price: string }[]>([]);
-  const [addons, setAddons] = useState<{ name: string; price: string }[]>([]);
+export function MenuItemForm({ categories, initialData, onSuccess }: { categories: Category[], initialData?: MenuItemData, onSuccess?: () => void }) {
+  const [sizes, setSizes] = useState<{ name: string; price: string }[]>(
+    initialData?.sizes ? initialData.sizes.map(s => ({ name: s.name, price: s.price.toString() })) : []
+  );
+  const [addons, setAddons] = useState<{ name: string; price: string }[]>(
+    initialData?.addons ? initialData.addons.map(a => ({ name: a.name, price: a.price.toString() })) : []
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addSize = () => setSizes([...sizes, { name: "", price: "" }]);
@@ -35,13 +49,20 @@ export function MenuItemForm({ categories }: { categories: Category[] }) {
     formData.append("sizes", JSON.stringify(sizes));
     formData.append("addons", JSON.stringify(addons));
 
-    await createMenuItem(formData);
+    if (initialData) {
+      await updateMenuItem(initialData.id, formData);
+    } else {
+      await createMenuItem(formData);
+    }
     
     // Reset form after successful submission
-    (e.target as HTMLFormElement).reset();
-    setSizes([]);
-    setAddons([]);
+    if (!initialData) {
+      (e.target as HTMLFormElement).reset();
+      setSizes([]);
+      setAddons([]);
+    }
     setIsSubmitting(false);
+    if (onSuccess) onSuccess();
   };
 
   return (
@@ -53,6 +74,7 @@ export function MenuItemForm({ categories }: { categories: Category[] }) {
             id="categoryId"
             name="categoryId"
             required
+            defaultValue={initialData?.categoryId || ""}
             className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none"
           >
             <option value="">اختر القسم...</option>
@@ -69,6 +91,7 @@ export function MenuItemForm({ categories }: { categories: Category[] }) {
             id="name"
             name="name"
             required
+            defaultValue={initialData?.name}
             placeholder="مثال: برجر لحم مشوي"
             className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none"
           />
@@ -84,6 +107,7 @@ export function MenuItemForm({ categories }: { categories: Category[] }) {
             name="price"
             step="0.01"
             required
+            defaultValue={initialData?.price}
             placeholder="0.00"
             className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none"
           />
@@ -95,6 +119,7 @@ export function MenuItemForm({ categories }: { categories: Category[] }) {
             id="description"
             name="description"
             rows={2}
+            defaultValue={initialData?.description || ""}
             className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none"
           />
         </div>
@@ -105,6 +130,7 @@ export function MenuItemForm({ categories }: { categories: Category[] }) {
             type="url"
             id="image"
             name="image"
+            defaultValue={initialData?.image || ""}
             placeholder="https://..."
             dir="ltr"
             className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none text-left"
@@ -186,7 +212,7 @@ export function MenuItemForm({ categories }: { categories: Category[] }) {
         className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
       >
         {isSubmitting && <Loader2 className="w-5 h-5 animate-spin" />}
-        حفظ الصنف
+        {initialData ? "تحديث الصنف" : "حفظ الصنف"}
       </button>
     </form>
   );

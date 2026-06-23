@@ -104,6 +104,28 @@ export default async function SettingsPage() {
             </div>
 
             <div>
+              <label htmlFor="logo" className="block text-sm font-medium text-surface-950 mb-1">
+                شعار المتجر (رابط صورة Logo)
+              </label>
+              <div className="flex items-center gap-3">
+                {store.logo && (
+                  <div className="w-10 h-10 rounded-full border border-surface-200 overflow-hidden shrink-0">
+                    <img src={store.logo} alt="Logo" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <input
+                  type="url"
+                  id="logo"
+                  name="logo"
+                  defaultValue={store.logo || ""}
+                  placeholder="https://example.com/logo.png"
+                  dir="ltr"
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
               <label htmlFor="description" className="block text-sm font-medium text-surface-950 mb-1">
                 وصف المتجر
               </label>
@@ -209,10 +231,11 @@ export default async function SettingsPage() {
                     <input 
                       type="checkbox" 
                       name="enableWhatsappOrders" 
+                      value="on"
                       defaultChecked={store.enableWhatsappOrders}
                       className="sr-only peer" 
                     />
-                    <div className="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success-500"></div>
+                    <div className="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:end-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success-500"></div>
                     <span className="ms-3 text-sm font-medium text-surface-700">تفعيل توجيه الزبون للواتساب بعد إتمام الطلب</span>
                   </label>
                 </div>

@@ -75,6 +75,74 @@ export async function createMenuItem(formData: FormData) {
   }
 }
 
+export async function updateMenuItem(menuItemId: string, formData: FormData) {
+  const session = await auth();
+  if (!session?.user?.storeId) {
+    return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
+  const price = parseFloat(formData.get("price") as string);
+  const image = formData.get("image") as string;
+  const categoryId = formData.get("categoryId") as string;
+  const sortOrder = parseInt((formData.get("sortOrder") as string) || "0");
+
+  const sizesStr = formData.get("sizes") as string;
+  const addonsStr = formData.get("addons") as string;
+  
+  let sizes: any[] = [];
+  let addons: any[] = [];
+  try {
+    if (sizesStr) sizes = JSON.parse(sizesStr);
+    if (addonsStr) addons = JSON.parse(addonsStr);
+  } catch (e) {}
+
+  if (!name || isNaN(price) || !categoryId) {
+    return { error: "الاسم، السعر، والقسم بيانات مطلوبة" };
+  }
+
+  try {
+    const item = await prisma.menuItem.findUnique({ where: { id: menuItemId } });
+    if (item?.storeId !== session.user.storeId) return { error: "غير مصرح لك" };
+
+    const category = await prisma.category.findUnique({ where: { id: categoryId } });
+    if (category?.storeId !== session.user.storeId) return { error: "القسم المحدد غير صحيح" };
+
+    await prisma.menuItem.update({
+      where: { id: menuItemId },
+      data: {
+        name,
+        description,
+        price,
+        image: image || null,
+        sortOrder,
+        categoryId,
+        sizes: {
+          deleteMany: {},
+          create: sizes.filter(s => s.name && s.price).map(s => ({
+            name: s.name,
+            price: parseFloat(s.price),
+          }))
+        },
+        addons: {
+          deleteMany: {},
+          create: addons.filter(a => a.name && a.price).map(a => ({
+            name: a.name,
+            price: parseFloat(a.price),
+          }))
+        }
+      },
+    });
+
+    revalidatePath("/dashboard/menu");
+    return { success: "تم تحديث الصنف بنجاح" };
+  } catch (error) {
+    console.error("Update Menu Item Error:", error);
+    return { error: "حدث خطأ أثناء تحديث الصنف" };
+  }
+}
+
 export async function toggleMenuItemStatus(menuItemId: string, currentStatus: boolean) {
   const session = await auth();
   if (!session?.user?.storeId) {
