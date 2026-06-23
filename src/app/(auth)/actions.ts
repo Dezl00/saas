@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 export async function loginAction(prevState: any, formData: FormData) {
+  let shouldRedirect = false;
   try {
     const rawData = Object.fromEntries(formData);
     const validatedData = loginSchema.parse(rawData);
@@ -19,7 +20,7 @@ export async function loginAction(prevState: any, formData: FormData) {
       redirect: false,
     });
 
-    redirect("/dashboard");
+    shouldRedirect = true;
   } catch (error) {
     if (error instanceof z.ZodError) {
       const zodError = error as any;
@@ -30,17 +31,19 @@ export async function loginAction(prevState: any, formData: FormData) {
         case "CredentialsSignin":
           return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
         default:
-          return { error: "حدث خطأ أثناء تسجيل الدخول" };
+          return { error: "حدث خطأ في المصادقة: " + error.message };
       }
     }
-    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
-        throw error;
-    }
-    return { error: "حدث خطأ غير متوقع" };
+    return { error: "خطأ غير متوقع: " + (error as Error).message };
+  }
+
+  if (shouldRedirect) {
+    redirect("/dashboard");
   }
 }
 
 export async function registerAction(prevState: any, formData: FormData) {
+  let shouldRedirect = false;
   try {
     const rawData = Object.fromEntries(formData);
     const validatedData = registerSchema.parse(rawData);
@@ -80,18 +83,19 @@ export async function registerAction(prevState: any, formData: FormData) {
       redirect: false,
     });
 
-    redirect("/dashboard");
+    shouldRedirect = true;
   } catch (error) {
     if (error instanceof z.ZodError) {
       const zodError = error as any;
       return { error: zodError.errors[0].message };
     }
     if (error instanceof AuthError) {
-        return { error: "حدث خطأ أثناء تسجيل الدخول التلقائي" };
+        return { error: "خطأ مصادقة: " + error.message };
     }
-    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
-        throw error;
-    }
-    return { error: "حدث خطأ أثناء إنشاء الحساب" };
+    return { error: "خطأ داخلي: " + (error as Error).message + "\n" + (error as Error).stack };
+  }
+
+  if (shouldRedirect) {
+    redirect("/dashboard");
   }
 }
