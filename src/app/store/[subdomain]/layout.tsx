@@ -19,11 +19,14 @@ export async function generateMetadata(props: { params: Promise<{ subdomain: str
   };
 }
 
-export default async function StoreLayout(props: {
+export default async function StoreLayout({
+  children,
+  params: paramsPromise,
+}: {
   children: React.ReactNode;
   params: Promise<{ subdomain: string }>;
 }) {
-  const params = await props.params;
+  const params = await paramsPromise;
   const store = await prisma.store.findUnique({
     where: { subdomain: params.subdomain },
   });
