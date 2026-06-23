@@ -1,3 +1,5 @@
+"use client";
+
 import { Menu } from "lucide-react";
 
 interface HeaderProps {
@@ -10,7 +12,10 @@ export function Header({ title = "لوحة التحكم", userName = "المست
     <header className="bg-white border-b border-surface-200 sticky top-0 z-30">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
-          <button className="lg:hidden p-2 text-surface-800/60 hover:bg-surface-50 rounded-lg transition-colors">
+          <button 
+            onClick={() => document.dispatchEvent(new CustomEvent('toggle-sidebar'))}
+            className="lg:hidden p-2 text-surface-800/60 hover:bg-surface-50 rounded-lg transition-colors"
+          >
             <Menu className="w-6 h-6" />
           </button>
           <h1 className="text-xl font-bold text-surface-950">{title}</h1>
