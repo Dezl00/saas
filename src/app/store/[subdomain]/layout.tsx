@@ -101,11 +101,11 @@ export default async function StoreLayout({
         {/* Hero Section */}
         <section className="bg-white border-b border-surface-200 py-10 px-4">
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
-            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-full shadow-lg border-4 border-white flex items-center justify-center overflow-hidden mb-4 relative z-10">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5 relative z-10">
               {store.logo ? (
                 <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
               ) : (
-                <StoreIcon className="w-10 h-10 text-primary-600" />
+                <StoreIcon className="w-12 h-12 text-primary-600" />
               )}
             </div>
             
