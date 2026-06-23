@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 export default function proxy(req: NextRequest) {
   const hostname = req.headers.get("host") || "";
-  const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost:3000";
+  const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "menura.site";
 
   // Extract subdomain
   const subdomain = hostname
