@@ -29,6 +29,7 @@ export default function proxy(req: NextRequest) {
     subdomain === rootDomain ||
     subdomain === "localhost" ||
     hostname === rootDomain ||
+    hostname === "menura.site" ||
     hostname.startsWith("localhost") ||
     hostname.endsWith(".vercel.app")
   ) {
