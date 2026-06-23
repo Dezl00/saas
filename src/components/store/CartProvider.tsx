@@ -12,7 +12,7 @@ export type CartItem = {
 
 type CartContextType = {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
+  addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -44,17 +44,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, isMounted]);
 
-  const addItem = (newItem: Omit<CartItem, "quantity">) => {
+  const addItem = (newItem: Omit<CartItem, "quantity"> & { quantity?: number }) => {
     setItems((current) => {
       const existing = current.find((item) => item.id === newItem.id);
+      const qtyToAdd = newItem.quantity || 1;
       if (existing) {
         return current.map((item) =>
           item.id === newItem.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + qtyToAdd }
             : item
         );
       }
-      return [...current, { ...newItem, quantity: 1 }];
+      // Remove quantity from newItem before spreading to avoid type issues if needed, but it's fine
+      const { quantity, ...itemWithoutQty } = newItem;
+      return [...current, { ...itemWithoutQty, quantity: qtyToAdd }];
     });
     setIsCartOpen(true);
   };
