@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Plus, Minus, ShoppingBag, Truck, Store as StoreIcon, Loader2 } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, Truck, Store as StoreIcon, Loader2, Check } from "lucide-react";
 import { useCart } from "./CartProvider";
 import { formatPrice } from "@/lib/utils";
 import { placeOrderAction } from "@/app/store/[subdomain]/actions";
