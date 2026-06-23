@@ -48,10 +48,10 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
                 {items.map(item => (
                   <div key={item.id} className="bg-white rounded-2xl border border-surface-200 overflow-hidden hover:border-primary-200 hover:shadow-lg hover:shadow-primary-500/5 transition-all group">
                     {/* Item Image */}
-                    {item.imageUrl ? (
+                    {item.image ? (
                       <div className="aspect-video w-full overflow-hidden bg-surface-100">
                         <img 
-                          src={item.imageUrl} 
+                          src={item.image} 
                           alt={item.name} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
@@ -85,7 +85,7 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
                           id: item.id,
                           name: item.name,
                           price: Number(item.price),
-                          image: item.imageUrl
+                          image: item.image
                         }} 
                       />
                     </div>
