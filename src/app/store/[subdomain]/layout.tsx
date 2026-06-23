@@ -5,7 +5,8 @@ import { CartProvider } from "@/components/store/CartProvider";
 import { CartSidebar } from "@/components/store/CartSidebar";
 import { CartHeaderButton } from "@/components/store/CartHeaderButton";
 
-export async function generateMetadata({ params }: { params: { subdomain: string } }) {
+export async function generateMetadata(props: { params: Promise<{ subdomain: string }> }) {
+  const params = await props.params;
   const store = await prisma.store.findUnique({
     where: { subdomain: params.subdomain },
   });
@@ -18,13 +19,11 @@ export async function generateMetadata({ params }: { params: { subdomain: string
   };
 }
 
-export default async function StoreLayout({
-  children,
-  params,
-}: {
+export default async function StoreLayout(props: {
   children: React.ReactNode;
-  params: { subdomain: string };
+  params: Promise<{ subdomain: string }>;
 }) {
+  const params = await props.params;
   const store = await prisma.store.findUnique({
     where: { subdomain: params.subdomain },
   });

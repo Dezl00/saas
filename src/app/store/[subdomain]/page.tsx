@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { AddToCartButton } from "@/components/store/AddToCartButton";
 
-export default async function StorePage({ params }: { params: { subdomain: string } }) {
+export default async function StorePage(props: { params: Promise<{ subdomain: string }> }) {
+  const params = await props.params;
   const store = await prisma.store.findUnique({
     where: { subdomain: params.subdomain },
     include: {
