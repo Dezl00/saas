@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import { Toaster } from "react-hot-toast";
 
 export default async function DashboardLayout({
   children,
@@ -14,11 +15,12 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-surface-50" dir="rtl">
+    <div className="flex h-screen bg-surface-50 overflow-hidden" dir="rtl">
       <Sidebar />
       <main className="flex-1 overflow-auto flex flex-col">
         {children}
       </main>
+      <Toaster position="top-center" />
     </div>
   );
 }

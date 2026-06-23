@@ -18,7 +18,7 @@ type MenuItem = {
   addons: Addon[];
 };
 type Category = { id: string; name: string };
-type Store = { name: string; currency: string };
+type Store = { name: string; currency: string; primaryColor?: string | null; secondaryColor?: string | null };
 
 export function StorefrontView({
   store,
@@ -32,6 +32,7 @@ export function StorefrontView({
   const [activeTab, setActiveTab] = useState(categories[0]?.id || "");
   const [gridCols, setGridCols] = useState<1 | 2>(2);
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Modal State
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
@@ -128,7 +129,8 @@ export function StorefrontView({
           <div className="flex items-center gap-2">
             <button 
               onClick={() => { setToastItem(null); setIsCartOpen(true); }}
-              className="flex-1 py-2 bg-primary-600 text-white font-bold text-sm rounded-xl transition-colors hover:bg-primary-700"
+              className="flex-1 py-2 text-white font-bold text-sm rounded-xl transition-colors"
+              style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}
             >
               عرض السلة
             </button>
@@ -165,13 +167,45 @@ export function StorefrontView({
         </div>
 
         {/* Tools */}
-        <div className="flex items-center gap-1 border-s border-surface-200 ps-2">
-          <button className="w-10 h-10 bg-white border border-surface-200 flex items-center justify-center text-surface-600 hover:bg-surface-100">
+        <div className="flex items-center gap-1 border-s border-surface-200 ps-2 relative">
+          <button 
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            className={`w-10 h-10 border flex items-center justify-center transition-colors rounded-xl ${isFilterOpen ? 'bg-surface-950 text-white border-surface-950' : 'bg-white border-surface-200 text-surface-600 hover:bg-surface-100'}`}
+          >
             <Filter className="w-4 h-4" />
           </button>
+          
+          {isFilterOpen && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
+              <div className="absolute top-12 end-0 w-48 bg-white border border-surface-200 rounded-2xl shadow-xl z-50 py-2 animate-zoom-in">
+                <h4 className="px-4 py-2 text-xs font-bold text-surface-500 border-b border-surface-100 mb-1">انتقال سريع</h4>
+                <div className="max-h-64 overflow-y-auto">
+                  {categories.map(cat => (
+                    <button
+                      key={`filter-${cat.id}`}
+                      onClick={() => {
+                        setActiveTab(cat.id);
+                        setIsFilterOpen(false);
+                        const el = document.getElementById(`category-${cat.id}`);
+                        if (el) {
+                          const y = el.getBoundingClientRect().top + window.scrollY - 100;
+                          window.scrollTo({ top: y, behavior: 'smooth' });
+                        }
+                      }}
+                      className={`w-full text-start px-4 py-2.5 text-sm transition-colors ${activeTab === cat.id ? 'bg-surface-50 text-surface-950 font-bold' : 'text-surface-700 hover:bg-surface-50'}`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
           <button 
             onClick={() => setGridCols(gridCols === 1 ? 2 : 1)}
-            className="w-10 h-10 bg-white border border-surface-200 flex items-center justify-center text-surface-600 hover:bg-surface-100 sm:hidden"
+            className="w-10 h-10 bg-white border border-surface-200 flex items-center justify-center text-surface-600 hover:bg-surface-100 sm:hidden rounded-xl"
           >
             {gridCols === 1 ? <LayoutGrid className="w-4 h-4" /> : <List className="w-4 h-4" />}
           </button>
@@ -193,7 +227,7 @@ export function StorefrontView({
                   <div 
                     key={item.id} 
                     onClick={() => handleOpenProduct(item)}
-                    className="bg-white border border-surface-200 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:border-surface-400 transition-colors shadow-sm hover:shadow-md"
+                    className="bg-white border border-surface-200 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:border-surface-400 transition-colors shadow-none"
                   >
                     {item.image ? (
                       <div className="aspect-video w-full overflow-hidden bg-surface-100 border-b border-surface-200">
@@ -232,9 +266,9 @@ export function StorefrontView({
       {/* Product Modal */}
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-none p-4 animate-fade-in">
-          <div className="bg-white w-full max-w-md max-h-[85vh] flex flex-col animate-zoom-in overflow-hidden border border-surface-200 rounded-3xl shadow-2xl">
+          <div className="bg-white w-full max-w-md max-h-[85vh] flex flex-col animate-zoom-in overflow-hidden border border-surface-200 rounded-2xl shadow-2xl">
             {/* Modal Header Image */}
-            <div className="relative h-32 sm:h-40 bg-surface-100 shrink-0">
+            <div className="relative h-48 sm:h-56 bg-surface-100 shrink-0">
               {selectedProduct.image ? (
                 <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
               ) : (
@@ -312,25 +346,26 @@ export function StorefrontView({
 
             {/* Modal Footer (Quantity + Add to Cart) */}
             <div className="p-4 border-t border-surface-200 bg-white flex items-center gap-3">
-              <div className="flex items-center bg-surface-100 rounded-2xl border border-surface-200">
+              <div className="flex items-center bg-surface-100 rounded-xl border border-surface-200 h-12">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-12 h-12 flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-s-2xl transition-colors"
+                  className="w-10 h-full flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-s-xl transition-colors"
                 >
-                  <Minus className="w-5 h-5" />
+                  <Minus className="w-4 h-4" />
                 </button>
-                <span className="font-black text-lg w-8 text-center text-surface-950">{quantity}</span>
+                <span className="font-black text-lg w-6 text-center text-surface-950">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-12 h-12 flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-e-2xl transition-colors"
+                  className="w-10 h-full flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-e-xl transition-colors"
                 >
-                  <Plus className="w-5 h-5" />
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
 
               <button 
                 onClick={handleAddToCart}
-                className="flex-1 h-12 bg-surface-950 hover:bg-surface-800 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 px-4 shadow-lg shadow-surface-950/20"
+                className="flex-[2] h-12 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 px-4 shadow-lg shadow-black/10"
+                style={{ backgroundColor: store.primaryColor || '#0a0a0a' }}
               >
                 <span>إضافة</span>
                 <span className="text-surface-400 font-normal">|</span>

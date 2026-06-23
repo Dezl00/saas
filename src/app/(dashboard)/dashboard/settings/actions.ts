@@ -13,6 +13,8 @@ export async function updateStoreSettings(formData: FormData) {
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const logo = formData.get("logo") as string;
+  const primaryColor = formData.get("primaryColor") as string;
+  const secondaryColor = formData.get("secondaryColor") as string;
   const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
   const currency = formData.get("currency") as string || "EGP";
@@ -28,6 +30,8 @@ export async function updateStoreSettings(formData: FormData) {
         name,
         description,
         logo,
+        primaryColor,
+        secondaryColor,
         phone,
         address,
         currency,

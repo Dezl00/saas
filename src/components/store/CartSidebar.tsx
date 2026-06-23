@@ -8,7 +8,7 @@ import { placeOrderAction } from "@/app/store/[subdomain]/actions";
 
 type Branch = { id: string; name: string; address: string | null };
 type DeliveryArea = { id: string; name: string; fee: number };
-type StoreData = { id: string; name: string; whatsappNumber: string | null; enableWhatsappOrders: boolean; currency: string };
+type StoreData = { id: string; name: string; whatsappNumber: string | null; enableWhatsappOrders: boolean; currency: string; primaryColor?: string | null; secondaryColor?: string | null };
 
 export function CartSidebar({
   store,
@@ -28,6 +28,7 @@ export function CartSidebar({
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   if (!isCartOpen) return null;
 
@@ -53,8 +54,24 @@ export function CartSidebar({
 
     setIsSubmitting(true);
     setError("");
+    setValidationErrors({});
 
     const formData = new FormData(e.currentTarget);
+    const customerName = formData.get("customerName") as string;
+    const customerPhone = formData.get("customerPhone") as string;
+    const customerAddress = formData.get("customerAddress") as string;
+    
+    const newErrors: Record<string, string> = {};
+    if (!customerName || customerName.trim() === "") newErrors.customerName = "يرجى إدخال الاسم كامل";
+    if (!customerPhone || customerPhone.replace(/\D/g, "").length !== 11) newErrors.customerPhone = "رقم الهاتف يجب أن يتكون من 11 رقم بالضبط";
+    if (deliveryType === "DELIVERY" && (!customerAddress || customerAddress.trim() === "")) newErrors.customerAddress = "يرجى إدخال العنوان التفصيلي";
+    
+    if (Object.keys(newErrors).length > 0) {
+      setValidationErrors(newErrors);
+      setIsSubmitting(false);
+      return;
+    }
+
     formData.append("deliveryType", deliveryType);
     formData.append("selectedArea", selectedArea);
     formData.append("selectedBranch", selectedBranch);
@@ -196,33 +213,33 @@ export function CartSidebar({
               ))
             ) : (
               // Checkout Form
-              <form id="checkout-form" onSubmit={handleSubmitOrder} className="space-y-6 animate-fade-in pb-10">
+              <form id="checkout-form" onSubmit={handleSubmitOrder} noValidate className="space-y-6 animate-fade-in pb-10">
                 {error && (
-                  <div className="p-3 bg-error-50 border border-error-200 text-error-600 text-sm font-bold">
+                  <div className="p-3 bg-error-50 border border-error-200 text-error-600 rounded-xl text-sm font-bold">
                     {error}
                   </div>
                 )}
 
                 {/* Toggle Delivery / Pickup */}
-                <div className="flex bg-surface-100 p-1 border border-surface-200">
+                <div className="flex bg-surface-100 p-1.5 rounded-2xl">
                   <button
                     type="button"
-                    onClick={() => setDeliveryType("DELIVERY")}
-                    className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-colors ${
-                      deliveryType === "DELIVERY" ? "bg-white border border-surface-200 text-primary-600 shadow-sm" : "text-surface-500 hover:text-surface-950"
+                    onClick={() => { setDeliveryType("DELIVERY"); setValidationErrors({}); }}
+                    className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-all rounded-xl ${
+                      deliveryType === "DELIVERY" ? "bg-white text-surface-950" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
                     }`}
                   >
-                    <Truck className="w-4 h-4" />
+                    <Truck className={`w-4 h-4 ${deliveryType === "DELIVERY" ? "text-primary-600" : ""}`} />
                     توصيل للمنزل
                   </button>
                   <button
                     type="button"
-                    onClick={() => setDeliveryType("PICKUP")}
-                    className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-colors ${
-                      deliveryType === "PICKUP" ? "bg-white border border-surface-200 text-primary-600 shadow-sm" : "text-surface-500 hover:text-surface-950"
+                    onClick={() => { setDeliveryType("PICKUP"); setValidationErrors({}); }}
+                    className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-all rounded-xl ${
+                      deliveryType === "PICKUP" ? "bg-white text-surface-950" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
                     }`}
                   >
-                    <StoreIcon className="w-4 h-4" />
+                    <StoreIcon className={`w-4 h-4 ${deliveryType === "PICKUP" ? "text-primary-600" : ""}`} />
                     استلام من الفرع
                   </button>
                 </div>
@@ -267,24 +284,27 @@ export function CartSidebar({
 
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-bold text-surface-950 mb-1 block">الاسم الكريم *</label>
-                    <input name="customerName" required className="w-full p-3 bg-white border border-surface-200 focus:border-primary-500 outline-none" placeholder="اكتب اسمك" />
+                    <label className="text-sm font-bold text-surface-950 mb-1 block">الاسم كامل *</label>
+                    <input name="customerName" className={`w-full p-3 bg-white border rounded-xl outline-none transition-colors ${validationErrors.customerName ? 'border-error-500 focus:border-error-500 bg-error-50' : 'border-surface-200 focus:border-primary-500'}`} placeholder="اكتب اسمك كامل" />
+                    {validationErrors.customerName && <p className="text-error-500 text-xs mt-1 font-bold">{validationErrors.customerName}</p>}
                   </div>
                   <div>
                     <label className="text-sm font-bold text-surface-950 mb-1 block">رقم الهاتف *</label>
-                    <input name="customerPhone" required type="tel" dir="ltr" className="w-full p-3 bg-white border border-surface-200 focus:border-primary-500 outline-none text-end" placeholder="01xxxxxxxxx" />
+                    <input name="customerPhone" type="tel" dir="ltr" className={`w-full p-3 bg-white border rounded-xl outline-none text-end transition-colors ${validationErrors.customerPhone ? 'border-error-500 focus:border-error-500 bg-error-50' : 'border-surface-200 focus:border-primary-500'}`} placeholder="01xxxxxxxxx" />
+                    {validationErrors.customerPhone && <p className="text-error-500 text-xs mt-1 font-bold">{validationErrors.customerPhone}</p>}
                   </div>
                   
                   {deliveryType === "DELIVERY" && (
                     <div>
                       <label className="text-sm font-bold text-surface-950 mb-1 block">العنوان التفصيلي *</label>
-                      <textarea name="customerAddress" required rows={2} className="w-full p-3 bg-white border border-surface-200 focus:border-primary-500 outline-none" placeholder="الشارع، العمارة، الدور، الشقة..." />
+                      <textarea name="customerAddress" rows={2} className={`w-full p-3 bg-white border rounded-xl outline-none transition-colors ${validationErrors.customerAddress ? 'border-error-500 focus:border-error-500 bg-error-50' : 'border-surface-200 focus:border-primary-500'}`} placeholder="الشارع، العمارة، الدور، الشقة..." />
+                      {validationErrors.customerAddress && <p className="text-error-500 text-xs mt-1 font-bold">{validationErrors.customerAddress}</p>}
                     </div>
                   )}
 
                   <div>
                     <label className="text-sm font-bold text-surface-950 mb-1 block">ملاحظات إضافية (اختياري)</label>
-                    <textarea name="notes" rows={2} className="w-full p-3 bg-white border border-surface-200 focus:border-primary-500 outline-none" placeholder="أي تفاصيل إضافية للطلب..." />
+                    <textarea name="notes" rows={2} className="w-full p-3 bg-white border border-surface-200 rounded-xl focus:border-primary-500 outline-none transition-colors" placeholder="أي تفاصيل إضافية للطلب..." />
                   </div>
                 </div>
 
@@ -317,7 +337,8 @@ export function CartSidebar({
             {!isCheckout ? (
               <button 
                 onClick={() => setIsCheckout(true)}
-                className="w-full py-4 bg-primary-600 text-white font-bold hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-4 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2"
+                style={{ backgroundColor: store?.primaryColor || 'var(--color-primary-600)' }}
               >
                 المتابعة لإتمام الطلب
               </button>
@@ -326,7 +347,8 @@ export function CartSidebar({
                 type="submit"
                 form="checkout-form"
                 disabled={isSubmitting}
-                className="w-full py-4 bg-primary-600 text-white font-bold hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-4 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                style={{ backgroundColor: store?.primaryColor || 'var(--color-primary-600)' }}
               >
                 {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
                 {isSubmitting ? "جاري الإرسال..." : "تأكيد وإرسال الطلب"}

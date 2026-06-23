@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, X, Loader2 } from "lucide-react";
 import { createMenuItem, updateMenuItem } from "@/app/(dashboard)/dashboard/menu/actions";
+import toast from "react-hot-toast";
 
 type Category = { id: string; name: string };
 export type MenuItemData = {
@@ -49,20 +50,27 @@ export function MenuItemForm({ categories, initialData, onSuccess }: { categorie
     formData.append("sizes", JSON.stringify(sizes));
     formData.append("addons", JSON.stringify(addons));
 
-    if (initialData) {
-      await updateMenuItem(initialData.id, formData);
-    } else {
-      await createMenuItem(formData);
+    try {
+      if (initialData) {
+        await updateMenuItem(initialData.id, formData);
+        toast.success("تم تحديث الصنف بنجاح");
+      } else {
+        await createMenuItem(formData);
+        toast.success("تمت إضافة الصنف بنجاح");
+      }
+      
+      // Reset form after successful submission
+      if (!initialData) {
+        (e.target as HTMLFormElement).reset();
+        setSizes([]);
+        setAddons([]);
+      }
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      toast.error("حدث خطأ أثناء الحفظ");
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    // Reset form after successful submission
-    if (!initialData) {
-      (e.target as HTMLFormElement).reset();
-      setSizes([]);
-      setAddons([]);
-    }
-    setIsSubmitting(false);
-    if (onSuccess) onSuccess();
   };
 
   return (
