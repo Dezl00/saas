@@ -249,8 +249,13 @@ export async function bulkDeleteMenuItems(menuItemIds: string[]) {
 
     revalidatePath("/dashboard/menu");
     return { success: `تم حذف ${items.length} صنف بنجاح` };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Bulk Delete Menu Items Error:", error);
-    return { error: "حدث خطأ أثناء الحذف الجماعي للأصناف" };
+    
+    if (error.code === 'P2003') {
+      return { error: "لا يمكن حذف بعض الأصناف لأنها مرتبطة بطلبات سابقة." };
+    }
+    
+    return { error: `حدث خطأ أثناء الحذف: ${error.message || "سبب غير معروف"}` };
   }
 }
