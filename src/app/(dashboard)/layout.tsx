@@ -22,6 +22,14 @@ export default async function DashboardLayout({
     redirect("/admin");
   }
 
+  if (session.user.role === "OWNER" && !isAdminImpersonating) {
+    const { prisma } = await import("@/lib/prisma");
+    const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+    if (user && user.onboardingStep < 4) {
+      redirect("/onboarding");
+    }
+  }
+
   return (
     <div className="flex h-screen bg-surface-50 overflow-hidden" dir="rtl">
       <Sidebar />

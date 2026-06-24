@@ -1,12 +1,103 @@
 "use client";
 
-import { useActionState } from "react";
-import { registerAction } from "../actions";
+import { useActionState, useState, useEffect } from "react";
+import { registerAction, verifyOtpAction, loginAction } from "../actions";
 import Link from "next/link";
-import { ArrowRight, Loader2, Mail, Lock, User, Store } from "lucide-react";
+import { ArrowRight, Loader2, Mail, Lock, User, Store, KeyRound } from "lucide-react";
 
 export default function RegisterPage() {
-  const [state, formAction, isPending] = useActionState(registerAction, null);
+  const [registerState, registerFormAction, isRegisterPending] = useActionState(registerAction, null);
+  
+  // State to hold credentials for auto-login after OTP
+  const [savedEmail, setSavedEmail] = useState("");
+  const [savedPassword, setSavedPassword] = useState("");
+  
+  const [otpError, setOtpError] = useState("");
+  const [isOtpPending, setIsOtpPending] = useState(false);
+
+  // When register succeeds, it returns requiresOtp
+  const requiresOtp = registerState?.requiresOtp;
+
+  const handleOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setOtpError("");
+    setIsOtpPending(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const otp = formData.get("otp") as string;
+    
+    try {
+      const result = await verifyOtpAction(savedEmail, otp);
+      if (result?.error) {
+        setOtpError(result.error);
+        setIsOtpPending(false);
+      } else if (result?.success) {
+        // OTP verified successfully! Now auto-login.
+        const loginData = new FormData();
+        loginData.append("email", savedEmail);
+        loginData.append("password", savedPassword);
+        
+        await loginAction(null, loginData);
+        // loginAction handles the redirect
+      }
+    } catch (error: any) {
+      setOtpError("حدث خطأ غير متوقع");
+      setIsOtpPending(false);
+    }
+  };
+
+  if (requiresOtp) {
+    return (
+      <div className="animate-fade-in">
+        <div className="mb-6 text-center">
+          <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <KeyRound className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-bold text-surface-950">تأكيد البريد الإلكتروني</h2>
+          <p className="mt-2 text-sm text-surface-800/60">
+            أرسلنا كود تحقق مكون من 4 أرقام إلى<br/>
+            <strong className="text-surface-950" dir="ltr">{savedEmail}</strong>
+          </p>
+        </div>
+
+        <form onSubmit={handleOtpSubmit} className="space-y-4">
+          {otpError && (
+            <div className="p-3 text-sm font-medium text-error-500 bg-error-500/10 rounded-xl border border-error-500/20 text-center animate-slide-up">
+              {otpError}
+            </div>
+          )}
+
+          <div>
+            <label htmlFor="otp" className="block text-sm font-medium text-surface-950 mb-1 text-center">
+              أدخل كود التحقق
+            </label>
+            <input
+              id="otp"
+              name="otp"
+              type="text"
+              required
+              maxLength={4}
+              className="block w-full px-3 py-3 text-center text-2xl tracking-[1em] bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+              placeholder="----"
+              dir="ltr"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isOtpPending}
+            className="w-full flex justify-center items-center py-3 px-4 mt-6 border border-transparent rounded-xl shadow-lg shadow-primary-500/25 text-sm font-bold text-white bg-gradient-to-l from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isOtpPending ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <>تأكيد الدخول</>
+            )}
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="animate-fade-in">
@@ -17,19 +108,21 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      <form action={formAction} className="space-y-4">
-        {state?.error && (
+      <form action={registerFormAction} className="space-y-4" onSubmit={(e) => {
+        // Save credentials to state before form submission for auto-login later
+        const formData = new FormData(e.currentTarget);
+        setSavedEmail(formData.get("email") as string);
+        setSavedPassword(formData.get("password") as string);
+      }}>
+        {registerState?.error && (
           <div className="p-3 text-sm font-medium text-error-500 bg-error-500/10 rounded-xl border border-error-500/20 text-center animate-slide-up">
-            {state.error}
+            {registerState.error}
           </div>
         )}
 
         <div className="space-y-4">
           <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-surface-950 mb-1"
-            >
+            <label htmlFor="name" className="block text-sm font-medium text-surface-950 mb-1">
               الاسم بالكامل
             </label>
             <div className="relative">
@@ -48,10 +141,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-surface-950 mb-1"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-surface-950 mb-1">
               البريد الإلكتروني
             </label>
             <div className="relative">
@@ -72,10 +162,24 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-surface-950 mb-1"
-            >
+            <label htmlFor="phone" className="block text-sm font-medium text-surface-950 mb-1">
+              رقم الهاتف
+            </label>
+            <div className="relative">
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                required
+                className="block w-full px-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                placeholder="01xxxxxxxxx"
+                dir="ltr"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-surface-950 mb-1">
               كلمة المرور
             </label>
             <div className="relative">
@@ -96,16 +200,10 @@ export default function RegisterPage() {
           </div>
 
           <div className="pt-2 border-t border-surface-200">
-            <h3 className="text-sm font-bold text-surface-950 mb-3">
-              بيانات المتجر
-            </h3>
-            
+            <h3 className="text-sm font-bold text-surface-950 mb-3">بيانات المتجر</h3>
             <div className="space-y-4">
               <div>
-                <label
-                  htmlFor="storeName"
-                  className="block text-sm font-medium text-surface-950 mb-1"
-                >
+                <label htmlFor="storeName" className="block text-sm font-medium text-surface-950 mb-1">
                   اسم المتجر
                 </label>
                 <div className="relative">
@@ -124,10 +222,7 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label
-                  htmlFor="storeType"
-                  className="block text-sm font-medium text-surface-950 mb-1"
-                >
+                <label htmlFor="storeType" className="block text-sm font-medium text-surface-950 mb-1">
                   نوع النشاط
                 </label>
                 <select
@@ -148,10 +243,10 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isRegisterPending}
           className="w-full flex justify-center items-center py-3 px-4 mt-6 border border-transparent rounded-xl shadow-lg shadow-primary-500/25 text-sm font-bold text-white bg-gradient-to-l from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all btn-shine disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {isPending ? (
+          {isRegisterPending ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             <>
@@ -164,10 +259,7 @@ export default function RegisterPage() {
         <div className="mt-4 text-center">
           <p className="text-sm text-surface-800/60">
             لديك حساب بالفعل؟{" "}
-            <Link
-              href="/login"
-              className="font-bold text-primary-600 hover:text-primary-500 transition-colors"
-            >
+            <Link href="/login" className="font-bold text-primary-600 hover:text-primary-500 transition-colors">
               تسجيل الدخول
             </Link>
           </p>
