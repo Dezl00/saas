@@ -29,7 +29,7 @@ export async function scanMenuWithAI(formData: FormData) {
     const genAI = new GoogleGenerativeAI(apiKey);
     
     // Models to try in order (lighter/cheaper first)
-    const modelsToTry = ["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-1.5-flash"];
+    const modelsToTry = ["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash"];
 
     const prompt = `أنت مساعد ذكي متخصص في قراءة قوائم الطعام (Menus). 
 قم بتحليل صورة قائمة الطعام المرفقة واستخراج جميع الأقسام والأصناف والأسعار منها بدقة عالية. 
@@ -74,8 +74,13 @@ export async function scanMenuWithAI(formData: FormData) {
       } catch (modelError: any) {
         lastError = modelError;
         console.error(`Model ${modelName} failed:`, modelError.message);
-        // If it's a quota error, try the next model
-        if (modelError.message?.includes("429") || modelError.message?.includes("quota")) {
+        // If it's a quota or model-not-found error, try the next model
+        if (
+          modelError.message?.includes("429") || 
+          modelError.message?.includes("quota") ||
+          modelError.message?.includes("404") ||
+          modelError.message?.includes("not found")
+        ) {
           continue;
         }
         // For non-quota errors, throw immediately
@@ -84,6 +89,10 @@ export async function scanMenuWithAI(formData: FormData) {
     }
 
     if (!responseText) {
+      const errMsg = lastError?.message || "";
+      if (errMsg.includes("429") || errMsg.includes("quota")) {
+        throw new Error("تم تجاوز حصة الاستخدام المجانية. يرجى تفعيل الفوترة (Billing) في Google Cloud Console أو المحاولة لاحقاً.");
+      }
       throw lastError || new Error("فشل الاتصال بجميع النماذج المتاحة");
     }
     
