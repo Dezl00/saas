@@ -57,7 +57,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">اسم المتجر</label>
-            <input type="text" name="name" defaultValue={storeName} required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
+            <input type="text" name="name" defaultValue={storeName} required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" />
             <p className="text-xs text-surface-500 mt-1">سيتم استخدام هذا الاسم لتوليد رابط متجرك تلقائياً.</p>
           </div>
 
@@ -70,7 +70,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
           </div>
 
           <div className="pt-6 flex gap-3">
-            <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center">
+            <button type="submit" disabled={isPending} className="flex-1 bg-surface-950 hover:bg-surface-900 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
               {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "التالي"}
             </button>
             <button type="button" onClick={() => skipStep(1)} className="px-6 bg-surface-100 hover:bg-surface-200 text-surface-700 py-3 rounded-xl font-bold transition-colors">
@@ -90,21 +90,21 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">رقم الهاتف العام</label>
-            <input type="text" name="phone" placeholder="مثال: 01xxxxxxxxx" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
+            <input type="text" name="phone" placeholder="مثال: 01xxxxxxxxx" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" dir="ltr" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">رقم الواتساب (لاستقبال الطلبات)</label>
-            <input type="text" name="whatsappNumber" placeholder="مع كود الدولة مثل +20" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
+            <input type="text" name="whatsappNumber" placeholder="مع كود الدولة مثل +20" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" dir="ltr" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">العنوان الرئيسي</label>
-            <input type="text" name="address" placeholder="مثال: شارع النيل، القاهرة" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
+            <input type="text" name="address" placeholder="مثال: شارع النيل، القاهرة" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" />
           </div>
 
           <div className="pt-6 flex gap-3">
-            <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center">
+            <button type="submit" disabled={isPending} className="flex-1 bg-surface-950 hover:bg-surface-900 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
               {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "التالي"}
             </button>
             <button type="button" onClick={() => skipStep(2)} className="px-6 bg-surface-100 hover:bg-surface-200 text-surface-700 py-3 rounded-xl font-bold transition-colors">
@@ -124,7 +124,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">اسم القسم</label>
-            <input type="text" name="categoryName" placeholder="مثال: المشويات، المشروبات الباردة" required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
+            <input type="text" name="categoryName" placeholder="مثال: المشويات، المشروبات الباردة" required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" />
           </div>
 
           <div className="bg-primary-50 p-4 rounded-xl border border-primary-100 mt-4">
@@ -134,7 +134,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
           </div>
 
           <div className="pt-6 flex gap-3">
-            <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center">
+            <button type="submit" disabled={isPending} className="flex-1 bg-surface-950 hover:bg-surface-900 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
               {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "إنهاء التهيئة"}
             </button>
             <button type="button" onClick={() => skipStep(3)} className="px-6 bg-surface-100 hover:bg-surface-200 text-surface-700 py-3 rounded-xl font-bold transition-colors">
@@ -173,7 +173,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
           </div>
 
           <div className="pt-8">
-            <button onClick={() => finishOnboarding()} className="w-full bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center text-lg shadow-lg shadow-primary-500/25">
+            <button onClick={() => finishOnboarding()} className="w-full bg-surface-950 hover:bg-surface-900 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center text-lg">
               الدخول للوحة التحكم
               <ArrowLeft className="ms-2 w-5 h-5" />
             </button>
