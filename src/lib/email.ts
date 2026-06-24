@@ -3,18 +3,18 @@ import nodemailer from "nodemailer";
 // Using a standard SMTP transporter. 
 // For production, these should be environment variables.
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: parseInt(process.env.SMTP_PORT || "587"),
-  secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
+  host: process.env.SMTP_HOST || "smtp.hostinger.com",
+  port: parseInt(process.env.SMTP_PORT || "465"),
+  secure: process.env.SMTP_SECURE !== "false", // default to true for 465
   auth: {
-    user: process.env.SMTP_USER,
+    user: process.env.SMTP_USER || "info@menura.site",
     pass: process.env.SMTP_PASS,
   },
 });
 
 export async function sendOTP(email: string, otpCode: string) {
-  // If no SMTP user is provided (e.g. localhost testing without env vars), we just log it
-  if (!process.env.SMTP_USER) {
+  // If no SMTP password is provided, we just log it to prevent crashing
+  if (!process.env.SMTP_PASS) {
     console.log(`\n\n========================================`);
     console.log(`[MOCK EMAIL] OTP for ${email} is: ${otpCode}`);
     console.log(`========================================\n\n`);
