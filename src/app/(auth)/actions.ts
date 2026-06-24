@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { sendOTP } from "@/lib/email";
 
 export async function loginAction(prevState: any, formData: FormData) {
   let shouldRedirect = false;
@@ -22,6 +23,7 @@ export async function loginAction(prevState: any, formData: FormData) {
 
     shouldRedirect = true;
   } catch (error) {
+    console.error("LOGIN ERROR:", error);
     if (error instanceof z.ZodError) {
       const zodError = error as any;
       return { error: zodError.errors[0].message };
@@ -37,7 +39,7 @@ export async function loginAction(prevState: any, formData: FormData) {
           return { error: "حدث خطأ في المصادقة: " + error.message };
       }
     }
-    return { error: "خطأ غير متوقع: " + (error as Error).message };
+    return { error: "خطأ غير متوقع: " + (error instanceof Error ? error.message : String(error)) };
   }
 
   if (shouldRedirect) {
@@ -98,7 +100,6 @@ export async function registerAction(prevState: any, formData: FormData) {
       });
     }
 
-    const { sendOTP } = await import("@/lib/email");
     const sent = await sendOTP(validatedData.email, otpCode);
     if (!sent) {
       return { error: "حدث خطأ أثناء إرسال كود التحقق" };
@@ -106,11 +107,12 @@ export async function registerAction(prevState: any, formData: FormData) {
 
     return { requiresOtp: true, email: validatedData.email };
   } catch (error) {
+    console.error("REGISTER ERROR:", error);
     if (error instanceof z.ZodError) {
       const zodError = error as any;
       return { error: zodError.errors[0].message };
     }
-    return { error: "خطأ داخلي: " + (error as Error).message };
+    return { error: "خطأ داخلي: " + (error instanceof Error ? error.message : String(error)) };
   }
 }
 
