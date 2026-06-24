@@ -27,7 +27,9 @@ export async function scanMenuWithAI(formData: FormData) {
     const base64Data = buffer.toString("base64");
     
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    
+    // Models to try in order (lighter/cheaper first)
+    const modelsToTry = ["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-1.5-flash"];
 
     const prompt = `أنت مساعد ذكي متخصص في قراءة قوائم الطعام (Menus). 
 قم بتحليل صورة قائمة الطعام المرفقة واستخراج جميع الأقسام والأصناف والأسعار منها بدقة عالية. 
@@ -60,8 +62,30 @@ export async function scanMenuWithAI(formData: FormData) {
       },
     ];
 
-    const result = await model.generateContent([prompt, ...imageParts]);
-    const responseText = result.response.text();
+    let responseText = "";
+    let lastError: any = null;
+
+    for (const modelName of modelsToTry) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent([prompt, ...imageParts]);
+        responseText = result.response.text();
+        break; // Success, exit loop
+      } catch (modelError: any) {
+        lastError = modelError;
+        console.error(`Model ${modelName} failed:`, modelError.message);
+        // If it's a quota error, try the next model
+        if (modelError.message?.includes("429") || modelError.message?.includes("quota")) {
+          continue;
+        }
+        // For non-quota errors, throw immediately
+        throw modelError;
+      }
+    }
+
+    if (!responseText) {
+      throw lastError || new Error("فشل الاتصال بجميع النماذج المتاحة");
+    }
     
     // تنظيف النص لاحتمال وجود علامات markdown
     const cleanText = responseText.replace(/```json/gi, "").replace(/```/g, "").trim();
