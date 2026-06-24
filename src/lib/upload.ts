@@ -1,7 +1,10 @@
 import { v2 as cloudinary } from 'cloudinary';
 
-// Cloudinary config is automatically loaded from process.env.CLOUDINARY_URL
-
+cloudinary.config({
+  cloud_name: 'dw7senbmg',
+  api_key: '158265941332155',
+  api_secret: 'mBJcsqsgRlp9nuR0rMAquNp6E8s'
+});
 export async function uploadImageToCloudinary(file: File): Promise<string> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
