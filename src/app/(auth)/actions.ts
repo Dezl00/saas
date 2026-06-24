@@ -10,20 +10,25 @@ import { z } from "zod";
 import { sendOTP } from "@/lib/email";
 
 export async function loginAction(prevState: any, formData: FormData) {
-  let shouldRedirect = false;
   try {
     const rawData = Object.fromEntries(formData);
     const validatedData = loginSchema.parse(rawData);
 
+    // Get user to determine role for redirect
+    const user = await prisma.user.findUnique({
+      where: { email: validatedData.email },
+    });
+
+    const redirectTo = user?.role === "ADMIN" ? "/admin" : "/dashboard";
+
     await signIn("credentials", {
       email: validatedData.email,
       password: validatedData.password,
-      redirect: false,
+      redirectTo,
     });
 
-    shouldRedirect = true;
+    // signIn throws a redirect error on success, so code here is not reached.
   } catch (error) {
-    console.error("LOGIN ERROR:", error);
     if (error instanceof z.ZodError) {
       const zodError = error as any;
       return { error: zodError.errors[0].message };
@@ -39,16 +44,8 @@ export async function loginAction(prevState: any, formData: FormData) {
           return { error: "حدث خطأ في المصادقة: " + error.message };
       }
     }
-    return { error: "خطأ غير متوقع: " + (error instanceof Error ? error.message : String(error)) };
-  }
-
-  if (shouldRedirect) {
-    const session = await auth();
-    if (session?.user?.role === "ADMIN") {
-      redirect("/admin");
-    } else {
-      redirect("/dashboard");
-    }
+    // Rethrow all other errors (including Next.js NEXT_REDIRECT error)
+    throw error;
   }
 }
 
