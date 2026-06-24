@@ -28,8 +28,8 @@ export async function scanMenuWithAI(formData: FormData) {
     
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // Models to try in order - using the cheapest/most generous models first
-    const modelsToTry = ["gemini-1.5-flash-8b", "gemini-1.5-flash"];
+    // Models to try in order - using the lightest models first
+    const modelsToTry = ["gemini-2.5-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash"];
 
     const prompt = `أنت مساعد ذكي متخصص في قراءة قوائم الطعام (Menus). 
 قم بتحليل صورة قائمة الطعام المرفقة واستخراج جميع الأقسام والأصناف والأسعار منها بدقة عالية. 
