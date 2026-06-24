@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, startTransition } from "react";
 import { registerAction, verifyOtpAction, loginAction } from "../actions";
 import Link from "next/link";
 import { ArrowRight, Loader2, Mail, Lock, User, KeyRound, Eye, EyeOff } from "lucide-react";
@@ -38,8 +38,9 @@ export default function RegisterPage() {
         loginData.append("email", savedEmail);
         loginData.append("password", savedPassword);
         
-        await loginAction(null, loginData);
-        // loginAction handles the redirect
+        startTransition(() => {
+          loginAction(null, loginData);
+        });
       }
     } catch (error: any) {
       setOtpError("حدث خطأ غير متوقع");

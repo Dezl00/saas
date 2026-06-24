@@ -59,8 +59,8 @@ export default function LoginPage() {
                 كلمة المرور
               </label>
               <Link
-                href="#"
-                className="text-xs font-medium text-surface-600 hover:text-surface-900 transition-colors"
+                href="/forgot-password"
+                className="text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors"
               >
                 نسيت كلمة المرور؟
               </Link>

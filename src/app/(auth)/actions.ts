@@ -44,8 +44,22 @@ export async function loginAction(prevState: any, formData: FormData) {
           return { error: "حدث خطأ في المصادقة: " + error.message };
       }
     }
-    // Rethrow all other errors (including Next.js NEXT_REDIRECT error)
-    throw error;
+    // Check if it's a NEXT_REDIRECT error thrown by Next.js or Auth.js
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      throw error;
+    }
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "digest" in error &&
+      typeof (error as any).digest === "string" &&
+      (error as any).digest.startsWith("NEXT_REDIRECT")
+    ) {
+      throw error;
+    }
+
+    // Return any other unexpected error safely to avoid 500 Internal Server Error
+    return { error: "خطأ غير متوقع: " + (error instanceof Error ? error.message : String(error)) };
   }
 }
 

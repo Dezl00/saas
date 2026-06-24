@@ -28,10 +28,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user || !user.password) return null;
         if (!user.isVerified) throw new Error("UNVERIFIED");
 
-        const isValid = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        );
+        let isValid = false;
+        try {
+          isValid = await bcrypt.compare(
+            credentials.password as string,
+            user.password
+          );
+        } catch (e) {
+          console.error("Bcrypt compare error:", e);
+          return null;
+        }
 
         if (!isValid) return null;
 
