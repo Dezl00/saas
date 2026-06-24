@@ -14,6 +14,7 @@ type ParsedItem = {
   name: string;
   description: string;
   price: number;
+  sizes?: { name: string; price: number }[];
   selected?: boolean; // added for UI
 };
 
@@ -326,6 +327,16 @@ export function AIMenuScanner() {
                                 </div>
                                 {item.description && (
                                   <p className="text-xs text-surface-500 mt-1">{item.description}</p>
+                                )}
+                                {item.sizes && item.sizes.length > 0 && (
+                                  <div className="mt-2 flex flex-wrap gap-2">
+                                    {item.sizes.map((size, sizeIndex) => (
+                                      <div key={sizeIndex} className="bg-purple-50 border border-purple-100 rounded-lg px-2 py-1 flex items-center gap-2 text-xs">
+                                        <span className="text-purple-700 font-medium">{size.name}</span>
+                                        <span className="text-purple-900 font-bold">{size.price}</span>
+                                      </div>
+                                    ))}
+                                  </div>
                                 )}
                               </div>
                             </div>

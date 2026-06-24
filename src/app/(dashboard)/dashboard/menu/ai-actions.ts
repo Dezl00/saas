@@ -35,6 +35,7 @@ export async function scanMenuWithAI(formData: FormData) {
 قم بتحليل صورة قائمة الطعام المرفقة واستخراج جميع الأقسام والأصناف والأسعار منها بدقة عالية. 
 إذا وجدت وصفاً للصنف قم بإضافته، وإذا لم تجد اتركه فارغاً. 
 تأكد من أن الأسعار أرقام صحيحة (أو عشرية) بدون رموز العملة.
+إذا كان للصنف أحجام مختلفة بأسعار مختلفة (مثل: صغير، وسط، كبير)، ضع السعر الأساسي (أو الأصغر) في حقل price، وأضف مصفوفة sizes تحتوي على اسم الحجم وسعره. إذا لم يكن هناك أحجام، اترك المصفوفة فارغة.
 
 أرجع النتيجة بصيغة JSON فقط، بدون أي نصوص إضافية وبدون علامات \`\`\`json.
 يجب أن يكون الـ JSON بهذا الهيكل تماماً:
@@ -46,7 +47,11 @@ export async function scanMenuWithAI(formData: FormData) {
         {
           "name": "اسم الصنف",
           "description": "وصف الصنف إن وجد",
-          "price": 100
+          "price": 100,
+          "sizes": [
+            { "name": "وسط", "price": 150 },
+            { "name": "كبير", "price": 200 }
+          ]
         }
       ]
     }
@@ -156,21 +161,29 @@ export async function importAIMenuItems(parsedData: any) {
       }
 
       if (categoryData.items && Array.isArray(categoryData.items)) {
-        const itemsToCreate = categoryData.items
-          .filter((item: any) => item.name && typeof item.price === "number")
-          .map((item: any) => ({
-            name: item.name,
-            description: item.description || null,
-            price: item.price,
-            categoryId: category!.id,
-            storeId,
-          }));
+        for (const item of categoryData.items) {
+          if (!item.name || typeof item.price !== "number") continue;
+          
+          const sizesData = Array.isArray(item.sizes) ? item.sizes.filter((s: any) => s.name && s.price).map((s: any) => ({
+            name: s.name,
+            price: Number(s.price)
+          })) : [];
 
-        if (itemsToCreate.length > 0) {
-          await prisma.menuItem.createMany({
-            data: itemsToCreate,
+          await prisma.menuItem.create({
+            data: {
+              name: item.name,
+              description: item.description || null,
+              price: item.price,
+              categoryId: category!.id,
+              storeId,
+              ...(sizesData.length > 0 && {
+                sizes: {
+                  create: sizesData
+                }
+              })
+            }
           });
-          addedItemsCount += itemsToCreate.length;
+          addedItemsCount++;
         }
       }
     }
