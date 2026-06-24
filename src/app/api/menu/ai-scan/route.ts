@@ -94,7 +94,7 @@ export async function POST(req: Request) {
       if (errMsg.includes("503") || errMsg.includes("Service Unavailable")) {
         return NextResponse.json({ error: "السيرفرات تواجه ضغطاً عالياً حالياً. يرجى المحاولة بعد قليل." }, { status: 503 });
       }
-      return NextResponse.json({ error: "لم نتمكن من تحليل الصورة بسبب ضغط مؤقت، يرجى المحاولة مرة أخرى." }, { status: 500 });
+      return NextResponse.json({ error: `خطأ من الذكاء الاصطناعي: ${errMsg}` }, { status: 500 });
     }
     
     // تنظيف النص لاحتمال وجود علامات markdown
