@@ -14,10 +14,12 @@ export default async function OnboardingPage({ searchParams }: { searchParams: {
     include: { store: true }
   });
 
-  if (!user || user.onboardingStep >= 4) {
-    if (searchParams.step !== "4") {
-      redirect("/dashboard");
-    }
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.onboardingStep >= 4 && searchParams.step !== "4") {
+    redirect("/dashboard");
   }
 
   const currentStep = searchParams.step ? parseInt(searchParams.step) : user.onboardingStep || 1;
