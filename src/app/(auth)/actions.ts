@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/lib/auth";
+import { signIn, auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { loginSchema, registerSchema } from "@/lib/validations";
 import bcrypt from "bcryptjs";
@@ -38,7 +38,12 @@ export async function loginAction(prevState: any, formData: FormData) {
   }
 
   if (shouldRedirect) {
-    redirect("/dashboard");
+    const session = await auth();
+    if (session?.user?.role === "ADMIN") {
+      redirect("/admin");
+    } else {
+      redirect("/dashboard");
+    }
   }
 }
 

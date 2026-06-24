@@ -1,9 +1,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Header } from "@/components/dashboard/Header";
+import { Breadcrumb } from "@/components/dashboard/Breadcrumb";
 import { Globe, Store, Save, Share2, MessageCircle } from "lucide-react";
 import { updateStoreSettings, updateSubdomain, updateContactSettings } from "./actions";
 import { SubmitButton } from "@/components/dashboard/SubmitButton";
+import { ImageUpload } from "@/components/dashboard/ImageUpload";
 
 export const metadata = {
   title: "إعدادات المتجر | لوحة التحكم",
@@ -24,12 +25,12 @@ export default async function SettingsPage() {
 
   return (
     <div className="animate-fade-in pb-10">
-      <Header title="إعدادات المتجر" />
+      <Breadcrumb title="إعدادات المتجر" />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
         
         {/* إعدادات الرابط (Subdomain) */}
-        <div className="bg-white rounded-2xl shadow-sm border border-surface-200 p-6 lg:col-span-2 relative overflow-hidden">
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 lg:col-span-2 relative overflow-hidden">
           <div className="absolute top-0 start-0 w-1 h-full bg-primary-500"></div>
           
           <h3 className="text-xl font-bold text-surface-950 mb-2 flex items-center gap-2">
@@ -67,7 +68,7 @@ export default async function SettingsPage() {
                 </div>
               </div>
               <SubmitButton
-                className="py-2.5 px-6 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-500/20 whitespace-nowrap"
+                className="py-2.5 px-6 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all whitespace-nowrap"
               >
                 تحديث الرابط
               </SubmitButton>
@@ -84,7 +85,7 @@ export default async function SettingsPage() {
         </div>
 
         {/* الإعدادات الأساسية */}
-        <div className="bg-white rounded-2xl shadow-sm border border-surface-200 p-6">
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 lg:col-span-2">
           <h3 className="text-xl font-bold text-surface-950 mb-6 flex items-center gap-2">
             <Store className="w-6 h-6 text-surface-700" />
             البيانات الأساسية
@@ -101,28 +102,12 @@ export default async function SettingsPage() {
                 name="name"
                 defaultValue={store.name}
                 required
-                className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                className="w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
               />
             </div>
 
-            <div className="flex items-center gap-3">
-              {store.logo && (
-                <div className="w-10 h-10 rounded-full border border-surface-200 overflow-hidden shrink-0 bg-surface-100">
-                  <img src={store.logo} alt="Logo" className="w-full h-full object-cover" />
-                </div>
-              )}
-              <div className="flex-1">
-                <label htmlFor="logo" className="block text-sm font-medium text-surface-950 mb-1">رابط الشعار (Logo)</label>
-                <input
-                  type="url"
-                  id="logo"
-                  name="logo"
-                  defaultValue={store.logo || ""}
-                  placeholder="https://example.com/logo.png"
-                  dir="ltr"
-                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                />
-              </div>
+            <div>
+              <ImageUpload name="logo" label="شعار المتجر (Logo)" defaultValue={store.logo} />
             </div>
 
             <div>
@@ -200,10 +185,10 @@ export default async function SettingsPage() {
             </div>
 
             <SubmitButton
-              className="w-full mt-2 py-2.5 px-4 bg-surface-950 hover:bg-surface-800 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto mt-6 py-3 px-8 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" />
-              حفظ التغييرات
+              حفظ التغييرات الأساسية
             </SubmitButton>
           </form>
         </div>
@@ -333,7 +318,7 @@ export default async function SettingsPage() {
             </div>
 
             <SubmitButton
-              className="mt-4 py-2.5 px-6 bg-surface-950 hover:bg-surface-800 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+              className="mt-6 w-full sm:w-auto py-3 px-8 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" />
               حفظ بيانات التواصل
@@ -345,3 +330,4 @@ export default async function SettingsPage() {
     </div>
   );
 }
+

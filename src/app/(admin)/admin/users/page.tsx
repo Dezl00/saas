@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Users as UsersIcon } from "lucide-react";
+import { ChangeUserPasswordButton } from "@/components/admin/ChangeUserPasswordButton";
 
 export default async function AdminUsersPage() {
   const users = await prisma.user.findMany({
@@ -21,7 +22,7 @@ export default async function AdminUsersPage() {
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-surface-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -43,6 +44,9 @@ export default async function AdminUsersPage() {
                 </th>
                 <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
                   تاريخ التسجيل
+                </th>
+                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                  إجراءات
                 </th>
               </tr>
             </thead>
@@ -103,12 +107,15 @@ export default async function AdminUsersPage() {
                   <td className="px-6 py-4 text-sm text-surface-800/60">
                     {new Date(user.createdAt).toLocaleDateString("ar-EG")}
                   </td>
+                  <td className="px-6 py-4">
+                    <ChangeUserPasswordButton userId={user.id} userName={user.name} />
+                  </td>
                 </tr>
               ))}
               {users.length === 0 && (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     className="px-6 py-16 text-center"
                   >
                     <UsersIcon className="w-12 h-12 text-surface-800/20 mx-auto mb-4" />

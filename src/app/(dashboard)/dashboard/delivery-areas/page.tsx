@@ -1,8 +1,9 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Header } from "@/components/dashboard/Header";
+import { Breadcrumb } from "@/components/dashboard/Breadcrumb";
 import { Map, Plus, Trash2 } from "lucide-react";
 import { addDeliveryArea, deleteDeliveryArea, toggleDeliveryArea } from "./actions";
+import { DeleteConfirmButton } from "@/components/dashboard/DeleteConfirmButton";
 
 export const metadata = {
   title: "مناطق التوصيل | لوحة التحكم",
@@ -22,12 +23,12 @@ export default async function DeliveryAreasPage() {
 
   return (
     <div className="animate-fade-in pb-10">
-      <Header title="مناطق التوصيل" />
+      <Breadcrumb title="مناطق التوصيل" />
       
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* إضافة منطقة جديد */}
-        <div className="bg-white border border-surface-200 p-6 self-start">
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 self-start sticky top-6 max-h-[calc(100vh-2rem)] overflow-y-auto scrollbar-hide">
           <h3 className="text-xl font-bold text-surface-950 mb-4 flex items-center gap-2">
             <Plus className="w-5 h-5 text-primary-600" />
             إضافة منطقة توصيل
@@ -64,16 +65,11 @@ export default async function DeliveryAreasPage() {
                 <div className="flex items-center gap-3">
                   <form action={toggleDeliveryArea as any}>
                     <input type="hidden" name="areaId" value={area.id} />
-                    <button type="submit" className={`text-xs font-bold px-3 py-1 border ${area.isActive ? 'bg-success-50 text-success-700 border-success-200' : 'bg-surface-100 text-surface-600 border-surface-200'}`}>
-                      {area.isActive ? 'مفعلة' : 'موقوفة'}
+                    <button type="submit" className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${area.isActive ? 'bg-success-500' : 'bg-error-500'}`}>
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${area.isActive ? '-translate-x-6' : '-translate-x-1'}`} />
                     </button>
                   </form>
-                  <form action={deleteDeliveryArea as any}>
-                    <input type="hidden" name="areaId" value={area.id} />
-                    <button type="submit" className="text-surface-400 hover:text-error-600 transition-colors">
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </form>
+                  <DeleteConfirmButton action={deleteDeliveryArea.bind(null, area.id) as any} />
                 </div>
               </div>
             ))
@@ -84,3 +80,4 @@ export default async function DeliveryAreasPage() {
     </div>
   );
 }
+

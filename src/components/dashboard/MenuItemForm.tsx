@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, X, Loader2 } from "lucide-react";
 import { createMenuItem, updateMenuItem } from "@/app/(dashboard)/dashboard/menu/actions";
+import { ImageUpload } from "@/components/dashboard/ImageUpload";
 import toast from "react-hot-toast";
 
 type Category = { id: string; name: string };
@@ -133,16 +134,7 @@ export function MenuItemForm({ categories, initialData, onSuccess }: { categorie
         </div>
 
         <div>
-          <label htmlFor="image" className="block text-sm font-bold text-surface-950 mb-1">رابط الصورة (URL)</label>
-          <input
-            type="url"
-            id="image"
-            name="image"
-            defaultValue={initialData?.image || ""}
-            placeholder="https://..."
-            dir="ltr"
-            className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none text-left"
-          />
+          <ImageUpload name="image" label="صورة الصنف (اختياري)" defaultValue={initialData?.image} />
         </div>
       </div>
 

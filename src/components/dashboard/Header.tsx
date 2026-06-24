@@ -1,13 +1,15 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
+import { exitImpersonation } from "@/app/(admin)/admin/stores/actions";
 
 interface HeaderProps {
   title?: string;
   userName?: string;
+  isAdminImpersonating?: boolean;
 }
 
-export function Header({ title = "لوحة التحكم", userName = "المستخدم" }: HeaderProps) {
+export function Header({ title = "لوحة التحكم", userName = "المستخدم", isAdminImpersonating = false }: HeaderProps) {
   return (
     <header className="bg-white border-b border-surface-200 sticky top-0 z-30">
       <div className="flex items-center justify-between px-6 py-4">
@@ -22,6 +24,18 @@ export function Header({ title = "لوحة التحكم", userName = "المست
         </div>
 
         <div className="flex items-center gap-4">
+          {isAdminImpersonating && (
+            <form action={exitImpersonation}>
+              <button
+                type="submit"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-error-50 text-error-600 rounded-xl font-bold hover:bg-error-100 transition-colors text-sm"
+                title="أنت الآن تدير هذا المتجر كأدمن"
+              >
+                <LogOut className="w-4 h-4" />
+                العودة للأدمن
+              </button>
+            </form>
+          )}
           <div className="flex items-center gap-3">
             <div className="text-end hidden sm:block">
               <p className="text-sm font-bold text-surface-950">{userName}</p>

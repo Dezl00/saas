@@ -1,11 +1,23 @@
 import Link from "next/link";
 import { Store } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let platformName = "منصتك";
+  let platformLogo: string | null = null;
+  
+  try {
+    const settings = await prisma.platformSetting.findUnique({ where: { id: "1" } });
+    if (settings?.name) platformName = settings.name;
+    if (settings?.logo) platformLogo = settings.logo;
+  } catch (e) {
+    // Fallback if DB is not migrated
+  }
+
   return (
     <div className="min-h-screen bg-surface-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background elements */}
@@ -16,10 +28,16 @@ export default function AuthLayout({
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 animate-slide-up">
         <Link href="/" className="flex items-center justify-center gap-2 mb-8 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-            <Store className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-black gradient-text">منصتك</span>
+          {platformLogo ? (
+            <div className="w-12 h-12 rounded-xl bg-surface-50 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
+              <img src={platformLogo} alt="Logo" className="w-full h-full object-contain" />
+            </div>
+          ) : (
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+              <Store className="w-6 h-6 text-white" />
+            </div>
+          )}
+          <span className="text-2xl font-black gradient-text">{platformName}</span>
         </Link>
         <div className="bg-white/80 backdrop-blur-xl py-8 px-4 shadow-2xl sm:rounded-3xl sm:px-10 border border-white/50 relative overflow-hidden">
           {/* Shine effect inside card */}

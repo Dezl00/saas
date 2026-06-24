@@ -13,9 +13,18 @@ export async function createMenuItem(formData: FormData) {
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);
-  const image = formData.get("image") as string;
-  const categoryId = formData.get("categoryId") as string;
-  const sortOrder = parseInt((formData.get("sortOrder") as string) || "0");
+  let imageStr = formData.get("image") as string | File | null;
+  if (imageStr && typeof imageStr !== "string" && imageStr.size > 0) {
+    const { uploadImageToCloudinary } = await import("@/lib/upload");
+    try {
+      imageStr = await uploadImageToCloudinary(imageStr);
+    } catch (e) {
+      console.error("Upload error", e);
+      return { error: "فشل رفع الصورة" };
+    }
+  } else if (typeof imageStr !== "string") {
+    imageStr = null;
+  }
 
   const sizesStr = formData.get("sizes") as string;
   const addonsStr = formData.get("addons") as string;
@@ -48,7 +57,7 @@ export async function createMenuItem(formData: FormData) {
         name,
         description,
         price,
-        image: image || null,
+        image: imageStr || null,
         sortOrder,
         categoryId,
         storeId: session.user.storeId,
@@ -84,9 +93,21 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);
-  const image = formData.get("image") as string;
   const categoryId = formData.get("categoryId") as string;
   const sortOrder = parseInt((formData.get("sortOrder") as string) || "0");
+
+  let imageStr = formData.get("image") as string | File | null;
+  if (imageStr && typeof imageStr !== "string" && imageStr.size > 0) {
+    const { uploadImageToCloudinary } = await import("@/lib/upload");
+    try {
+      imageStr = await uploadImageToCloudinary(imageStr);
+    } catch (e) {
+      console.error("Upload error", e);
+      return { error: "فشل رفع الصورة" };
+    }
+  } else if (typeof imageStr !== "string") {
+    imageStr = undefined; // Do not update image if file was empty and old string wasn't provided
+  }
 
   const sizesStr = formData.get("sizes") as string;
   const addonsStr = formData.get("addons") as string;
@@ -115,7 +136,7 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
         name,
         description,
         price,
-        image: image || null,
+        ...(imageStr !== undefined ? { image: imageStr || null } : {}),
         sortOrder,
         categoryId,
         sizes: {

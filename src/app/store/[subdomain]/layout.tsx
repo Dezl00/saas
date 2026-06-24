@@ -72,8 +72,20 @@ export default async function StoreLayout({
     }
   });
 
-  if (!store) {
+  if (!store || store.status === "DELETED") {
     notFound();
+  }
+
+  if (store.status === "SUSPENDED") {
+    return (
+      <div className="min-h-screen bg-surface-50 flex flex-col items-center justify-center p-4 text-center">
+        <StoreIcon className="w-16 h-16 text-surface-400 mb-6" />
+        <h1 className="text-3xl font-black text-surface-950 mb-2">عذراً، المتجر موقوف مؤقتاً</h1>
+        <p className="text-surface-600 max-w-md text-lg">
+          هذا المتجر غير متاح في الوقت الحالي للطلبات أو التصفح. يرجى المحاولة في وقت لاحق.
+        </p>
+      </div>
+    );
   }
 
   return (

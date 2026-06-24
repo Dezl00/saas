@@ -80,6 +80,14 @@ export async function deleteCategory(categoryId: string) {
       return { error: "غير مصرح لك بحذف هذا القسم" };
     }
 
+    const itemsCount = await prisma.menuItem.count({
+      where: { categoryId },
+    });
+
+    if (itemsCount > 0) {
+      return { error: "لا يمكن حذف القسم! يحتوي على منتجات ويجب إفراغه أولاً." };
+    }
+
     await prisma.category.delete({
       where: { id: categoryId },
     });
@@ -88,6 +96,6 @@ export async function deleteCategory(categoryId: string) {
     return { success: "تم حذف القسم بنجاح" };
   } catch (error) {
     console.error("Delete Category Error:", error);
-    return { error: "لا يمكن حذف قسم يحتوي على أصناف. احذف الأصناف أولاً." };
+    return { error: "حدث خطأ أثناء الحذف." };
   }
 }

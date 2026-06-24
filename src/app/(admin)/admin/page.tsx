@@ -20,25 +20,33 @@ export default async function AdminDashboard() {
       icon: Users,
       label: "المستخدمين",
       value: usersCount,
-      gradient: "from-primary-500 to-primary-600",
+      cardClasses: "bg-primary-50 border-primary-100 text-primary-950",
+      iconClasses: "bg-primary-100 text-primary-600",
+      labelClasses: "text-primary-800/80",
     },
     {
       icon: Store,
       label: "المتاجر",
       value: storesCount,
-      gradient: "from-accent-500 to-accent-600",
+      cardClasses: "bg-accent-50 border-accent-100 text-accent-950",
+      iconClasses: "bg-accent-100 text-accent-600",
+      labelClasses: "text-accent-800/80",
     },
     {
       icon: ShoppingBag,
       label: "إجمالي الطلبات",
       value: ordersCount,
-      gradient: "from-success-500 to-primary-500",
+      cardClasses: "bg-green-50 border-green-100 text-green-950",
+      iconClasses: "bg-green-100 text-green-600",
+      labelClasses: "text-green-800/80",
     },
     {
       icon: TrendingUp,
       label: "المتاجر النشطة",
       value: recentStores.filter((s) => s.status === "ACTIVE").length,
-      gradient: "from-warning-500 to-accent-500",
+      cardClasses: "bg-yellow-50 border-yellow-100 text-yellow-950",
+      iconClasses: "bg-yellow-100 text-yellow-600",
+      labelClasses: "text-yellow-800/80",
     },
   ];
 
@@ -54,23 +62,23 @@ export default async function AdminDashboard() {
         {stats.map((stat, i) => (
           <div
             key={i}
-            className="bg-white rounded-2xl p-6 shadow-sm card-hover border border-surface-100"
+            className={`rounded-2xl p-6 border ${stat.cardClasses}`}
           >
             <div className="flex items-center justify-between mb-4">
               <div
-                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg`}
+                className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.iconClasses}`}
               >
-                <stat.icon className="w-6 h-6 text-white" />
+                <stat.icon className="w-6 h-6" />
               </div>
             </div>
-            <p className="text-2xl font-black text-surface-950">{stat.value}</p>
-            <p className="text-sm text-surface-800/60 mt-1">{stat.label}</p>
+            <p className="text-3xl font-black mb-1">{stat.value}</p>
+            <p className={`text-sm font-bold ${stat.labelClasses}`}>{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Recent Stores */}
-      <div className="bg-white rounded-2xl shadow-sm border border-surface-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
         <div className="p-6 border-b border-surface-100 flex items-center justify-between">
           <h2 className="text-lg font-bold text-surface-950">آخر المتاجر المسجلة</h2>
           <Link
@@ -109,7 +117,7 @@ export default async function AdminDashboard() {
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center">
                         <Store className="w-5 h-5 text-primary-600" />
                       </div>
                       <div>

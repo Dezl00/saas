@@ -41,12 +41,10 @@ export async function toggleDeliveryArea(formData: FormData) {
   }
 }
 
-export async function deleteDeliveryArea(formData: FormData) {
+export async function deleteDeliveryArea(areaId: string) {
   const session = await auth();
   if (!session?.user?.storeId) return { error: "غير مصرح" };
 
-  const areaId = formData.get("areaId") as string;
-  
   await prisma.deliveryArea.deleteMany({
     where: { 
       id: areaId,

@@ -14,6 +14,7 @@ import {
   Store,
   MapPin,
   Map,
+  MoreHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -44,17 +45,8 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-      <aside className={cn(
-        "fixed inset-y-0 start-0 z-50 flex flex-col w-64 bg-white border-e border-surface-200 transform transition-transform duration-300 ease-in-out lg:relative lg:transform-none lg:flex",
-        isOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
-      )}>
+      {/* Sidebar (Desktop) */}
+      <aside className="hidden md:flex md:flex-col w-64 bg-white border-e border-surface-200 z-10">
       <div className="p-6 border-b border-surface-100">
         <Link href="/dashboard" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-primary-100 flex items-center justify-center transition-transform">
@@ -112,6 +104,40 @@ export function Sidebar() {
         </form>
       </div>
     </aside>
+
+    {/* Bottom Navigation (Mobile) */}
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-surface-200 flex items-center justify-around p-2 pb-safe z-50">
+      {navItems.filter(item => ["/dashboard", "/dashboard/menu", "/dashboard/categories", "/dashboard/orders"].includes(item.href)).sort((a, b) => {
+        const order = ["/dashboard", "/dashboard/categories", "/dashboard/menu", "/dashboard/orders"];
+        return order.indexOf(a.href) - order.indexOf(b.href);
+      }).map((item) => {
+        const isActive = pathname === item.href;
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              "flex flex-col items-center gap-1 p-2 transition-colors",
+              isActive ? "text-primary-600" : "text-surface-500 hover:text-primary-600"
+            )}
+          >
+            <item.icon className="w-6 h-6 flex-shrink-0" />
+            <span className="text-[10px] font-bold whitespace-nowrap">{item.label}</span>
+          </Link>
+        );
+      })}
+      
+      <Link
+        href="/dashboard/more"
+        className={cn(
+          "flex flex-col items-center gap-1 p-2 transition-colors",
+          pathname === "/dashboard/more" ? "text-primary-600" : "text-surface-500 hover:text-primary-600"
+        )}
+      >
+        <MoreHorizontal className="w-6 h-6 flex-shrink-0" />
+        <span className="text-[10px] font-bold whitespace-nowrap">المزيد</span>
+      </Link>
+    </nav>
     </>
   );
 }

@@ -1,9 +1,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Header } from "@/components/dashboard/Header";
+import { Breadcrumb } from "@/components/dashboard/Breadcrumb";
 import { Plus, Trash2, Edit2, CheckCircle2, XCircle } from "lucide-react";
 import { createCategory, toggleCategoryStatus, deleteCategory } from "./actions";
 import { SubmitButton } from "@/components/dashboard/SubmitButton";
+import { DeleteConfirmButton } from "@/components/dashboard/DeleteConfirmButton";
 
 export const metadata = {
   title: "إدارة الأقسام | لوحة التحكم",
@@ -28,12 +29,12 @@ export default async function CategoriesPage() {
 
   return (
     <div className="animate-fade-in pb-10">
-      <Header title="إدارة الأقسام" />
+      <Breadcrumb title="إدارة الأقسام" />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         {/* نموذج إضافة قسم */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-2xl shadow-sm border border-surface-200 p-6 sticky top-6">
+          <div className="bg-white rounded-2xl border border-surface-200 p-6 sticky top-6 max-h-[calc(100vh-2rem)] overflow-y-auto scrollbar-hide">
             <h3 className="text-lg font-bold text-surface-950 mb-4 flex items-center gap-2">
               <Plus className="w-5 h-5 text-primary-500" />
               إضافة قسم جديد
@@ -80,7 +81,7 @@ export default async function CategoriesPage() {
               </div>
 
               <SubmitButton
-                className="w-full py-2.5 px-4 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-500/20"
+                className="w-full py-2.5 px-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all"
               >
                 حفظ القسم
               </SubmitButton>
@@ -90,7 +91,7 @@ export default async function CategoriesPage() {
 
         {/* قائمة الأقسام */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl shadow-sm border border-surface-200 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-start">
                 <thead>
@@ -124,33 +125,23 @@ export default async function CategoriesPage() {
                         </td>
                         <td className="px-6 py-4">
                           <form action={toggleCategoryStatus.bind(null, category.id, category.isActive) as any}>
-                            <button
-                              type="submit"
-                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors ${
-                                category.isActive 
-                                  ? "bg-success-50 text-success-700 hover:bg-success-100" 
-                                  : "bg-surface-100 text-surface-600 hover:bg-surface-200"
-                              }`}
-                            >
-                              {category.isActive ? (
-                                <><CheckCircle2 className="w-3.5 h-3.5" /> نشط</>
-                              ) : (
-                                <><XCircle className="w-3.5 h-3.5" /> متوقف</>
-                              )}
-                            </button>
+                              <button
+                                type="submit"
+                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                                  category.isActive ? 'bg-success-500' : 'bg-error-500'
+                                }`}
+                              >
+                                <span
+                                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                    category.isActive ? '-translate-x-6' : '-translate-x-1'
+                                  }`}
+                                />
+                              </button>
                           </form>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
-                            <form action={deleteCategory.bind(null, category.id) as any}>
-                              <button
-                                type="submit"
-                                title="حذف"
-                                className="p-2 text-error-500 hover:bg-error-50 rounded-lg transition-colors"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </form>
+                            <DeleteConfirmButton action={deleteCategory.bind(null, category.id) as any} />
                           </div>
                         </td>
                       </tr>
@@ -165,3 +156,4 @@ export default async function CategoriesPage() {
     </div>
   );
 }
+

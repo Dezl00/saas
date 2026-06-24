@@ -1,9 +1,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Header } from "@/components/dashboard/Header";
+import { Breadcrumb } from "@/components/dashboard/Breadcrumb";
 import { Plus, Trash2, ImageIcon } from "lucide-react";
 import { toggleMenuItemStatus, deleteMenuItem } from "./actions";
 import { MenuItemForm } from "@/components/dashboard/MenuItemForm";
+import { DeleteConfirmButton } from "@/components/dashboard/DeleteConfirmButton";
 import { MenuItemEditButton } from "@/components/dashboard/MenuItemEditButton";
 import { AIMenuScanner } from "@/components/dashboard/AIMenuScanner";
 
@@ -37,7 +38,7 @@ export default async function MenuPage() {
 
   return (
     <div className="animate-fade-in pb-10">
-      <Header title="إدارة المنيو" />
+      <Breadcrumb title="إدارة المنيو" />
       
       <div className="flex justify-end mt-4 px-1">
         <AIMenuScanner />
@@ -46,7 +47,7 @@ export default async function MenuPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
         {/* نموذج إضافة صنف */}
         <div className="xl:col-span-1">
-          <div className="bg-white rounded-2xl shadow-sm border border-surface-200 p-6 sticky top-6">
+          <div className="bg-white rounded-2xl border border-surface-200 p-6 sticky top-6 max-h-[calc(100vh-2rem)] overflow-y-auto scrollbar-hide">
             <h3 className="text-lg font-bold text-surface-950 mb-4 flex items-center gap-2">
               <Plus className="w-5 h-5 text-primary-500" />
               إضافة صنف جديد
@@ -64,7 +65,7 @@ export default async function MenuPage() {
 
         {/* قائمة الأصناف */}
         <div className="xl:col-span-2">
-          <div className="bg-white rounded-2xl shadow-sm border border-surface-200 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-start">
                 <thead>
@@ -110,7 +111,7 @@ export default async function MenuPage() {
                             <button
                               type="submit"
                               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                                item.isAvailable ? 'bg-success-500' : 'bg-surface-300'
+                                item.isAvailable ? 'bg-success-500' : 'bg-error-500'
                               }`}
                             >
                               <span
@@ -132,15 +133,7 @@ export default async function MenuPage() {
                               }} 
                               categories={categories.map(c => ({ id: c.id, name: c.name }))} 
                             />
-                            <form action={deleteMenuItem.bind(null, item.id) as any}>
-                              <button
-                                type="submit"
-                                title="حذف"
-                                className="p-2 text-error-500 hover:bg-error-50 rounded-lg transition-colors"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </form>
+                            <DeleteConfirmButton action={deleteMenuItem.bind(null, item.id) as any} />
                           </div>
                         </td>
                       </tr>
@@ -155,3 +148,4 @@ export default async function MenuPage() {
     </div>
   );
 }
+

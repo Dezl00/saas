@@ -39,25 +39,33 @@ export default async function DashboardPage() {
       title: "إجمالي الطلبات",
       value: ordersCount,
       icon: ShoppingBag,
-      gradient: "from-primary-500 to-primary-600",
+      cardClasses: "bg-primary-50 border-primary-100 text-primary-950",
+      iconClasses: "bg-primary-100 text-primary-600",
+      labelClasses: "text-primary-800/80",
     },
     {
       title: "إجمالي المبيعات",
       value: formatPrice(Number(revenueResult._sum.total || 0), store?.currency),
       icon: DollarSign,
-      gradient: "from-success-500 to-primary-500",
+      cardClasses: "bg-green-50 border-green-100 text-green-950",
+      iconClasses: "bg-green-100 text-green-600",
+      labelClasses: "text-green-800/80",
     },
     {
       title: "إجمالي الأقسام",
       value: categoriesCount,
       icon: FolderTree,
-      gradient: "from-accent-500 to-accent-600",
+      cardClasses: "bg-accent-50 border-accent-100 text-accent-950",
+      iconClasses: "bg-accent-100 text-accent-600",
+      labelClasses: "text-accent-800/80",
     },
     {
       title: "إجمالي الأصناف",
       value: menuItemsCount,
       icon: UtensilsCrossed,
-      gradient: "from-warning-500 to-accent-500",
+      cardClasses: "bg-yellow-50 border-yellow-100 text-yellow-950",
+      iconClasses: "bg-yellow-100 text-yellow-600",
+      labelClasses: "text-yellow-800/80",
     },
   ];
 
@@ -72,7 +80,7 @@ export default async function DashboardPage() {
           <Link
             href={`https://${store.subdomain}.menura.site`}
             target="_blank"
-            className="px-6 py-2 bg-white text-primary-600 font-bold rounded-xl shadow-sm hover:shadow-md transition-shadow border border-primary-100"
+            className="px-6 py-2 bg-white text-primary-600 font-bold rounded-xl border border-primary-200 hover:bg-primary-50 transition-colors"
           >
             زيارة المتجر
           </Link>
@@ -87,7 +95,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-2xl shadow-sm border border-surface-100 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
         <div className="p-6 border-b border-surface-100 flex items-center justify-between">
           <h2 className="text-lg font-bold text-surface-950">أحدث الطلبات</h2>
           <Link

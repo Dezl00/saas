@@ -12,7 +12,19 @@ export async function updateStoreSettings(formData: FormData) {
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
-  const logo = formData.get("logo") as string;
+  let logoStr = formData.get("logo") as string | File | null;
+  if (logoStr && typeof logoStr !== "string" && logoStr.size > 0) {
+    const { uploadImageToCloudinary } = await import("@/lib/upload");
+    try {
+      logoStr = await uploadImageToCloudinary(logoStr);
+    } catch (e) {
+      console.error("Upload error", e);
+      return { error: "فشل رفع الصورة" };
+    }
+  } else if (typeof logoStr !== "string") {
+    logoStr = undefined; // Do not update if no new file is provided
+  }
+
   const primaryColor = formData.get("primaryColor") as string;
   const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
@@ -28,7 +40,7 @@ export async function updateStoreSettings(formData: FormData) {
       data: {
         name,
         description,
-        logo,
+        ...(logoStr !== undefined ? { logo: logoStr as string } : {}),
         primaryColor,
         phone,
         address,

@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Header } from "@/components/dashboard/Header";
+import { Breadcrumb } from "@/components/dashboard/Breadcrumb";
 import { ShoppingBag, Truck, Store as StoreIcon, Clock } from "lucide-react";
 import { updateOrderStatus } from "./actions";
 import { formatPrice } from "@/lib/utils";
@@ -39,7 +39,7 @@ export default async function OrdersPage() {
 
   return (
     <div className="animate-fade-in pb-10">
-      <Header title="الطلبات الواردة" />
+      <Breadcrumb title="الطلبات الواردة" />
       
       <div className="mt-6 space-y-6">
         {orders.length === 0 ? (
@@ -151,3 +151,4 @@ export default async function OrdersPage() {
     </div>
   );
 }
+

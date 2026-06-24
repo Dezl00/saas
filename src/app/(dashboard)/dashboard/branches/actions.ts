@@ -43,12 +43,10 @@ export async function toggleBranch(formData: FormData) {
   }
 }
 
-export async function deleteBranch(formData: FormData) {
+export async function deleteBranch(branchId: string) {
   const session = await auth();
   if (!session?.user?.storeId) return { error: "غير مصرح" };
 
-  const branchId = formData.get("branchId") as string;
-  
   await prisma.branch.deleteMany({
     where: { 
       id: branchId,

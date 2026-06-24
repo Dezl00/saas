@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma) as never,
@@ -57,6 +58,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = token.role as string;
         session.user.id = token.id as string;
         session.user.storeId = token.storeId as string | null;
+
+        // --- Store Impersonation Logic for ADMIN ---
+        if (session.user.role === "ADMIN") {
+          try {
+            const cookieStore = await cookies();
+            const managedStoreId = cookieStore.get("admin_managed_store_id")?.value;
+            if (managedStoreId) {
+              session.user.storeId = managedStoreId;
+            }
+          } catch (e) {
+            // Ignore errors (e.g., if cookies() is called in a context where it's not allowed)
+          }
+        }
       }
       return session;
     },
