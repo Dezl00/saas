@@ -9,30 +9,48 @@ import {
   Shield,
   Smartphone,
 } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 
-export default function HomePage() {
+export default async function HomePage() {
+  let platformName = "منصتك";
+  let platformLogo: string | null = null;
+  
+  try {
+    const settings = await prisma.platformSetting.findUnique({ where: { id: "1" } });
+    if (settings?.name) platformName = settings.name;
+    if (settings?.logo) platformLogo = settings.logo;
+  } catch (e) {
+    // Fallback if DB is not migrated
+  }
+
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 inset-x-0 z-50 glass">
+      <nav className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-xl border-b border-surface-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-                <Store className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold gradient-text">منصتك</span>
+              {platformLogo ? (
+                <div className="w-9 h-9 flex items-center justify-center">
+                  <img src={platformLogo} alt="Logo" className="w-full h-full object-contain" />
+                </div>
+              ) : (
+                <div className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center">
+                  <Store className="w-5 h-5 text-surface-900" />
+                </div>
+              )}
+              <span className="text-xl font-bold text-surface-950">{platformName}</span>
             </div>
             <div className="flex items-center gap-3">
               <Link
                 href="/login"
-                className="px-4 py-2 text-sm font-medium text-primary-700 hover:text-primary-800 transition-colors"
+                className="px-4 py-2 text-sm font-bold text-surface-700 hover:text-surface-950 transition-colors"
               >
                 تسجيل الدخول
               </Link>
               <Link
                 href="/register"
-                className="px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-l from-primary-500 to-primary-600 rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all shadow-lg shadow-primary-500/25 btn-shine"
+                className="px-5 py-2.5 text-sm font-bold text-white bg-surface-950 rounded-xl hover:bg-surface-800 transition-colors"
               >
                 ابدأ مجاناً
               </Link>
@@ -43,24 +61,18 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 start-1/4 w-96 h-96 bg-primary-200/30 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 end-1/4 w-80 h-80 bg-accent-200/30 rounded-full blur-3xl" />
-        </div>
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-slide-up">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-medium mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-100 text-surface-800 text-sm font-bold mb-6">
               <Zap className="w-4 h-4" />
               أنشئ متجرك في دقائق
             </span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-surface-950 leading-tight mb-6 animate-slide-up">
-            منصتك لإنشاء
+            {platformName} لإنشاء
             <br />
-            <span className="gradient-text">متجرك الإلكتروني</span>
+            <span className="text-surface-600">متجرك الإلكتروني</span>
           </h1>
 
           <p className="text-lg sm:text-xl text-surface-800/70 max-w-2xl mx-auto mb-10 animate-slide-up">
@@ -71,14 +83,14 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
             <Link
               href="/register"
-              className="group flex items-center gap-2 px-8 py-4 text-lg font-bold text-white bg-gradient-to-l from-primary-500 to-primary-600 rounded-2xl hover:from-primary-600 hover:to-primary-700 transition-all shadow-xl shadow-primary-500/30 btn-shine"
+              className="group flex items-center gap-2 px-8 py-4 text-lg font-bold text-white bg-surface-950 rounded-2xl hover:bg-surface-800 transition-colors"
             >
               ابدأ الآن مجاناً
               <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1" />
             </Link>
             <Link
               href="#features"
-              className="px-8 py-4 text-lg font-medium text-primary-700 bg-white rounded-2xl border-2 border-primary-100 hover:border-primary-200 hover:bg-primary-50 transition-all"
+              className="px-8 py-4 text-lg font-bold text-surface-950 bg-surface-50 rounded-2xl border-2 border-transparent hover:border-surface-200 transition-all"
             >
               اكتشف المميزات
             </Link>
@@ -92,7 +104,7 @@ export default function HomePage() {
               { value: "رابط", label: "خاص بمتجرك" },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-2xl sm:text-3xl font-black gradient-text">
+                <div className="text-2xl sm:text-3xl font-black text-surface-950">
                   {stat.value}
                 </div>
                 <div className="text-sm text-surface-800/60 mt-1">
@@ -105,12 +117,12 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 bg-white">
+      <section id="features" className="py-24 bg-surface-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-black text-surface-950 mb-4">
               كل اللي محتاجه في{" "}
-              <span className="gradient-text">مكان واحد</span>
+              <span className="text-surface-600">مكان واحد</span>
             </h2>
             <p className="text-lg text-surface-800/60 max-w-xl mx-auto">
               منصة متكاملة لإدارة متجرك الإلكتروني من الألف للياء
@@ -123,47 +135,41 @@ export default function HomePage() {
                 icon: Store,
                 title: "أنشئ متجرك",
                 desc: "سجل حسابك، اختر نوع نشاطك، وأنشئ متجرك الإلكتروني في دقائق معدودة.",
-                gradient: "from-primary-500 to-primary-600",
               },
               {
                 icon: ShoppingBag,
                 title: "ارفع المنيو",
                 desc: "أضف أقسامك وأصنافك بالصور والأسعار. عدّل واحذف وأضف في أي وقت.",
-                gradient: "from-accent-500 to-accent-600",
               },
               {
                 icon: Globe,
                 title: "رابط خاص بيك",
                 desc: "اختر اسم رابطك الخاص (subdomain) وشاركه مع عملائك عبر أي وسيلة.",
-                gradient: "from-success-500 to-primary-500",
               },
               {
                 icon: BarChart3,
                 title: "لوحة تحكم ذكية",
                 desc: "تابع طلباتك وإحصائياتك ومبيعاتك من لوحة تحكم سهلة وواضحة.",
-                gradient: "from-warning-500 to-accent-500",
               },
               {
                 icon: Shield,
                 title: "دفع آمن",
                 desc: "فعّل وسائل الدفع المناسبة: كاش، إنستاباي، محافظ بنكية، تحويل بنكي.",
-                gradient: "from-error-500 to-accent-500",
               },
               {
                 icon: Smartphone,
                 title: "متوافق مع الموبايل",
                 desc: "متجرك يعمل بشكل مثالي على الموبايل والتابلت والكمبيوتر.",
-                gradient: "from-primary-400 to-accent-400",
               },
             ].map((feature, i) => (
               <div
                 key={i}
-                className="group p-8 bg-surface-50 rounded-2xl border border-surface-100 card-hover"
+                className="group p-8 bg-white rounded-2xl border border-surface-200 card-hover"
               >
                 <div
-                  className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform`}
+                  className={`w-14 h-14 rounded-2xl bg-surface-100 flex items-center justify-center mb-5 group-hover:bg-surface-950 transition-colors duration-300`}
                 >
-                  <feature.icon className="w-7 h-7 text-white" />
+                  <feature.icon className="w-7 h-7 text-surface-950 group-hover:text-white transition-colors duration-300" />
                 </div>
                 <h3 className="text-xl font-bold text-surface-950 mb-3">
                   {feature.title}
@@ -178,11 +184,11 @@ export default function HomePage() {
       </section>
 
       {/* How it Works */}
-      <section className="py-24 bg-surface-50">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-black text-surface-950 mb-4">
-              إزاي <span className="gradient-text">تبدأ؟</span>
+              إزاي <span className="text-surface-600">تبدأ؟</span>
             </h2>
             <p className="text-lg text-surface-800/60">
               3 خطوات بسيطة وهتبدأ تستقبل طلبات
@@ -208,7 +214,7 @@ export default function HomePage() {
               },
             ].map((item, i) => (
               <div key={i} className="text-center group">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-3xl font-black text-white shadow-xl shadow-primary-500/20 group-hover:scale-110 transition-transform">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-surface-100 flex items-center justify-center text-3xl font-black text-surface-950 group-hover:bg-surface-950 group-hover:text-white transition-colors duration-300">
                   {item.step}
                 </div>
                 <h3 className="text-xl font-bold text-surface-950 mb-2">
@@ -222,20 +228,17 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-800" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMS41IiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYSkiLz48L3N2Zz4=')] opacity-50" />
-
+      <section className="py-24 relative overflow-hidden bg-surface-950">
         <div className="relative max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl sm:text-4xl font-black text-white mb-6">
             جاهز تبدأ رحلتك؟
           </h2>
-          <p className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl text-surface-300 mb-10 max-w-2xl mx-auto">
             انضم للمنصة وأنشئ متجرك الإلكتروني الآن. مجاني بالكامل في البداية.
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 px-10 py-4 text-lg font-bold text-primary-700 bg-white rounded-2xl hover:bg-primary-50 transition-all shadow-xl btn-shine"
+            className="inline-flex items-center gap-2 px-10 py-4 text-lg font-bold text-surface-950 bg-white rounded-2xl hover:bg-surface-100 transition-colors"
           >
             أنشئ متجرك الآن
             <ChevronLeft className="w-5 h-5" />
@@ -244,17 +247,23 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 bg-surface-950 text-surface-200">
+      <footer className="py-8 bg-surface-950 text-surface-400 border-t border-surface-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-                <Store className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-white">منصتك</span>
+              {platformLogo ? (
+                <div className="w-8 h-8 flex items-center justify-center">
+                  <img src={platformLogo} alt="Logo" className="w-full h-full object-contain opacity-70" />
+                </div>
+              ) : (
+                <div className="w-8 h-8 rounded-lg bg-surface-800 flex items-center justify-center">
+                  <Store className="w-4 h-4 text-surface-400" />
+                </div>
+              )}
+              <span className="font-bold text-surface-300">{platformName}</span>
             </div>
-            <p className="text-sm text-surface-200/60">
-              © {new Date().getFullYear()} منصتك. جميع الحقوق محفوظة.
+            <p className="text-sm">
+              © {new Date().getFullYear()} {platformName}. جميع الحقوق محفوظة.
             </p>
           </div>
         </div>

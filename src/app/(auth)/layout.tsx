@@ -31,7 +31,6 @@ export default async function AuthLayout({
               <Store className="w-8 h-8 text-surface-900" />
             </div>
           )}
-          <span className="text-2xl font-bold text-surface-950 tracking-tight">{platformName}</span>
         </Link>
         <div className="bg-white py-8 px-4 sm:rounded-3xl sm:px-10 border border-surface-200">
           {children}
