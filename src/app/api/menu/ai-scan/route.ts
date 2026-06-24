@@ -71,33 +71,19 @@ export async function POST(req: Request) {
     let lastError: any = null;
 
     for (const modelName of modelsToTry) {
-      // Try each model up to 2 times (for 503 retries)
-      for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-          const model = genAI.getGenerativeModel({ model: modelName });
-          const result = await model.generateContent([prompt, ...imageParts]);
-          responseText = result.response.text();
-          break; // Success
-        } catch (modelError: any) {
-          lastError = modelError;
-          const msg = modelError.message || "";
-          console.error(`Model ${modelName} attempt ${attempt + 1} failed:`, msg);
-          
-          // 503 = temporary overload, wait and retry same model
-          if (msg.includes("503") || msg.includes("Service Unavailable")) {
-            await new Promise(r => setTimeout(r, 4000)); // Wait 4 seconds
-            continue; // Retry same model
-          }
-          // Quota or not-found = skip to next model
-          if (msg.includes("429") || msg.includes("quota") || msg.includes("404") || msg.includes("not found")) {
-            break; // Break inner loop, try next model
-          }
-          
-          // Other errors = just break and let it try the next model
-          break;
-        }
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent([prompt, ...imageParts]);
+        responseText = result.response.text();
+        break; // Success
+      } catch (modelError: any) {
+        lastError = modelError;
+        const msg = modelError.message || "";
+        console.error(`Model ${modelName} failed:`, msg);
+        
+        // Skip to next model immediately without sleeping to avoid Vercel 504 Timeout
+        continue;
       }
-      if (responseText) break; // Got a result, stop trying models
     }
 
     if (!responseText) {
