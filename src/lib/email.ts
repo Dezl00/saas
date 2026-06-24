@@ -10,6 +10,9 @@ const transporter = nodemailer.createTransport({
     user: "info@menuegy.com",
     pass: "@jG3&JNjJ",
   },
+  connectionTimeout: 5000, // 5 seconds timeout to prevent Vercel function crash
+  greetingTimeout: 5000,
+  socketTimeout: 5000,
 });
 
 export async function sendOTP(email: string, otpCode: string) {
