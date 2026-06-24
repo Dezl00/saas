@@ -9,17 +9,17 @@ export async function updatePlatformSettings(formData: FormData) {
   if (session?.user?.role !== "ADMIN") return { error: "غير مصرح" };
 
   const name = formData.get("name") as string;
-  let logoStr = undefined;
-  const logoFile = formData.get("logo") as File | null;
-  
-  if (logoFile && logoFile.size > 0) {
+  let logoStr: string | File | null | undefined = formData.get("logo") as string | File | null;
+  if (logoStr && typeof logoStr !== "string" && logoStr.size > 0) {
     const { uploadImageToCloudinary } = await import("@/lib/upload");
     try {
-      logoStr = await uploadImageToCloudinary(logoFile);
+      logoStr = await uploadImageToCloudinary(logoStr);
     } catch (e) {
       console.error("Upload error", e);
       return { error: "فشل رفع الصورة" };
     }
+  } else if (typeof logoStr !== "string") {
+    logoStr = undefined; // Do not update if no new file is provided
   }
 
   if (!name) return { error: "اسم المنصة مطلوب" };
@@ -28,12 +28,12 @@ export async function updatePlatformSettings(formData: FormData) {
     where: { id: "1" },
     update: { 
       name, 
-      ...(logoStr ? { logo: logoStr } : {}) 
+      ...(logoStr !== undefined ? { logo: logoStr as string } : {}) 
     },
     create: { 
       id: "1", 
       name, 
-      logo: logoStr || "" 
+      logo: (logoStr as string) || "" 
     },
   });
 

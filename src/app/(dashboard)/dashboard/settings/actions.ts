@@ -12,7 +12,7 @@ export async function updateStoreSettings(formData: FormData) {
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
-  let logoStr = formData.get("logo") as string | File | null;
+  let logoStr: string | File | null | undefined = formData.get("logo") as string | File | null;
   if (logoStr && typeof logoStr !== "string" && logoStr.size > 0) {
     const { uploadImageToCloudinary } = await import("@/lib/upload");
     try {
