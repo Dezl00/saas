@@ -15,6 +15,7 @@ type MenuItemType = {
   image: string | null;
   isAvailable: boolean;
   sortOrder: number;
+  categoryId: string;
   category: { id: string; name: string };
   sizes: any[];
   addons: any[];
