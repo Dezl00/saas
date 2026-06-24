@@ -91,8 +91,8 @@ export async function registerAction(prevState: any, formData: FormData) {
       // Create an empty store to be filled in onboarding
       await prisma.store.create({
         data: {
-          name: validatedData.storeName as string || "متجر جديد",
-          type: validatedData.storeType as any || "RESTAURANT",
+          name: "متجر جديد",
+          type: "RESTAURANT",
           userId: user.id,
         },
       });
