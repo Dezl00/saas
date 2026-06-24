@@ -89,20 +89,35 @@ export function AIMenuScanner() {
     }
   };
 
+  // Progress text effect
+  const [progressStep, setProgressStep] = useState(0);
+  
   const handleScan = async () => {
     if (!file) return;
 
     setIsScanning(true);
+    setProgressStep(1); // 1: Uploading/Compressing
     setSuccessResult(null);
+
+    // Simulate progress steps
+    const stepInterval = setInterval(() => {
+      setProgressStep((prev) => {
+        if (prev < 4) return prev + 1;
+        return prev;
+      });
+    }, 2500);
 
     const formData = new FormData();
     formData.append("image", file);
 
     const result = await scanMenuWithAI(formData);
 
+    clearInterval(stepInterval);
+
     if (result?.error) {
       toast.error(result.error);
       setIsScanning(false);
+      setProgressStep(0);
     } else if (result?.success && result.data) {
       // Mark all items as selected by default
       const processedData = {
@@ -113,6 +128,7 @@ export function AIMenuScanner() {
       };
       setParsedData(processedData);
       setIsScanning(false);
+      setProgressStep(0);
     }
   };
 
@@ -158,12 +174,21 @@ export function AIMenuScanner() {
     setIsImporting(false);
     setSuccessResult(null);
     setParsedData(null);
+    setProgressStep(0);
   };
 
   // Calculate totals
   const totalCategories = parsedData?.categories.length || 0;
   const totalItems = parsedData?.categories.reduce((acc, cat) => acc + cat.items.length, 0) || 0;
   const selectedItemsCount = parsedData?.categories.reduce((acc, cat) => acc + cat.items.filter(i => i.selected).length, 0) || 0;
+
+  const progressMessages = [
+    "",
+    "جاري الاتصال بالذكاء الاصطناعي...",
+    "جاري قراءة المنيو واستخراج البيانات...",
+    "جاري تنسيق الأصناف والأسعار...",
+    "على وشك الانتهاء..."
+  ];
 
   return (
     <>
@@ -220,10 +245,21 @@ export function AIMenuScanner() {
                     )}
                     
                     {isScanning && (
-                      <div className="absolute inset-0 bg-purple-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-white">
-                        <Loader2 className="w-10 h-10 animate-spin mb-3 text-purple-200" />
-                        <p className="font-bold animate-pulse">جاري التحليل واستخراج البيانات...</p>
-                        <p className="text-xs text-purple-200 mt-1">قد يستغرق الأمر بضع ثوانٍ</p>
+                      <div className="absolute inset-0 bg-purple-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-white p-6 text-center">
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-full border-4 border-purple-300/30 border-t-purple-400 animate-spin mb-4" />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Sparkles className="w-5 h-5 text-purple-200 animate-pulse mb-4" />
+                          </div>
+                        </div>
+                        <p className="font-bold text-lg animate-pulse">{progressMessages[progressStep] || progressMessages[progressMessages.length - 1]}</p>
+                        
+                        <div className="w-full max-w-xs bg-purple-900/50 rounded-full h-1.5 mt-4 overflow-hidden">
+                          <div 
+                            className="bg-purple-400 h-1.5 rounded-full transition-all duration-1000 ease-out" 
+                            style={{ width: `${Math.min((progressStep / 4) * 100, 95)}%` }}
+                          />
+                        </div>
                       </div>
                     )}
                   </div>

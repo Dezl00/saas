@@ -87,8 +87,9 @@ export async function scanMenuWithAI(formData: FormData) {
           if (msg.includes("429") || msg.includes("quota") || msg.includes("404") || msg.includes("not found")) {
             break; // Break inner loop, try next model
           }
-          // Other errors = throw
-          throw modelError;
+          
+          // Other errors = just break and let it try the next model
+          break;
         }
       }
       if (responseText) break; // Got a result, stop trying models
@@ -97,9 +98,12 @@ export async function scanMenuWithAI(formData: FormData) {
     if (!responseText) {
       const errMsg = lastError?.message || "";
       if (errMsg.includes("429") || errMsg.includes("quota")) {
-        throw new Error("تم تجاوز حصة الاستخدام المجانية. يرجى تفعيل الفوترة (Billing) في Google Cloud Console أو المحاولة لاحقاً.");
+        return { error: "تم تجاوز حصة الاستخدام المجانية للذكاء الاصطناعي." };
       }
-      throw lastError || new Error("فشل الاتصال بجميع النماذج المتاحة");
+      if (errMsg.includes("503") || errMsg.includes("Service Unavailable")) {
+        return { error: "السيرفرات تواجه ضغطاً عالياً حالياً. يرجى المحاولة بعد قليل." };
+      }
+      return { error: "لم نتمكن من تحليل الصورة بسبب ضغط مؤقت، يرجى المحاولة مرة أخرى." };
     }
     
     // تنظيف النص لاحتمال وجود علامات markdown
