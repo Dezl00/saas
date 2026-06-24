@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   secure: process.env.SMTP_SECURE !== "false", // default to true for 465
   auth: {
     user: "info@menuegy.com",
-    pass: "@jG3&JNjJ",
+    pass: "R4/tw3uWJ0&",
   },
   connectionTimeout: 5000, // 5 seconds timeout to prevent Vercel function crash
   greetingTimeout: 5000,
