@@ -7,23 +7,15 @@ const transporter = nodemailer.createTransport({
   port: parseInt(process.env.SMTP_PORT || "465"),
   secure: process.env.SMTP_SECURE !== "false", // default to true for 465
   auth: {
-    user: process.env.SMTP_USER || "info@menura.site",
-    pass: process.env.SMTP_PASS,
+    user: "info@menuegy.com",
+    pass: "@jG3&JNjJ",
   },
 });
 
 export async function sendOTP(email: string, otpCode: string) {
-  // If no SMTP password is provided, we just log it to prevent crashing
-  if (!process.env.SMTP_PASS) {
-    console.log(`\n\n========================================`);
-    console.log(`[MOCK EMAIL] OTP for ${email} is: ${otpCode}`);
-    console.log(`========================================\n\n`);
-    return true; // Simulate success
-  }
-
   try {
     await transporter.sendMail({
-      from: `"منصتك" <${process.env.SMTP_USER}>`,
+      from: `"منصتك" <info@menuegy.com>`,
       to: email,
       subject: "كود التحقق من حسابك",
       text: `مرحباً،\n\nكود التحقق الخاص بك هو: ${otpCode}\n\nلا تشارك هذا الكود مع أحد.`,
