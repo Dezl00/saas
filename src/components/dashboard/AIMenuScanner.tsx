@@ -1,16 +1,33 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Camera, Upload, X, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
+import { Camera, Upload, X, Loader2, Sparkles, CheckCircle2, ListChecks, CheckSquare, Square } from "lucide-react";
 import toast from "react-hot-toast";
-import { scanMenuWithAI } from "@/app/(dashboard)/dashboard/menu/ai-actions";
+import { scanMenuWithAI, importAIMenuItems } from "@/app/(dashboard)/dashboard/menu/ai-actions";
+
+type ParsedCategory = {
+  name: string;
+  items: ParsedItem[];
+};
+
+type ParsedItem = {
+  name: string;
+  description: string;
+  price: number;
+  selected?: boolean; // added for UI
+};
 
 export function AIMenuScanner() {
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [isScanning, setIsScanning] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const [successResult, setSuccessResult] = useState<string | null>(null);
+  
+  // Review state
+  const [parsedData, setParsedData] = useState<{ categories: ParsedCategory[] } | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const compressImage = (file: File): Promise<File> => {
@@ -86,11 +103,47 @@ export function AIMenuScanner() {
     if (result?.error) {
       toast.error(result.error);
       setIsScanning(false);
+    } else if (result?.success && result.data) {
+      // Mark all items as selected by default
+      const processedData = {
+        categories: result.data.categories.map((c: any) => ({
+          ...c,
+          items: c.items?.map((i: any) => ({ ...i, selected: true })) || []
+        }))
+      };
+      setParsedData(processedData);
+      setIsScanning(false);
+    }
+  };
+
+  const handleToggleItem = (catIndex: number, itemIndex: number) => {
+    if (!parsedData) return;
+    const newData = { ...parsedData };
+    newData.categories[catIndex].items[itemIndex].selected = !newData.categories[catIndex].items[itemIndex].selected;
+    setParsedData(newData);
+  };
+
+  const handleImport = async () => {
+    if (!parsedData) return;
+    setIsImporting(true);
+
+    // Filter only selected items
+    const filteredData = {
+      categories: parsedData.categories.map(c => ({
+        ...c,
+        items: c.items.filter(i => i.selected)
+      })).filter(c => c.items.length > 0) // Remove empty categories
+    };
+
+    const result = await importAIMenuItems(filteredData);
+
+    if (result?.error) {
+      toast.error(result.error);
+      setIsImporting(false);
     } else if (result?.success) {
       setSuccessResult(result.success);
       toast.success(result.success);
-      setIsScanning(false);
-      // اغلاق النافذة بعد ثانيتين
+      setIsImporting(false);
       setTimeout(() => {
         handleClose();
       }, 3000);
@@ -102,8 +155,15 @@ export function AIMenuScanner() {
     setImage(null);
     setFile(null);
     setIsScanning(false);
+    setIsImporting(false);
     setSuccessResult(null);
+    setParsedData(null);
   };
+
+  // Calculate totals
+  const totalCategories = parsedData?.categories.length || 0;
+  const totalItems = parsedData?.categories.reduce((acc, cat) => acc + cat.items.length, 0) || 0;
+  const selectedItemsCount = parsedData?.categories.reduce((acc, cat) => acc + cat.items.filter(i => i.selected).length, 0) || 0;
 
   return (
     <>
@@ -117,22 +177,22 @@ export function AIMenuScanner() {
 
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-950/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-zoom-in">
-            <div className="px-6 py-4 border-b border-surface-100 flex items-center justify-between bg-surface-50/50">
+          <div className="bg-white w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden animate-zoom-in">
+            <div className="px-6 py-4 border-b border-surface-100 flex items-center justify-between bg-surface-50/50 shrink-0">
               <h3 className="text-xl font-bold text-surface-950 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-purple-600" />
                 المساعد الذكي للمنيو
               </h3>
               <button
                 onClick={handleClose}
-                disabled={isScanning}
+                disabled={isScanning || isImporting}
                 className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-100 text-surface-500 hover:bg-surface-200 hover:text-surface-950 transition-colors disabled:opacity-50"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-6">
+            <div className="p-6 overflow-y-auto flex-1">
               {!image ? (
                 <div 
                   onClick={() => fileInputRef.current?.click()}
@@ -146,7 +206,7 @@ export function AIMenuScanner() {
                     <p className="text-xs text-purple-600/70 mt-1">يُفضل أن تكون الصورة واضحة وبإضاءة جيدة</p>
                   </div>
                 </div>
-              ) : (
+              ) : !parsedData ? (
                 <div className="space-y-4">
                   <div className="relative w-full h-48 rounded-2xl overflow-hidden border border-surface-200 shadow-inner">
                     <img src={image} alt="Menu preview" className="w-full h-full object-cover" />
@@ -166,34 +226,78 @@ export function AIMenuScanner() {
                         <p className="text-xs text-purple-200 mt-1">قد يستغرق الأمر بضع ثوانٍ</p>
                       </div>
                     )}
-
-                    {successResult && (
-                      <div className="absolute inset-0 bg-success-600/90 backdrop-blur-sm flex flex-col items-center justify-center text-white p-6 text-center animate-fade-in">
-                        <CheckCircle2 className="w-16 h-16 mb-3 text-white" />
-                        <p className="font-bold text-lg">{successResult}</p>
-                      </div>
-                    )}
                   </div>
 
-                  {!successResult && (
-                    <button
-                      onClick={handleScan}
-                      disabled={isScanning}
-                      className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {isScanning ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          <span>الذكاء الاصطناعي يعمل...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="w-5 h-5" />
-                          <span>استخراج الأصناف والأسعار الآن</span>
-                        </>
-                      )}
-                    </button>
-                  )}
+                  <button
+                    onClick={handleScan}
+                    disabled={isScanning}
+                    className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isScanning ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>الذكاء الاصطناعي يعمل...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-5 h-5" />
+                        <span>استخراج الأصناف والأسعار الآن</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              ) : successResult ? (
+                <div className="flex flex-col items-center justify-center text-success-600 py-10 animate-fade-in">
+                  <CheckCircle2 className="w-16 h-16 mb-4" />
+                  <p className="font-bold text-xl text-surface-950">{successResult}</p>
+                </div>
+              ) : (
+                <div className="space-y-6 animate-slide-up">
+                  <div className="flex items-center justify-between bg-purple-50 p-4 rounded-xl border border-purple-100">
+                    <div className="flex items-center gap-3">
+                      <ListChecks className="w-6 h-6 text-purple-600" />
+                      <div>
+                        <p className="font-bold text-purple-900">مراجعة الأصناف المستخرجة</p>
+                        <p className="text-xs text-purple-600 mt-0.5">الرجاء تحديد الأصناف التي تريد إضافتها</p>
+                      </div>
+                    </div>
+                    <div className="text-end">
+                      <p className="text-sm font-bold text-purple-900">{totalCategories} أقسام</p>
+                      <p className="text-xs text-purple-700">{selectedItemsCount} من {totalItems} أصناف محددة</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    {parsedData.categories.map((category, catIndex) => (
+                      <div key={catIndex} className="bg-surface-50 border border-surface-200 rounded-2xl overflow-hidden">
+                        <div className="px-4 py-3 bg-surface-100 border-b border-surface-200 font-bold text-surface-950">
+                          {category.name}
+                        </div>
+                        <div className="divide-y divide-surface-100">
+                          {category.items.map((item, itemIndex) => (
+                            <div 
+                              key={itemIndex} 
+                              onClick={() => handleToggleItem(catIndex, itemIndex)}
+                              className={`flex items-start gap-3 p-4 cursor-pointer hover:bg-purple-50/50 transition-colors ${!item.selected ? 'opacity-50 bg-surface-50 grayscale' : ''}`}
+                            >
+                              <button type="button" className="mt-0.5 shrink-0 text-purple-600">
+                                {item.selected ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5 text-surface-400" />}
+                              </button>
+                              <div className="flex-1">
+                                <div className="flex justify-between items-start">
+                                  <p className="font-bold text-surface-950 text-sm">{item.name}</p>
+                                  <span className="font-bold text-purple-700 text-sm">{item.price}</span>
+                                </div>
+                                {item.description && (
+                                  <p className="text-xs text-surface-500 mt-1">{item.description}</p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
@@ -206,6 +310,30 @@ export function AIMenuScanner() {
                 className="hidden"
               />
             </div>
+            
+            {/* Footer actions for review step */}
+            {parsedData && !successResult && (
+              <div className="p-4 border-t border-surface-200 bg-surface-50 flex gap-3 shrink-0">
+                <button
+                  onClick={() => setParsedData(null)}
+                  disabled={isImporting}
+                  className="flex-1 py-3 px-4 rounded-xl text-sm font-bold text-surface-700 bg-white border border-surface-200 hover:bg-surface-50 transition-colors disabled:opacity-50"
+                >
+                  إلغاء وإعادة المحاولة
+                </button>
+                <button
+                  onClick={handleImport}
+                  disabled={isImporting || selectedItemsCount === 0}
+                  className="flex-1 py-3 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {isImporting ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    `تأكيد وإضافة (${selectedItemsCount})`
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

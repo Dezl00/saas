@@ -220,3 +220,37 @@ export async function deleteMenuItem(menuItemId: string) {
     return { error: "حدث خطأ أثناء حذف الصنف." };
   }
 }
+
+export async function bulkDeleteMenuItems(menuItemIds: string[]) {
+  const session = await auth();
+  if (!session?.user?.storeId) {
+    return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  try {
+    // First, verify all items belong to the store
+    const items = await prisma.menuItem.findMany({
+      where: {
+        id: { in: menuItemIds },
+        storeId: session.user.storeId
+      }
+    });
+
+    if (items.length !== menuItemIds.length) {
+      return { error: "بعض الأصناف المحددة غير موجودة أو لا تملك صلاحية حذفها" };
+    }
+
+    await prisma.menuItem.deleteMany({
+      where: {
+        id: { in: menuItemIds },
+        storeId: session.user.storeId
+      }
+    });
+
+    revalidatePath("/dashboard/menu");
+    return { success: `تم حذف ${items.length} صنف بنجاح` };
+  } catch (error) {
+    console.error("Bulk Delete Menu Items Error:", error);
+    return { error: "حدث خطأ أثناء الحذف الجماعي للأصناف" };
+  }
+}

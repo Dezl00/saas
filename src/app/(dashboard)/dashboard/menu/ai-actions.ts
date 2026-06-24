@@ -117,14 +117,27 @@ export async function scanMenuWithAI(formData: FormData) {
       return { error: "البيانات المستخرجة غير مكتملة." };
     }
 
-    const storeId = session.user.storeId;
-    let addedItemsCount = 0;
+    return { success: true, data: parsedData };
 
-    // حفظ البيانات في قاعدة البيانات
+  } catch (error: any) {
+    console.error("AI Scan Error:", error);
+    return { error: `خطأ أثناء الاتصال: ${error.message || "سبب غير معروف"}` };
+  }
+}
+
+export async function importAIMenuItems(parsedData: any) {
+  const session = await auth();
+  if (!session?.user?.storeId) {
+    return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  const storeId = session.user.storeId;
+  let addedItemsCount = 0;
+
+  try {
     for (const categoryData of parsedData.categories) {
       if (!categoryData.name) continue;
 
-      // البحث عن القسم أو إنشائه
       let category = await prisma.category.findFirst({
         where: { storeId, name: categoryData.name },
       });
@@ -138,7 +151,6 @@ export async function scanMenuWithAI(formData: FormData) {
         });
       }
 
-      // إضافة الأصناف
       if (categoryData.items && Array.isArray(categoryData.items)) {
         const itemsToCreate = categoryData.items
           .filter((item: any) => item.name && typeof item.price === "number")
@@ -160,10 +172,9 @@ export async function scanMenuWithAI(formData: FormData) {
     }
 
     revalidatePath("/dashboard/menu");
-    return { success: `تم مسح المنيو بنجاح! إضافة ${addedItemsCount} صنف جديد.` };
-
+    return { success: `تم حفظ المنيو بنجاح! إضافة ${addedItemsCount} صنف جديد.` };
   } catch (error: any) {
-    console.error("AI Scan Error:", error);
-    return { error: `خطأ أثناء الاتصال: ${error.message || "سبب غير معروف"}` };
+    console.error("AI Import Error:", error);
+    return { error: "حدث خطأ أثناء حفظ البيانات." };
   }
 }
