@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { submitStep1, submitStep2, submitStep3, skipStep, finishOnboarding } from "./actions";
+import { submitStep1, submitStep2, skipStep, finishOnboarding } from "./actions";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
-import { Loader2, ArrowRight, ArrowLeft, CheckCircle2, Store, Phone, Menu, Link as LinkIcon } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, Store, Phone, PartyPopper, Link as LinkIcon, ExternalLink } from "lucide-react";
 
 export function OnboardingClient({ step, storeName, subdomain }: { step: number; storeName: string; subdomain: string }) {
   const [isPending, setIsPending] = useState(false);
@@ -11,8 +11,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
   const steps = [
     { id: 1, title: "هوية المتجر", icon: Store },
     { id: 2, title: "بيانات التواصل", icon: Phone },
-    { id: 3, title: "أول قسم", icon: Menu },
-    { id: 4, title: "اكتمل", icon: CheckCircle2 }
+    { id: 3, title: "اكتمل", icon: CheckCircle2 }
   ];
 
   return (
@@ -28,13 +27,13 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
             return (
               <div key={s.id} className="flex flex-col items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${
-                  isActive ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30" :
+                  isActive ? "bg-surface-950 text-white" :
                   isCompleted ? "bg-success-500 text-white" :
-                  "bg-surface-200 text-surface-500"
+                  "bg-surface-100 text-surface-400"
                 }`}>
                   {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                 </div>
-                <span className={`text-xs mt-2 font-medium ${isActive ? "text-primary-700" : "text-surface-500"}`}>
+                <span className={`text-xs mt-2 font-medium ${isActive ? "text-surface-950" : "text-surface-500"}`}>
                   {s.title}
                 </span>
               </div>
@@ -114,68 +113,43 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
         </form>
       )}
 
-      {/* Step 3: Menu Category */}
+      {/* Step 3: Success */}
       {step === 3 && (
-        <form action={(data) => { setIsPending(true); submitStep3(data).finally(() => setIsPending(false)); }} className="space-y-5 animate-slide-up">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-surface-950">إعداد القائمة (المنيو)</h2>
-            <p className="text-surface-600 text-sm mt-2">قم بإنشاء أول قسم في قائمة منتجاتك.</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-surface-950 mb-1">اسم القسم</label>
-            <input type="text" name="categoryName" placeholder="مثال: المشويات، المشروبات الباردة" required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" />
-          </div>
-
-          <div className="bg-primary-50 p-4 rounded-xl border border-primary-100 mt-4">
-            <p className="text-sm text-primary-800">
-              💡 <strong>تلميح:</strong> لا تقلق، يمكنك إضافة وتعديل الأقسام والمنتجات لاحقاً من خلال لوحة التحكم بسهولة.
-            </p>
-          </div>
-
-          <div className="pt-6 flex gap-3">
-            <button type="submit" disabled={isPending} className="flex-1 bg-surface-950 hover:bg-surface-900 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
-              {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "إنهاء التهيئة"}
-            </button>
-            <button type="button" onClick={() => skipStep(3)} className="px-6 bg-surface-100 hover:bg-surface-200 text-surface-700 py-3 rounded-xl font-bold transition-colors">
-              تخطي
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* Step 4: Success */}
-      {step === 4 && (
         <div className="text-center space-y-6 animate-slide-up py-4">
-          <div className="w-24 h-24 bg-success-100 text-success-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-12 h-12" />
+          <div className="w-24 h-24 bg-success-50 text-success-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+            <PartyPopper className="w-12 h-12" />
           </div>
           
-          <h2 className="text-3xl font-bold text-surface-950">تهانينا! متجرك جاهز</h2>
+          <h2 className="text-3xl font-bold text-surface-950">مبروك متجرك جاهز! 🎉</h2>
           <p className="text-surface-600">
             لقد تم إعداد متجرك بنجاح. يمكنك الآن مشاركة الرابط مع عملائك للبدء في استقبال الطلبات.
           </p>
 
-          <div className="bg-surface-50 border border-surface-200 rounded-xl p-4 flex items-center justify-between mt-6">
-            <div className="flex items-center gap-3 text-surface-800 overflow-hidden">
-              <LinkIcon className="w-5 h-5 flex-shrink-0" />
-              <span className="font-mono text-sm sm:text-base truncate" dir="ltr">
+          <div className="bg-surface-50 border border-surface-200 rounded-xl p-4 flex flex-col gap-2 mt-6">
+            <span className="text-xs font-bold text-surface-500 uppercase tracking-widest text-start">رابط متجرك</span>
+            <div className="flex items-center gap-3 text-surface-900 overflow-hidden">
+              <LinkIcon className="w-5 h-5 flex-shrink-0 text-surface-400" />
+              <span className="font-mono text-base sm:text-lg truncate" dir="ltr">
                 {subdomain ? `${subdomain}.menura.com` : "your-store.menura.com"}
               </span>
             </div>
+          </div>
+
+          <div className="pt-8 flex flex-col gap-3">
             <a 
               href={`/store/${subdomain}`} 
               target="_blank" 
-              className="text-primary-600 hover:text-primary-700 text-sm font-bold ms-4 whitespace-nowrap"
+              className="w-full bg-surface-950 hover:bg-surface-900 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center text-lg gap-2"
             >
               زيارة المتجر
+              <ExternalLink className="w-5 h-5" />
             </a>
-          </div>
-
-          <div className="pt-8">
-            <button onClick={() => finishOnboarding()} className="w-full bg-surface-950 hover:bg-surface-900 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center text-lg">
-              الدخول للوحة التحكم
-              <ArrowLeft className="ms-2 w-5 h-5" />
+            <button 
+              onClick={() => finishOnboarding()} 
+              className="w-full bg-surface-100 hover:bg-surface-200 text-surface-900 py-3 rounded-xl font-bold transition-colors flex items-center justify-center text-sm gap-2"
+            >
+              الإنتقال للوحة التحكم
+              <ArrowLeft className="w-4 h-4" />
             </button>
           </div>
         </div>

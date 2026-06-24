@@ -64,7 +64,7 @@ export async function skipStep(step: number) {
     data: { onboardingStep: step + 1 }
   });
 
-  if (step === 4) {
+  if (step === 3) {
     redirect("/dashboard");
   } else {
     redirect(`/onboarding?step=${step + 1}`);
@@ -92,38 +92,13 @@ export async function submitStep2(formData: FormData) {
   redirect("/onboarding?step=3");
 }
 
-export async function submitStep3(formData: FormData) {
-  const session = await auth();
-  if (!session?.user?.id) return { error: "غير مصرح" };
-
-  const categoryName = formData.get("categoryName") as string;
-
-  const store = await prisma.store.findUnique({ where: { userId: session.user.id } });
-
-  if (store && categoryName) {
-    await prisma.category.create({
-      data: {
-        name: categoryName,
-        storeId: store.id
-      }
-    });
-  }
-
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: { onboardingStep: 4 }
-  });
-
-  redirect("/onboarding?step=4");
-}
-
 export async function finishOnboarding() {
   const session = await auth();
   if (!session?.user?.id) return;
 
   await prisma.user.update({
     where: { id: session.user.id },
-    data: { onboardingStep: 4 } // mark as finished (already 4, but ensures we don't block them)
+    data: { onboardingStep: 4 } // mark as finished
   });
 
   redirect("/dashboard");
