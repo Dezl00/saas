@@ -25,8 +25,14 @@ export async function submitStep1(formData: FormData) {
   }
 
   const baseSlug = slugifyArabic(name) || "store";
-  const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-  const subdomain = `${baseSlug}-${randomSuffix}`;
+  let subdomain = baseSlug;
+  let counter = 0;
+  while (true) {
+    const existing = await prisma.store.findUnique({ where: { subdomain } });
+    if (!existing || existing.userId === session.user.id) break;
+    counter++;
+    subdomain = `${baseSlug}-${String.fromCharCode(96 + counter)}`;
+  }
 
   await prisma.store.update({
     where: { userId: session.user.id },

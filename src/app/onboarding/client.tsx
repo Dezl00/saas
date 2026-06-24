@@ -19,23 +19,23 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
   useEffect(() => {
     if (step === 3) {
       // Fire confetti explosion
-      const duration = 3000;
+      const duration = 1500;
       const end = Date.now() + duration;
 
       const frame = () => {
         confetti({
-          particleCount: 5,
+          particleCount: 3,
           angle: 60,
           spread: 55,
           origin: { x: 0 },
-          colors: ['#3b82f6', '#f97316', '#10b981']
+          colors: ['#3b82f6', '#f97316', '#10b981', '#ef4444', '#8b5cf6', '#eab308']
         });
         confetti({
-          particleCount: 5,
+          particleCount: 3,
           angle: 120,
           spread: 55,
           origin: { x: 1 },
-          colors: ['#3b82f6', '#f97316', '#10b981']
+          colors: ['#3b82f6', '#f97316', '#10b981', '#ef4444', '#8b5cf6', '#eab308']
         });
 
         if (Date.now() < end) {
@@ -52,6 +52,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
       <div className="mb-8">
         <div className="flex items-center justify-between relative">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-surface-100 -z-10 rounded-full" />
+          <div className="absolute top-1/2 right-0 h-1 bg-primary-600 -z-10 rounded-full transition-all duration-500 ease-in-out" style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }} />
           {steps.map((s) => {
             const Icon = s.icon;
             const isActive = s.id === step;
@@ -88,7 +89,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">اسم المتجر</label>
-            <input type="text" name="name" defaultValue={storeName} required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
+            <input type="text" name="name" defaultValue={storeName} required className="block w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
             <p className="text-xs text-surface-500 mt-1">سيتم استخدام هذا الاسم لتوليد رابط متجرك تلقائياً.</p>
           </div>
 
@@ -121,17 +122,17 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">رقم الهاتف العام</label>
-            <input type="text" name="phone" placeholder="مثال: 01xxxxxxxxx" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
+            <input type="text" name="phone" placeholder="مثال: 01xxxxxxxxx" className="block w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">رقم الواتساب (لاستقبال الطلبات)</label>
-            <input type="text" name="whatsappNumber" placeholder="مع كود الدولة مثل +20" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
+            <input type="text" name="whatsappNumber" placeholder="مع كود الدولة مثل +20" className="block w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">العنوان الرئيسي</label>
-            <input type="text" name="address" placeholder="مثال: شارع النيل، القاهرة" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
+            <input type="text" name="address" placeholder="مثال: شارع النيل، القاهرة" className="block w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
           </div>
 
           <div className="pt-6 flex gap-3">
@@ -158,7 +159,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
             <div className="flex items-center gap-3 text-surface-900 overflow-hidden">
               <LinkIcon className="w-5 h-5 flex-shrink-0 text-surface-400" />
               <span className="font-mono text-base sm:text-lg truncate" dir="ltr">
-                {subdomain ? `${subdomain}.menura.com` : "your-store.menura.com"}
+                {subdomain ? `menura.site/store/${subdomain}` : "menura.site/store/your-store"}
               </span>
             </div>
           </div>
@@ -167,7 +168,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
             <a 
               href={`/store/${subdomain}`} 
               target="_blank" 
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center text-lg gap-2"
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center text-base gap-2"
             >
               زيارة المتجر
               <ExternalLink className="w-5 h-5" />
