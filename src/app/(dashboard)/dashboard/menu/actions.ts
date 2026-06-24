@@ -13,6 +13,8 @@ export async function createMenuItem(formData: FormData) {
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);
+  const categoryId = formData.get("categoryId") as string;
+  const sortOrder = parseInt((formData.get("sortOrder") as string) || "0");
   let imageStr = formData.get("image") as string | File | null;
   if (imageStr && typeof imageStr !== "string" && imageStr.size > 0) {
     const { uploadImageToCloudinary } = await import("@/lib/upload");
