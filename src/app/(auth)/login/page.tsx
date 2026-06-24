@@ -1,12 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { loginAction } from "../actions";
 import Link from "next/link";
-import { ArrowRight, Loader2, Mail, Lock } from "lucide-react";
+import { ArrowRight, Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="animate-fade-in">
@@ -59,7 +60,7 @@ export default function LoginPage() {
               </label>
               <Link
                 href="#"
-                className="text-xs font-medium text-primary-600 hover:text-primary-500 transition-colors"
+                className="text-xs font-medium text-surface-600 hover:text-surface-900 transition-colors"
               >
                 نسيت كلمة المرور؟
               </Link>
@@ -71,13 +72,20 @@ export default function LoginPage() {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
-                className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+                className="block w-full ps-10 pe-10 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
                 placeholder="••••••••"
                 dir="ltr"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 end-0 pe-3 flex items-center text-surface-800/40 hover:text-surface-950 transition-colors"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
             </div>
           </div>
         </div>
@@ -102,7 +110,7 @@ export default function LoginPage() {
             ليس لديك حساب؟{" "}
             <Link
               href="/register"
-              className="font-bold text-primary-600 hover:text-primary-500 transition-colors"
+              className="font-bold text-surface-950 hover:text-surface-800 transition-colors underline decoration-surface-200 underline-offset-4"
             >
               أنشئ متجرك مجاناً
             </Link>

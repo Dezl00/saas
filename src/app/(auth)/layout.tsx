@@ -19,11 +19,11 @@ export default async function AuthLayout({
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-white flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8 relative">
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 animate-fade-in">
         <Link href="/" className="flex flex-col items-center justify-center gap-4 mb-10 group">
           {platformLogo ? (
-            <div className="w-16 h-16 rounded-2xl bg-surface-50 flex items-center justify-center overflow-hidden border border-surface-100">
+            <div className="w-24 h-24 flex items-center justify-center">
               <img src={platformLogo} alt="Logo" className="w-full h-full object-contain" />
             </div>
           ) : (

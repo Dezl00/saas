@@ -9,8 +9,6 @@ export const registerSchema = z.object({
   name: z.string().min(2, "الاسم يجب أن يكون حرفين على الأقل"),
   email: z.string().email("البريد الإلكتروني غير صحيح"),
   password: z.string().min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل"),
-  storeName: z.string().min(2, "اسم المتجر يجب أن يكون حرفين على الأقل"),
-  storeType: z.enum(["RESTAURANT", "MARKET", "PHARMACY", "OTHER"]),
 });
 
 export const categorySchema = z.object({
