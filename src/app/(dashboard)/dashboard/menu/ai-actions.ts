@@ -5,6 +5,8 @@ import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+export const maxDuration = 60;
+
 export async function scanMenuWithAI(formData: FormData) {
   const session = await auth();
   if (!session?.user?.storeId) {
