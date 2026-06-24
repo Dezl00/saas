@@ -51,7 +51,7 @@ export default function RegisterPage() {
     return (
       <div className="animate-fade-in">
         <div className="mb-6 text-center">
-          <div className="w-16 h-16 bg-surface-100 text-surface-900 rounded-full flex items-center justify-center mx-auto mb-4 border border-surface-200">
+          <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-surface-200">
             <KeyRound className="w-8 h-8" />
           </div>
           <h2 className="text-2xl font-bold text-surface-950">تأكيد البريد الإلكتروني</h2>
@@ -78,7 +78,7 @@ export default function RegisterPage() {
               type="text"
               required
               maxLength={4}
-              className="block w-full px-3 py-3 text-center text-2xl tracking-[1em] bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+              className="block w-full px-3 py-3 text-center text-2xl tracking-[1em] bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
               placeholder="----"
               dir="ltr"
             />
@@ -87,7 +87,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isOtpPending}
-            className="w-full flex justify-center items-center py-3.5 px-4 mt-6 rounded-xl text-sm font-bold text-white bg-surface-950 hover:bg-surface-900 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full flex justify-center items-center py-3.5 px-4 mt-6 rounded-xl text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isOtpPending ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -135,7 +135,7 @@ export default function RegisterPage() {
                 name="name"
                 type="text"
                 required
-                className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+                className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="أحمد محمد"
               />
             </div>
@@ -155,7 +155,7 @@ export default function RegisterPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+                className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="اسم@example.com"
                 dir="ltr"
               />
@@ -172,7 +172,7 @@ export default function RegisterPage() {
                 name="phone"
                 type="text"
                 required
-                className="block w-full px-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+                className="block w-full px-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="01xxxxxxxxx"
                 dir="ltr"
               />
@@ -193,7 +193,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 required
-                className="block w-full ps-10 pe-10 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+                className="block w-full ps-10 pe-10 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="••••••••"
                 dir="ltr"
               />
@@ -211,7 +211,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={isRegisterPending}
-          className="w-full flex justify-center items-center py-3.5 px-4 mt-6 rounded-xl text-sm font-bold text-white bg-surface-950 hover:bg-surface-900 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full flex justify-center items-center py-3.5 px-4 mt-6 rounded-xl text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isRegisterPending ? (
             <Loader2 className="w-5 h-5 animate-spin" />

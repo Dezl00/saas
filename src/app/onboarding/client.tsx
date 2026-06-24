@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { submitStep1, submitStep2, skipStep, finishOnboarding } from "./actions";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
-import { Loader2, ArrowLeft, CheckCircle2, Store, Phone, PartyPopper, Link as LinkIcon, ExternalLink } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, Store, Phone, Link as LinkIcon, ExternalLink } from "lucide-react";
+import confetti from "canvas-confetti";
+import { useEffect } from "react";
 
 export function OnboardingClient({ step, storeName, subdomain }: { step: number; storeName: string; subdomain: string }) {
   const [isPending, setIsPending] = useState(false);
@@ -13,6 +15,36 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
     { id: 2, title: "بيانات التواصل", icon: Phone },
     { id: 3, title: "اكتمل", icon: CheckCircle2 }
   ];
+
+  useEffect(() => {
+    if (step === 3) {
+      // Fire confetti explosion
+      const duration = 3000;
+      const end = Date.now() + duration;
+
+      const frame = () => {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#3b82f6', '#f97316', '#10b981']
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#3b82f6', '#f97316', '#10b981']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
+      frame();
+    }
+  }, [step]);
 
   return (
     <div>
@@ -27,7 +59,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
             return (
               <div key={s.id} className="flex flex-col items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors ${
-                  isActive ? "bg-surface-950 text-white" :
+                  isActive ? "bg-primary-600 text-white" :
                   isCompleted ? "bg-success-500 text-white" :
                   "bg-surface-100 text-surface-400"
                 }`}>
@@ -56,7 +88,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">اسم المتجر</label>
-            <input type="text" name="name" defaultValue={storeName} required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" />
+            <input type="text" name="name" defaultValue={storeName} required className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
             <p className="text-xs text-surface-500 mt-1">سيتم استخدام هذا الاسم لتوليد رابط متجرك تلقائياً.</p>
           </div>
 
@@ -69,7 +101,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
           </div>
 
           <div className="pt-6 flex gap-3">
-            <button type="submit" disabled={isPending} className="flex-1 bg-surface-950 hover:bg-surface-900 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
+            <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
               {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "التالي"}
             </button>
             <button type="button" onClick={() => skipStep(1)} className="px-6 bg-surface-100 hover:bg-surface-200 text-surface-700 py-3 rounded-xl font-bold transition-colors">
@@ -89,21 +121,21 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">رقم الهاتف العام</label>
-            <input type="text" name="phone" placeholder="مثال: 01xxxxxxxxx" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" dir="ltr" />
+            <input type="text" name="phone" placeholder="مثال: 01xxxxxxxxx" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">رقم الواتساب (لاستقبال الطلبات)</label>
-            <input type="text" name="whatsappNumber" placeholder="مع كود الدولة مثل +20" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" dir="ltr" />
+            <input type="text" name="whatsappNumber" placeholder="مع كود الدولة مثل +20" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" dir="ltr" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-surface-950 mb-1">العنوان الرئيسي</label>
-            <input type="text" name="address" placeholder="مثال: شارع النيل، القاهرة" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900" />
+            <input type="text" name="address" placeholder="مثال: شارع النيل، القاهرة" className="block w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500" />
           </div>
 
           <div className="pt-6 flex gap-3">
-            <button type="submit" disabled={isPending} className="flex-1 bg-surface-950 hover:bg-surface-900 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
+            <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center">
               {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "التالي"}
             </button>
             <button type="button" onClick={() => skipStep(2)} className="px-6 bg-surface-100 hover:bg-surface-200 text-surface-700 py-3 rounded-xl font-bold transition-colors">
@@ -116,11 +148,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
       {/* Step 3: Success */}
       {step === 3 && (
         <div className="text-center space-y-6 animate-slide-up py-4">
-          <div className="w-24 h-24 bg-success-50 text-success-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
-            <PartyPopper className="w-12 h-12" />
-          </div>
-          
-          <h2 className="text-3xl font-bold text-surface-950">مبروك متجرك جاهز! 🎉</h2>
+          <h2 className="text-3xl font-bold text-surface-950">مبروك متجرك جاهز!</h2>
           <p className="text-surface-600">
             لقد تم إعداد متجرك بنجاح. يمكنك الآن مشاركة الرابط مع عملائك للبدء في استقبال الطلبات.
           </p>
@@ -139,7 +167,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
             <a 
               href={`/store/${subdomain}`} 
               target="_blank" 
-              className="w-full bg-surface-950 hover:bg-surface-900 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center text-lg gap-2"
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center text-lg gap-2"
             >
               زيارة المتجر
               <ExternalLink className="w-5 h-5" />

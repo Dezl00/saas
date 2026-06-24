@@ -43,7 +43,7 @@ export default function LoginPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+                className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="اسم@example.com"
                 dir="ltr"
               />
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
-                className="block w-full ps-10 pe-10 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-surface-900/20 focus:border-surface-900 transition-colors"
+                className="block w-full ps-10 pe-10 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="••••••••"
                 dir="ltr"
               />
@@ -93,7 +93,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full flex justify-center items-center py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-surface-950 hover:bg-surface-900 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full flex justify-center items-center py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isPending ? (
             <Loader2 className="w-5 h-5 animate-spin" />
