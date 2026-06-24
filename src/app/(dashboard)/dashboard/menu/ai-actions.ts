@@ -3,21 +3,6 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-      console.error("AI Response Parsing Error:", cleanText);
-      return { error: "فشل في فهم استجابة الذكاء الاصطناعي، يرجى المحاولة بصورة أوضح." };
-    }
-
-    if (!parsedData.categories || !Array.isArray(parsedData.categories)) {
-      return { error: "البيانات المستخرجة غير مكتملة." };
-    }
-
-    return { success: true, data: parsedData };
-
-  } catch (error: any) {
-    console.error("AI Scan Error:", error);
-    return { error: `خطأ أثناء الاتصال: ${error.message || "سبب غير معروف"}` };
-  }
-}
 
 export async function importAIMenuItems(parsedData: any) {
   const session = await auth();
