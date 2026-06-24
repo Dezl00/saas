@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Camera, Upload, X, Loader2, Sparkles, CheckCircle2, ListChecks, CheckSquare, Square } from "lucide-react";
 import toast from "react-hot-toast";
-import { scanMenuWithAI, importAIMenuItems } from "@/app/(dashboard)/dashboard/menu/ai-actions";
+import { importAIMenuItems } from "@/app/(dashboard)/dashboard/menu/ai-actions";
 
 type ParsedCategory = {
   name: string;
@@ -111,15 +111,21 @@ export function AIMenuScanner() {
     const formData = new FormData();
     formData.append("image", file);
 
-    const result = await scanMenuWithAI(formData);
+    try {
+      const response = await fetch("/api/menu/ai-scan", {
+        method: "POST",
+        body: formData,
+      });
 
-    clearInterval(stepInterval);
+      const result = await response.json();
 
-    if (result?.error) {
-      toast.error(result.error);
-      setIsScanning(false);
-      setProgressStep(0);
-    } else if (result?.success && result.data) {
+      clearInterval(stepInterval);
+
+      if (!response.ok || result?.error) {
+        toast.error(result?.error || "حدث خطأ غير متوقع");
+        setIsScanning(false);
+        setProgressStep(0);
+      } else if (result?.success && result.data) {
       // Mark all items as selected by default
       const processedData = {
         categories: result.data.categories.map((c: any) => ({
@@ -128,6 +134,12 @@ export function AIMenuScanner() {
         }))
       };
       setParsedData(processedData);
+      setIsScanning(false);
+      setProgressStep(0);
+    }
+    } catch (error) {
+      clearInterval(stepInterval);
+      toast.error("حدث خطأ في الاتصال بالسيرفر. يرجى المحاولة مرة أخرى.");
       setIsScanning(false);
       setProgressStep(0);
     }
