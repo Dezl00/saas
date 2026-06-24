@@ -39,3 +39,30 @@ export async function sendOTP(email: string, otpCode: string) {
     return false;
   }
 }
+
+export async function sendPasswordResetOTP(email: string, otpCode: string) {
+  try {
+    await transporter.sendMail({
+      from: `"منصتك" <info@menuegy.com>`,
+      to: email,
+      subject: "إعادة تعيين كلمة المرور",
+      text: `مرحباً،\n\nلقد طلبت إعادة تعيين كلمة المرور الخاصة بك.\n\nكود التحقق الخاص بك هو: ${otpCode}\n\nصالح لمدة 15 دقيقة.`,
+      html: `
+        <div dir="rtl" style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+          <h2>إعادة تعيين كلمة المرور</h2>
+          <p>لقد تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بحسابك في منصتك.</p>
+          <p>كود التحقق الخاص بك هو:</p>
+          <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #3b82f6; margin: 20px 0;">
+            ${otpCode}
+          </div>
+          <p>هذا الكود صالح لمدة 15 دقيقة فقط.</p>
+          <p>إذا لم تطلب تغيير كلمة المرور، يرجى تجاهل هذه الرسالة.</p>
+        </div>
+      `,
+    });
+    return true;
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
+    return false;
+  }
+}

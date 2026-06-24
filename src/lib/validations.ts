@@ -11,6 +11,16 @@ export const registerSchema = z.object({
   password: z.string().min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل"),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("البريد الإلكتروني غير صحيح"),
+});
+
+export const resetPasswordSchema = z.object({
+  email: z.string().email("البريد الإلكتروني غير صحيح"),
+  otpCode: z.string().length(4, "كود التحقق يجب أن يكون 4 أرقام"),
+  password: z.string().min(6, "كلمة المرور يجب أن تكون 6 أحرف على الأقل"),
+});
+
 export const categorySchema = z.object({
   name: z.string().min(1, "اسم القسم مطلوب"),
   description: z.string().optional(),

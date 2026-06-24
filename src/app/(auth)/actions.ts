@@ -146,3 +146,72 @@ export async function verifyOtpAction(email: string, otp: string) {
     return { error: "حدث خطأ أثناء التحقق من الكود" };
   }
 }
+export async function forgotPasswordAction(prevState: any, formData: FormData) {
+  try {
+    const rawData = Object.fromEntries(formData);
+    const { email } = await import("@/lib/validations").then(m => m.forgotPasswordSchema.parse(rawData));
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // Don't leak whether user exists or not for security, just pretend it was sent.
+      return { success: true, email };
+    }
+
+    const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
+    const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
+    await prisma.user.update({
+      where: { email },
+      data: { otpCode, otpExpiry }
+    });
+
+    const { sendPasswordResetOTP } = await import("@/lib/email");
+    const sent = await sendPasswordResetOTP(email, otpCode);
+    
+    if (!sent) {
+      return { error: "حدث خطأ أثناء إرسال كود التحقق" };
+    }
+
+    return { success: true, email };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { error: (error as any).errors[0].message };
+    }
+    return { error: "خطأ داخلي، يرجى المحاولة لاحقاً" };
+  }
+}
+
+export async function resetPasswordAction(prevState: any, formData: FormData) {
+  try {
+    const rawData = Object.fromEntries(formData);
+    const { email, otpCode, password } = await import("@/lib/validations").then(m => m.resetPasswordSchema.parse(rawData));
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user || user.otpCode !== otpCode) {
+      return { error: "الكود غير صحيح" };
+    }
+
+    if (user.otpExpiry && user.otpExpiry < new Date()) {
+      return { error: "الكود منتهي الصلاحية" };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.user.update({
+      where: { email },
+      data: { 
+        password: hashedPassword,
+        otpCode: null, 
+        otpExpiry: null,
+        isVerified: true // verify them if they weren't
+      }
+    });
+
+    return { success: true };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { error: (error as any).errors[0].message };
+    }
+    return { error: "حدث خطأ أثناء تغيير كلمة المرور" };
+  }
+}
