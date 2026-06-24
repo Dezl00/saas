@@ -4,7 +4,6 @@ import { signIn, auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { loginSchema, registerSchema } from "@/lib/validations";
 import bcrypt from "bcryptjs";
-import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { sendOTP } from "@/lib/email";
@@ -21,28 +20,32 @@ export async function loginAction(prevState: any, formData: FormData) {
 
     const redirectTo = user?.role === "ADMIN" ? "/admin" : "/dashboard";
 
-    await signIn("credentials", {
+    const result = await signIn("credentials", {
       email: validatedData.email,
       password: validatedData.password,
-      redirectTo,
+      redirect: false,
     });
 
-    // signIn throws a redirect error on success, so code here is not reached.
+    if (result?.error) {
+      return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
+    }
+    
+    // Manual redirect after successful sign in
+    redirect(redirectTo);
   } catch (error) {
     if (error instanceof z.ZodError) {
       const zodError = error as any;
       return { error: zodError.errors[0].message };
     }
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          if ((error as any).cause?.err?.message === "UNVERIFIED") {
-            return { error: "يرجى تفعيل حسابك أولاً. قم بإنشاء حساب بنفس البريد لإعادة إرسال الكود." };
-          }
-          return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
-        default:
-          return { error: "حدث خطأ في المصادقة: " + error.message };
+    const isCredentialsError = 
+      (error && typeof error === "object" && "type" in error && (error as any).type === "CredentialsSignin") ||
+      (error instanceof Error && (error.message.includes("CredentialsSignin") || error.name === "CredentialsSignin"));
+
+    if (isCredentialsError) {
+      if ((error as any)?.cause?.err?.message === "UNVERIFIED") {
+        return { error: "يرجى تفعيل حسابك أولاً. قم بإنشاء حساب بنفس البريد لإعادة إرسال الكود." };
       }
+      return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
     }
     // Check if it's a NEXT_REDIRECT error thrown by Next.js or Auth.js
     if (error instanceof Error && error.message === "NEXT_REDIRECT") {
