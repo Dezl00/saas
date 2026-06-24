@@ -23,7 +23,7 @@ export function AIMenuScanner() {
           let width = img.width;
           let height = img.height;
           
-          const MAX_DIM = 1200;
+          const MAX_DIM = 1000;
           if (width > height && width > MAX_DIM) {
             height = Math.round((height * MAX_DIM) / width);
             width = MAX_DIM;
@@ -43,7 +43,7 @@ export function AIMenuScanner() {
             } else {
               resolve(file);
             }
-          }, "image/jpeg", 0.7);
+          }, "image/jpeg", 0.6);
         };
         img.src = e.target?.result as string;
       };
