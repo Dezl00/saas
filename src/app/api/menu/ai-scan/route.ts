@@ -27,8 +27,10 @@ export async function POST(req: Request) {
     const base64Data = buffer.toString("base64");
     
     const genAI = new GoogleGenerativeAI(apiKey);
-    // Models to try in order - using the valid Google models
-    const modelsToTry = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash"];
+    const modelsToTry = [
+      "gemini-2.0-flash",
+      "gemini-2.5-flash"
+    ];
 
     const prompt = `أنت مساعد ذكي متخصص في قراءة قوائم الطعام (Menus). 
 قم بتحليل صورة قائمة الطعام المرفقة واستخراج جميع الأقسام والأصناف والأسعار منها بدقة عالية. 
@@ -70,6 +72,7 @@ export async function POST(req: Request) {
     let lastError: any = null;
 
     for (const modelName of modelsToTry) {
+      console.log("Trying model:", modelName);
       try {
         const model = genAI.getGenerativeModel({ model: modelName });
         const result = await model.generateContent([prompt, ...imageParts]);
@@ -80,8 +83,15 @@ export async function POST(req: Request) {
         const msg = modelError.message || "";
         console.error(`Model ${modelName} failed:`, msg);
         
-        // Skip to next model immediately without sleeping to avoid Vercel 504 Timeout
-        continue;
+        if (
+          msg.includes("404") ||
+          msg.includes("503") ||
+          msg.includes("429")
+        ) {
+          continue;
+        }
+
+        throw modelError;
       }
     }
 
