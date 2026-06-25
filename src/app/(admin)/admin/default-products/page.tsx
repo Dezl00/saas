@@ -16,11 +16,10 @@ export const metadata = {
 
 export const maxDuration = 60;
 
-export default async function DefaultProductsPage({
-  searchParams,
-}: {
-  searchParams: { tab?: string };
+export default async function DefaultProductsPage(props: {
+  searchParams: Promise<{ tab?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const session = await auth();
   
   if (!session?.user || session.user.role !== "ADMIN") {

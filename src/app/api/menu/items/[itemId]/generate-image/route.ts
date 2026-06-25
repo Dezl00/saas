@@ -11,7 +11,7 @@ export async function POST(
 ) {
   try {
     const session = await auth();
-    if (!session?.user?.storeId) {
+    if (!session?.user) {
       return NextResponse.json({ error: "غير مصرح لك" }, { status: 401 });
     }
 
@@ -23,12 +23,12 @@ export async function POST(
     const item = await prisma.menuItem.findFirst({
       where: {
         id: itemId,
-        storeId: session.user.storeId,
+        ...(session.user.role !== "ADMIN" ? { storeId: session.user.storeId! } : {}),
       },
     });
 
-    if (!item) {
-      return NextResponse.json({ error: "الصنف غير موجود" }, { status: 404 });
+    if (!item || (session.user.role === "ADMIN" && item.storeId !== "DEFAULT_STORE")) {
+      return NextResponse.json({ error: "الصنف غير موجود أو غير مصرح" }, { status: 404 });
     }
 
     // البناء الثابت للـ Prompt بناءً على نصيحة المستخدم

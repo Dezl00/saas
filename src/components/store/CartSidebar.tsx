@@ -59,11 +59,11 @@ export function CartSidebar({
     e.preventDefault();
     if (!store) return;
 
-    if (deliveryType === "DELIVERY" && !selectedArea) {
+    if (deliveryType === "DELIVERY" && !selectedArea && deliveryAreas && deliveryAreas.length > 0) {
       toast.error("يرجى اختيار منطقة التوصيل");
       return;
     }
-    if (deliveryType === "PICKUP" && !selectedBranch) {
+    if (deliveryType === "PICKUP" && !selectedBranch && branches && branches.length > 0) {
       toast.error("يرجى اختيار الفرع");
       return;
     }
@@ -117,9 +117,11 @@ export function CartSidebar({
         msg += `*الاسم:* ${formData.get("customerName")}\n`;
         msg += `*الهاتف:* ${formData.get("customerPhone")}\n`;
         if (deliveryType === "DELIVERY") {
-          msg += `*التوصيل إلى:* ${deliveryAreas?.find(a=>a.id===selectedArea)?.name} - ${formData.get("customerAddress")}\n`;
+          const areaName = deliveryAreas?.find(a=>a.id===selectedArea)?.name;
+          msg += `*التوصيل إلى:* ${areaName ? areaName + ' - ' : ''}${formData.get("customerAddress")}\n`;
         } else {
-          msg += `*استلام من فرع:* ${branches?.find(b=>b.id===selectedBranch)?.name}\n`;
+          const branchName = branches?.find(b=>b.id===selectedBranch)?.name;
+          msg += `*استلام من فرع:* ${branchName || 'الفرع الرئيسي'}\n`;
         }
         msg += `\n*الطلبات:*\n`;
         items.forEach(item => {
