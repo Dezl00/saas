@@ -35,7 +35,12 @@
   --color-surface-950: oklch(0.15 0.02 250);
 
   /* Success/Warning/Error */
+  --color-success-50: oklch(0.97 0.04 145);
+  --color-success-100: oklch(0.93 0.08 145);
+  --color-success-200: oklch(0.88 0.12 145);
   --color-success-500: oklch(0.65 0.18 145);
+  --color-success-600: oklch(0.55 0.16 145);
+  --color-success-700: oklch(0.45 0.14 145);
   --color-warning-500: oklch(0.75 0.15 70);
   --color-error-500: oklch(0.6 0.2 25);
 
