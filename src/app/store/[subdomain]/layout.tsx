@@ -235,7 +235,7 @@ export default async function StoreLayout({
             </div>
             
             <div className="text-xs text-surface-400 mt-10 pt-6 border-t border-surface-100 flex items-center justify-center gap-2">
-              مدعوم بواسطة <a href="https://menura.site" target="_blank" className="font-bold text-surface-950 hover:text-surface-700">منصتك</a> &copy; {new Date().getFullYear()}
+              مدعوم بواسطة <a href="https://menura.site" target="_blank" className="font-bold text-surface-950 hover:text-surface-700">Menura</a> &copy; {new Date().getFullYear()}
             </div>
           </div>
         </footer>

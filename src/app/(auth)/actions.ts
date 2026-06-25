@@ -33,9 +33,11 @@ export async function loginAction(prevState: any, formData: FormData) {
     // Manual redirect after successful sign in
     redirect(redirectTo);
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      const zodError = error as any;
-      return { error: zodError.errors[0].message };
+    if (error && typeof error === 'object' && ('errors' in error || 'issues' in error)) {
+      const issues = (error as any).errors || (error as any).issues;
+      if (Array.isArray(issues) && issues.length > 0) {
+        return { error: issues[0].message };
+      }
     }
     const isCredentialsError = 
       (error && typeof error === "object" && "type" in error && (error as any).type === "CredentialsSignin") ||
@@ -122,9 +124,11 @@ export async function registerAction(prevState: any, formData: FormData) {
     return { requiresOtp: true, email: validatedData.email };
   } catch (error) {
     console.error("REGISTER ERROR:", error);
-    if (error instanceof z.ZodError) {
-      const zodError = error as any;
-      return { error: zodError.errors[0].message };
+    if (error && typeof error === 'object' && ('errors' in error || 'issues' in error)) {
+      const issues = (error as any).errors || (error as any).issues;
+      if (Array.isArray(issues) && issues.length > 0) {
+        return { error: issues[0].message };
+      }
     }
     return { error: "خطأ داخلي: " + (error instanceof Error ? error.message : String(error)) };
   }
@@ -177,8 +181,11 @@ export async function forgotPasswordAction(prevState: any, formData: FormData) {
 
     return { success: true, email };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { error: (error as any).errors[0].message };
+    if (error && typeof error === 'object' && ('errors' in error || 'issues' in error)) {
+      const issues = (error as any).errors || (error as any).issues;
+      if (Array.isArray(issues) && issues.length > 0) {
+        return { error: issues[0].message };
+      }
     }
     return { error: "خطأ داخلي، يرجى المحاولة لاحقاً" };
   }
@@ -212,8 +219,11 @@ export async function resetPasswordAction(prevState: any, formData: FormData) {
 
     return { success: true };
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { error: (error as any).errors[0].message };
+    if (error && typeof error === 'object' && ('errors' in error || 'issues' in error)) {
+      const issues = (error as any).errors || (error as any).issues;
+      if (Array.isArray(issues) && issues.length > 0) {
+        return { error: issues[0].message };
+      }
     }
     return { error: "حدث خطأ أثناء تغيير كلمة المرور" };
   }
