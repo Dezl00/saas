@@ -1,4 +1,4 @@
-import Groq from "groq-sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
@@ -17,20 +17,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "الرجاء إرفاق صورة صالحة" }, { status: 400 });
     }
 
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ error: "مفتاح GROQ_API_KEY غير موجود في إعدادات البيئة." }, { status: 500 });
+    const keysString = process.env.GEMINI_API_KEYS;
+    if (!keysString) {
+      return NextResponse.json({ error: "مفاتيح GEMINI_API_KEYS غير موجودة في إعدادات البيئة." }, { status: 500 });
+    }
+    const apiKeys = keysString.split(",").map(k => k.trim()).filter(k => k.length > 0);
+
+    if (apiKeys.length === 0) {
+      return NextResponse.json({ error: "لا توجد مفاتيح صالحة." }, { status: 500 });
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const base64Data = buffer.toString("base64");
-    
-    const groq = new Groq({ apiKey: apiKey });
-    const modelsToTry = [
-      "llama-3.2-90b-vision-preview",
-      "llama-3.2-11b-vision-preview"
-    ];
 
     const prompt = `أنت مساعد ذكي متخصص في قراءة قوائم الطعام (Menus). 
 قم بتحليل صورة قائمة الطعام المرفقة واستخراج جميع الأقسام والأصناف والأسعار منها بدقة عالية. 
@@ -59,59 +58,56 @@ export async function POST(req: Request) {
   ]
 }`;
 
+    const imageParts = [
+      {
+        inlineData: {
+          data: base64Data,
+          mimeType: file.type,
+        },
+      },
+    ];
+
     let responseText = "";
     let lastError: any = null;
 
-    for (const modelName of modelsToTry) {
-      console.log("Trying model:", modelName);
-      try {
-        const chatCompletion = await groq.chat.completions.create({
-          messages: [
-            {
-              role: "user",
-              content: [
-                { type: "text", text: prompt },
-                {
-                  type: "image_url",
-                  image_url: {
-                    url: `data:${file.type};base64,${base64Data}`,
-                  },
-                },
-              ],
-            },
-          ],
-          model: modelName,
-          temperature: 0.1,
-          max_tokens: 4096,
-        });
+    // Loop through all provided API keys
+    for (const apiKey of apiKeys) {
+      console.log("Trying API Key starting with:", apiKey.substring(0, 8));
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-        responseText = chatCompletion.choices[0]?.message?.content || "";
-        break; // Success
+      try {
+        const result = await model.generateContent([prompt, ...imageParts]);
+        responseText = result.response.text();
+        break; // Success! Break the key loop
       } catch (modelError: any) {
         lastError = modelError;
         const msg = modelError.message || "";
-        console.error(`Model ${modelName} failed:`, msg);
+        console.error(`Key ${apiKey.substring(0, 8)} failed:`, msg);
         
-        if (
-          msg.includes("404") ||
-          msg.includes("503") ||
-          msg.includes("429") ||
-          msg.includes("rate_limit_exceeded")
-        ) {
-          continue;
+        if (msg.includes("429") || msg.includes("quota") || msg.includes("API_KEY_INVALID")) {
+          console.log("Key quota exceeded or invalid, switching to the next key...");
+          continue; // Try next key
         }
 
-        throw modelError;
+        if (msg.includes("503") || msg.includes("Service Unavailable")) {
+          // If it's a server overload, switching keys won't help. 
+          // We break and tell the user to wait.
+          break;
+        }
+        
+        // Other errors (e.g. 404), maybe we should throw or continue? We will break.
+        break;
       }
     }
 
     if (!responseText) {
       const errMsg = lastError?.message || "";
-      if (errMsg.includes("429") || errMsg.includes("rate_limit_exceeded")) {
-        return NextResponse.json({ error: "تم تجاوز حصة الاستخدام للذكاء الاصطناعي (Groq)." }, { status: 429 });
+      if (errMsg.includes("429") || errMsg.includes("quota")) {
+        return NextResponse.json({ error: "تم تجاوز الحصة لجميع المفاتيح المتاحة! الرجاء المحاولة غداً." }, { status: 429 });
       }
-      if (errMsg.includes("503")) {
-        return NextResponse.json({ error: "السيرفرات تواجه ضغطاً عالياً حالياً. يرجى المحاولة بعد قليل." }, { status: 503 });
+      if (errMsg.includes("503") || errMsg.includes("Service Unavailable")) {
+        return NextResponse.json({ error: "سيرفرات جوجل تواجه ضغطاً عالياً حالياً. يرجى المحاولة بعد قليل." }, { status: 503 });
       }
       return NextResponse.json({ error: `خطأ من الذكاء الاصطناعي: ${errMsg}` }, { status: 500 });
     }
