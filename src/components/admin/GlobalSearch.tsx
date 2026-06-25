@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Search, Store, User, Phone, Mail, CheckCircle, AlertTriangle, Trash2, X } from "lucide-react";
 import { globalSearch } from "@/app/(admin)/admin/searchAction";
 import Link from "next/link";
@@ -15,6 +16,9 @@ export function GlobalSearch() {
   // Modals state
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [selectedStore, setSelectedStore] = useState<any>(null);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Handle outside click
   useEffect(() => {
@@ -142,8 +146,8 @@ export function GlobalSearch() {
       )}
 
       {/* Store Modal */}
-      {selectedStore && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-surface-950/50 backdrop-blur-sm">
+      {mounted && selectedStore && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-surface-950/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6 relative animate-fade-in">
             <button onClick={() => setSelectedStore(null)} className="absolute top-4 left-4 text-surface-400 hover:text-surface-900">
               <X className="w-5 h-5" />
@@ -207,12 +211,13 @@ export function GlobalSearch() {
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* User Modal */}
-      {selectedUser && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-surface-950/50 backdrop-blur-sm">
+      {mounted && selectedUser && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-surface-950/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6 relative animate-fade-in">
             <button onClick={() => setSelectedUser(null)} className="absolute top-4 left-4 text-surface-400 hover:text-surface-900">
               <X className="w-5 h-5" />
@@ -265,7 +270,8 @@ export function GlobalSearch() {
               إغلاق
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
