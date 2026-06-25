@@ -24,3 +24,36 @@ export async function toggleStoreDefaultProducts(storeId: string, currentStatus:
     return { error: "حدث خطأ أثناء تحديث الإعدادات" };
   }
 }
+
+export async function createDefaultCategory(formData: FormData) {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") return { error: "غير مصرح" };
+  
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
+  const sortOrder = parseInt(formData.get("sortOrder") as string) || 0;
+
+  await prisma.category.create({
+    data: { name, description, sortOrder, storeId: 'DEFAULT_STORE' }
+  });
+  revalidatePath("/admin/default-products");
+}
+
+export async function toggleDefaultCategoryStatus(categoryId: string, currentStatus: boolean) {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") return;
+  
+  await prisma.category.update({
+    where: { id: categoryId },
+    data: { isActive: !currentStatus }
+  });
+  revalidatePath("/admin/default-products");
+}
+
+export async function deleteDefaultCategory(categoryId: string) {
+  const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") return;
+  
+  await prisma.category.delete({ where: { id: categoryId } });
+  revalidatePath("/admin/default-products");
+}

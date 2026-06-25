@@ -7,7 +7,11 @@ export const maxDuration = 60; // Allow up to 60 seconds
 export async function POST(req: Request) {
   try {
     const session = await auth();
-    if (!session?.user?.storeId) {
+    if (!session?.user) {
+      return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
+    }
+
+    if (session.user.role !== "ADMIN" && !session.user.storeId) {
       return NextResponse.json({ error: "غير مصرح لك بالقيام بهذه العملية" }, { status: 401 });
     }
 

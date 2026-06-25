@@ -6,13 +6,16 @@ import { revalidatePath } from "next/cache";
 
 export async function importAIMenuItems(parsedData: any, targetStoreId?: string) {
   const session = await auth();
-  if (!session?.user?.storeId) {
-    return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  if (!session?.user) {
+    return { error: "غير مصرح" };
   }
 
   let storeId = session.user.storeId;
+
   if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
     storeId = "DEFAULT_STORE";
+  } else if (!storeId) {
+    return { error: "غير مصرح لك بالقيام بهذه العملية" };
   }
   
   let addedItemsCount = 0;
@@ -62,7 +65,11 @@ export async function importAIMenuItems(parsedData: any, targetStoreId?: string)
       }
     }
 
-    revalidatePath("/dashboard/menu");
+    if (storeId === "DEFAULT_STORE") {
+      revalidatePath("/admin/default-products");
+    } else {
+      revalidatePath("/dashboard/menu");
+    }
     return { success: `تم حفظ المنيو بنجاح! إضافة ${addedItemsCount} صنف جديد.` };
   } catch (error: any) {
     console.error("AI Import Error:", error);
