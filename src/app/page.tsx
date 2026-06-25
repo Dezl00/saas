@@ -8,7 +8,8 @@ import {
   Zap,
   Shield,
   Smartphone,
-  Rocket
+  Rocket,
+  MessageCircle
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
@@ -135,48 +136,48 @@ export default async function HomePage() {
             {[
               {
                 icon: Store,
-                title: "متجرك في دقايق",
-                desc: "سجل حسابك، اختار نوع نشاطك، ومتجرك هيكون جاهز يستقبل الزباين فوراً.",
+                title: "متجرك في دقائق",
+                desc: "أنشئ متجرك وابدأ استقبال الطلبات خلال دقائق.",
                 bgColor: "bg-blue-100",
                 textColor: "text-blue-900",
                 iconColor: "text-blue-600",
               },
               {
-                icon: ShoppingBag,
+                icon: Zap,
                 title: "المنيو الذكي",
-                desc: "ارفع أقسامك وأصنافك، واستخدم الذكاء الاصطناعي عشان تولد صور احترافية للأكل.",
+                desc: "صوّر المنيو وسيتم استخراج الأصناف تلقائياً.",
                 bgColor: "bg-purple-100",
                 textColor: "text-purple-900",
                 iconColor: "text-purple-600",
               },
               {
-                icon: Globe,
-                title: "لينك خاص بيك",
-                desc: "اختار اسم اللينك بتاعك وشاركه على الواتساب والفيسبوك وانستجرام مع عملائك.",
+                icon: MessageCircle,
+                title: "استقبال الطلبات على واتساب",
+                desc: "استقبل كل طلب مباشرة على واتساب بتفاصيله كاملة.",
                 bgColor: "bg-green-100",
                 textColor: "text-green-900",
                 iconColor: "text-green-600",
               },
               {
-                icon: BarChart3,
-                title: "لوحة تحكم رايقة",
-                desc: "تابع مبيعاتك، أوردراتك، وإحصائياتك من لوحة تحكم سهلة جداً وواضحة.",
+                icon: Globe,
+                title: "رابط خاص بمطعمك",
+                desc: "شارك رابط المنيو وQR Code مع عملائك بسهولة.",
                 bgColor: "bg-orange-100",
                 textColor: "text-orange-900",
                 iconColor: "text-orange-600",
               },
               {
-                icon: Shield,
-                title: "طرق دفع مريحة",
-                desc: "استقبل فلوسك بالطريقة اللي تريحك: كاش، إنستاباي، أو محافظ بنكية.",
+                icon: BarChart3,
+                title: "لوحة تحكم ذكية",
+                desc: "أدر الأصناف والطلبات والأسعار من مكان واحد.",
                 bgColor: "bg-rose-100",
                 textColor: "text-rose-900",
                 iconColor: "text-rose-600",
               },
               {
                 icon: Smartphone,
-                title: "شغال على أي جهاز",
-                desc: "الزباين تقدر تطلب من الموبايل أو التابلت بمنتهى السهولة وبدون تحميل برامج.",
+                title: "يعمل على أي جهاز",
+                desc: "استخدمه من الموبايل أو الكمبيوتر بدون تطبيق.",
                 bgColor: "bg-teal-100",
                 textColor: "text-teal-900",
                 iconColor: "text-teal-600",
