@@ -1,13 +1,18 @@
 import { prisma } from "@/lib/prisma";
-import { Store, Eye, LayoutDashboard } from "lucide-react";
+import { Store, Eye, LogIn } from "lucide-react";
 import Link from "next/link";
 import { impersonateStore } from "./actions";
 import { StoreActions } from "./StoreActions";
+import { StoreTabs } from "./StoreTabs";
 
-export default async function AdminStoresPage() {
+export default async function AdminStoresPage(props: { searchParams: Promise<{ status?: string }> }) {
+  const searchParams = await props.searchParams;
+  const statusFilter = searchParams.status;
+
   const stores = await prisma.store.findMany({
+    where: statusFilter ? { status: statusFilter as any } : undefined,
     include: {
-      user: { select: { name: true, email: true } },
+      user: { select: { name: true, email: true, phone: true } },
       _count: { select: { orders: true, menuItems: true, categories: true } },
     },
     orderBy: { createdAt: "desc" },
@@ -16,11 +21,10 @@ export default async function AdminStoresPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black text-surface-950">إدارة المتاجر</h1>
-          <p className="text-surface-800/60 mt-1">
-            عرض وإدارة جميع المتاجر المسجلة
-          </p>
+        <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
+          <Link href="/admin" className="hover:text-primary-600 transition-colors">الرئيسية</Link>
+          <span>/</span>
+          <span className="text-surface-900 font-bold">المتاجر</span>
         </div>
         <Link
           href="/admin/stores/new"
@@ -31,6 +35,8 @@ export default async function AdminStoresPage() {
         </Link>
       </div>
 
+      <StoreTabs currentStatus={statusFilter} />
+
       <div className="grid gap-6">
         {stores.map((store) => (
           <div
@@ -40,8 +46,12 @@ export default async function AdminStoresPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               {/* Store Info */}
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center flex-shrink-0">
-                  <Store className="w-7 h-7 text-primary-600" />
+                <div className="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center flex-shrink-0 overflow-hidden border border-surface-200">
+                  {store.logo ? (
+                    <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <Store className="w-7 h-7 text-primary-600" />
+                  )}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -64,12 +74,10 @@ export default async function AdminStoresPage() {
                           : "محذوف"}
                     </span>
                   </div>
-                  <p className="text-sm text-surface-800/60">
-                    {store.user.name} • {store.user.email}
-                  </p>
+                  </div>
                   {store.subdomain && (
-                    <p className="text-xs text-primary-500 mt-0.5">
-                      {store.subdomain}.{process.env.NEXT_PUBLIC_ROOT_DOMAIN}
+                    <p className="text-xs text-primary-500 mt-1 font-medium" dir="ltr">
+                      {store.subdomain}.{process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}
                     </p>
                   )}
                 </div>
@@ -103,7 +111,7 @@ export default async function AdminStoresPage() {
               <div className="flex items-center gap-2">
                 {store.subdomain && (
                   <Link
-                    href={`http://${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
+                    href={`https://${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}
                     target="_blank"
                     className="p-2 rounded-xl hover:bg-surface-50 text-surface-800/50 hover:text-primary-500 transition-colors"
                     title="عرض المتجر"
@@ -118,11 +126,16 @@ export default async function AdminStoresPage() {
                     className="p-2 rounded-xl hover:bg-primary-50 text-surface-800/50 hover:text-primary-600 transition-colors"
                     title="دخول للوحة التحكم (كأدمن)"
                   >
-                    <LayoutDashboard className="w-5 h-5" />
+                    <LogIn className="w-5 h-5" />
                   </button>
                 </form>
 
-                <StoreActions storeId={store.id} storeName={store.name} status={store.status} />
+                <StoreActions 
+                  storeId={store.id} 
+                  storeName={store.name} 
+                  status={store.status} 
+                  ownerInfo={{ name: store.user.name, email: store.user.email, phone: store.user.phone || '' }} 
+                />
               </div>
             </div>
           </div>

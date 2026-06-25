@@ -15,6 +15,11 @@ enum Role {
   ADMIN
 }
 
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
 enum StoreType {
   RESTAURANT
   MARKET
@@ -63,19 +68,20 @@ enum DeliveryType {
 // ===== MODELS =====
 
 model User {
-  id             String   @id @default(cuid())
+  id             String     @id @default(cuid())
   name           String
-  email          String   @unique
+  email          String     @unique
   password       String
   phone          String?
-  role           Role     @default(OWNER)
+  role           Role       @default(OWNER)
+  status         UserStatus @default(ACTIVE)
   store          Store?
   otpCode        String?
   otpExpiry      DateTime?
-  isVerified     Boolean  @default(true)
-  onboardingStep Int      @default(1)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  isVerified     Boolean    @default(true)
+  onboardingStep Int        @default(1)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 }
 
 model Store {
@@ -314,8 +320,9 @@ model OrderItem {
 }
 
 model PlatformSetting {
-  id        String   @id @default("1")
-  name      String   @default("منصتك")
-  logo      String?
-  updatedAt DateTime @updatedAt
+  id              String   @id @default("1")
+  name            String   @default("منصتك")
+  logo            String?
+  supportWhatsapp String?
+  updatedAt       DateTime @updatedAt
 }

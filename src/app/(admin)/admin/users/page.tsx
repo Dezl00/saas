@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { Users as UsersIcon } from "lucide-react";
 import { ChangeUserPasswordButton } from "@/components/admin/ChangeUserPasswordButton";
+import Link from "next/link";
+import { UserToggleStatus } from "./UserToggleStatus";
 
 export default async function AdminUsersPage() {
   const users = await prisma.user.findMany({
@@ -15,11 +17,12 @@ export default async function AdminUsersPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-black text-surface-950">إدارة المستخدمين</h1>
-        <p className="text-surface-800/60 mt-1">
-          عرض وإدارة جميع المستخدمين المسجلين
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
+          <Link href="/admin" className="hover:text-primary-600 transition-colors">الرئيسية</Link>
+          <span>/</span>
+          <span className="text-surface-900 font-bold">المستخدمين</span>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
@@ -31,7 +34,7 @@ export default async function AdminUsersPage() {
                   المستخدم
                 </th>
                 <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
-                  البريد الإلكتروني
+                  تواصل
                 </th>
                 <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
                   المتجر
@@ -57,17 +60,15 @@ export default async function AdminUsersPage() {
                   className="hover:bg-surface-50 transition-colors"
                 >
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center text-white font-bold">
-                        {user.name.charAt(0)}
-                      </div>
-                      <span className="font-bold text-surface-950">
-                        {user.name}
-                      </span>
-                    </div>
+                    <span className="font-medium text-surface-950">
+                      {user.name}
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-surface-800/70">
-                    {user.email}
+                    <div className="flex flex-col gap-1">
+                      <span>{user.email}</span>
+                      {user.phone && <span className="text-xs" dir="ltr">{user.phone}</span>}
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-surface-950">
                     {user.store?.name || "—"}
@@ -86,23 +87,7 @@ export default async function AdminUsersPage() {
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    {user.store && (
-                      <span
-                        className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium ${
-                          user.store.status === "ACTIVE"
-                            ? "bg-green-100 text-green-700"
-                            : user.store.status === "SUSPENDED"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {user.store.status === "ACTIVE"
-                          ? "نشط"
-                          : user.store.status === "SUSPENDED"
-                            ? "موقوف"
-                            : "محذوف"}
-                      </span>
-                    )}
+                    <UserToggleStatus userId={user.id} status={user.status as "ACTIVE" | "SUSPENDED"} />
                   </td>
                   <td className="px-6 py-4 text-sm text-surface-800/60">
                     {new Date(user.createdAt).toLocaleDateString("ar-EG")}

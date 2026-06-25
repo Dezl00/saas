@@ -1,25 +1,32 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Trash2, AlertTriangle, Loader2 } from "lucide-react";
+import { useState, useOptimistic, useTransition } from "react";
+import { Trash2, AlertTriangle, Loader2, User, Phone, Mail } from "lucide-react";
 import { toggleStoreStatus } from "./new/actions"; // We'll export it from new/actions.ts for now
 
 interface StoreActionsProps {
   storeId: string;
   storeName: string;
   status: "ACTIVE" | "SUSPENDED" | "DELETED";
+  ownerInfo: { name: string; email: string; phone: string };
 }
 
-export function StoreActions({ storeId, storeName, status }: StoreActionsProps) {
+export function StoreActions({ storeId, storeName, status, ownerInfo }: StoreActionsProps) {
   const [isPending, startTransition] = useTransition();
+  const [optimisticStatus, addOptimisticStatus] = useOptimistic(
+    status,
+    (state: string, newStatus: string) => newStatus as "ACTIVE" | "SUSPENDED" | "DELETED"
+  );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showOwnerModal, setShowOwnerModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
-  const isActive = status === "ACTIVE";
+  const isActive = optimisticStatus === "ACTIVE";
 
   const handleToggle = () => {
+    const newStatus = isActive ? "suspend" : "activate";
     startTransition(async () => {
-      const newStatus = isActive ? "suspend" : "activate";
+      addOptimisticStatus(isActive ? "SUSPENDED" : "ACTIVE");
       await toggleStoreStatus(storeId, newStatus);
     });
   };
@@ -52,6 +59,63 @@ export function StoreActions({ storeId, storeName, status }: StoreActionsProps) 
           }`}
         />
       </button>
+
+      {/* Owner Info Button */}
+      <button
+        onClick={() => setShowOwnerModal(true)}
+        className="p-2 rounded-xl hover:bg-surface-50 text-surface-800/50 hover:text-primary-600 transition-colors"
+        title="معلومات المالك"
+      >
+        <User className="w-5 h-5" />
+      </button>
+
+      {/* Owner Info Modal */}
+      {showOwnerModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-950/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6 animate-fade-in relative">
+            <button onClick={() => setShowOwnerModal(false)} className="absolute top-4 left-4 text-surface-400 hover:text-surface-900">
+              ✕
+            </button>
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <User className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-surface-950">معلومات المالك</h3>
+              <p className="text-surface-500 text-sm">{storeName}</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
+                <User className="w-5 h-5 text-primary-500" />
+                <div className="flex-1">
+                  <p className="text-xs text-surface-500 font-bold">الاسم</p>
+                  <p className="font-medium text-surface-900">{ownerInfo.name}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
+                <Phone className="w-5 h-5 text-primary-500" />
+                <div className="flex-1">
+                  <p className="text-xs text-surface-500 font-bold">رقم الهاتف</p>
+                  <p className="font-medium text-surface-900" dir="ltr">{ownerInfo.phone || 'غير محدد'}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
+                <Mail className="w-5 h-5 text-primary-500" />
+                <div className="flex-1 overflow-hidden">
+                  <p className="text-xs text-surface-500 font-bold">البريد الإلكتروني</p>
+                  <p className="font-medium text-surface-900 truncate" dir="ltr">{ownerInfo.email}</p>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowOwnerModal(false)}
+              className="w-full mt-6 px-4 py-2.5 bg-surface-100 text-surface-700 font-bold rounded-xl hover:bg-surface-200 transition-colors"
+            >
+              إغلاق
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Delete Button */}
       <button

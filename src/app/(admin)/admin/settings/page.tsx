@@ -3,6 +3,7 @@ import { Settings, Save, Lock } from "lucide-react";
 import { updatePlatformSettings, updateAdminPassword } from "./actions";
 import { SubmitButton } from "@/components/dashboard/SubmitButton";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
+import Link from "next/link";
 
 export const metadata = {
   title: "إعدادات المنصة | لوحة الأدمن",
@@ -22,11 +23,12 @@ export default async function AdminSettingsPage() {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <div>
-        <h1 className="text-3xl font-black text-surface-950">إعدادات المنصة</h1>
-        <p className="text-surface-800/60 mt-1">
-          إدارة إعدادات المنصة العامة واسم النظام وتغيير كلمة المرور الخاصة بك.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
+          <Link href="/admin" className="hover:text-primary-600 transition-colors">الرئيسية</Link>
+          <span>/</span>
+          <span className="text-surface-900 font-bold">إعدادات المنصة</span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -49,6 +51,21 @@ export default async function AdminSettingsPage() {
                 name="name"
                 defaultValue={settings?.name || "منصتك"}
                 required
+                className="w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="supportWhatsapp" className="block text-sm font-medium text-surface-950 mb-1">
+                رقم واتساب للدعم (يظهر للمستخدمين الموقوفين)
+              </label>
+              <input
+                type="text"
+                id="supportWhatsapp"
+                name="supportWhatsapp"
+                dir="ltr"
+                defaultValue={settings?.supportWhatsapp || ""}
+                placeholder="+201000000000"
                 className="w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
               />
             </div>

@@ -13,10 +13,16 @@ export async function loginAction(prevState: any, formData: FormData) {
     const rawData = Object.fromEntries(formData);
     const validatedData = loginSchema.parse(rawData);
 
-    // Get user to determine role for redirect
+    // Get user to determine role for redirect and check suspension
     const user = await prisma.user.findUnique({
       where: { email: validatedData.email },
     });
+
+    if (user?.status === "SUSPENDED") {
+      const platformSetting = await prisma.platformSetting.findUnique({ where: { id: "1" } });
+      const whatsapp = platformSetting?.supportWhatsapp || "";
+      return { error: `تم ايقاف حسابك تواصل مع الدعم عبر واتساب ${whatsapp}`, values: rawData };
+    }
 
     const redirectTo = user?.role === "ADMIN" ? "/admin" : "/dashboard";
 

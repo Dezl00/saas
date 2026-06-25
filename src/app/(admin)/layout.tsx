@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
-import {
   LayoutDashboard,
   Users,
   Store,
   LogOut,
   Settings,
+  Home,
+  Search,
 } from "lucide-react";
 
 export default async function AdminLayout({
@@ -28,10 +29,10 @@ export default async function AdminLayout({
   ];
 
   return (
-    <div className="flex min-h-screen bg-surface-50">
+    <div className="min-h-screen bg-surface-50 flex">
       {/* Sidebar (Desktop) */}
-      <aside className="hidden md:flex md:flex-col w-64 bg-white border-e border-surface-200 z-10">
-        <div className="p-6 border-b border-surface-100">
+      <aside className="hidden md:flex md:flex-col fixed inset-y-0 right-0 w-64 bg-white border-l border-surface-200 z-30">
+        <div className="p-6 border-b border-surface-100 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center">
               <LayoutDashboard className="w-5 h-5 text-primary-600" />
@@ -43,7 +44,7 @@ export default async function AdminLayout({
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 overflow-y-auto p-4 space-y-1">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -56,7 +57,7 @@ export default async function AdminLayout({
           ))}
         </nav>
 
-        <div className="p-4 border-t border-surface-100">
+        <div className="p-4 border-t border-surface-100 flex-shrink-0">
           <form
             action={async () => {
               "use server";
@@ -75,10 +76,30 @@ export default async function AdminLayout({
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-auto pb-20 md:pb-0">
-        <div className="p-4 md:p-8 max-w-5xl mx-auto">{children}</div>
-      </main>
+      {/* Main Content Area */}
+      <div className="flex-1 md:mr-64 flex flex-col min-h-screen relative">
+        {/* Simple Header with Search */}
+        <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-surface-200 shadow-sm h-16 flex items-center justify-between px-4 md:px-8">
+          <div className="flex-1 max-w-xl">
+            <div className="relative">
+              <Search className="w-4 h-4 text-surface-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input 
+                type="search" 
+                placeholder="ابحث عن متجر أو مستخدم..." 
+                className="w-full pl-4 pr-10 py-2 bg-surface-50 border border-surface-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm"
+              />
+            </div>
+          </div>
+          <div className="mr-4 flex items-center">
+            {/* Additional header actions could go here */}
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto pb-20 md:pb-8">
+          <div className="p-4 md:p-8 max-w-6xl mx-auto w-full">{children}</div>
+        </main>
+      </div>
 
       {/* Bottom Navigation (Mobile) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-surface-200 flex items-center justify-around p-2 pb-safe z-50">
@@ -88,7 +109,11 @@ export default async function AdminLayout({
             href={item.href}
             className="flex flex-col items-center gap-1 p-2 text-surface-500 hover:text-primary-600 active:text-primary-600 transition-colors"
           >
-            <item.icon className="w-5 h-5" />
+            {item.href === "/admin" ? (
+              <Home className="w-5 h-5" />
+            ) : (
+              <item.icon className="w-5 h-5" />
+            )}
             <span className="text-[10px] font-bold">{item.label}</span>
           </Link>
         ))}

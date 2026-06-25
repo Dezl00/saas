@@ -22,3 +22,15 @@ export async function changeUserPassword(formData: FormData) {
   revalidatePath("/admin/users");
   return { success: true };
 }
+
+export async function toggleUserStatus(userId: string, action: "activate" | "suspend") {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") throw new Error("Unauthorized");
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { status: action === "activate" ? "ACTIVE" : "SUSPENDED" }
+  });
+
+  revalidatePath("/admin/users");
+}

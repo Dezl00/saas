@@ -9,6 +9,7 @@ export async function updatePlatformSettings(formData: FormData) {
   if (session?.user?.role !== "ADMIN") return { error: "غير مصرح" };
 
   const name = formData.get("name") as string;
+  const supportWhatsapp = formData.get("supportWhatsapp") as string;
   let logoStr: string | File | null | undefined = formData.get("logo") as string | File | null;
   if (logoStr && typeof logoStr !== "string" && logoStr.size > 0) {
     const { uploadImageToCloudinary } = await import("@/lib/upload");
@@ -28,11 +29,13 @@ export async function updatePlatformSettings(formData: FormData) {
     where: { id: "1" },
     update: { 
       name, 
+      supportWhatsapp,
       ...(logoStr !== undefined ? { logo: logoStr as string } : {}) 
     },
     create: { 
       id: "1", 
       name, 
+      supportWhatsapp,
       logo: (logoStr as string) || "" 
     },
   });

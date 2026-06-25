@@ -52,9 +52,10 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-black text-surface-950">لوحة تحكم الأدمن</h1>
-        <p className="text-surface-800/60 mt-1">نظرة عامة على المنصة</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
+          <span className="text-surface-900 font-bold">الرئيسية</span>
+        </div>
       </div>
 
       {/* Stats Grid */}
