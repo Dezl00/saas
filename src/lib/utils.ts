@@ -22,3 +22,11 @@ export function slugify(text: string): string {
     .replace(/[\s_-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
+
+export function formatWhatsappNumber(number: string): string {
+  const clean = number.replace(/[^0-9]/g, '');
+  if (!clean) return '';
+  if (clean.startsWith('0')) return '2' + clean;
+  if (!clean.startsWith('20')) return '20' + clean;
+  return clean;
+}

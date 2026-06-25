@@ -265,7 +265,7 @@ export function OnboardingClient({
                 <input 
                   type="text" 
                   name="whatsappNumber" 
-                  placeholder="مع كود الدولة مثل +20" 
+                  placeholder="مثال: 01012345678" 
                   className="block w-full ps-11 pe-4 py-3 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm" 
                   dir="ltr" 
                 />

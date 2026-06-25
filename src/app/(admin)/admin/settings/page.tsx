@@ -65,7 +65,7 @@ export default async function AdminSettingsPage() {
                 name="supportWhatsapp"
                 dir="ltr"
                 defaultValue={settings?.supportWhatsapp || ""}
-                placeholder="+201000000000"
+                placeholder="01012345678"
                 className="w-full px-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
               />
             </div>

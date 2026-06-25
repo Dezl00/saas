@@ -211,13 +211,13 @@ export default async function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="whatsappNumber" className="block text-sm font-medium text-surface-950 mb-1">
-                    رقم الواتساب (متضمن كود الدولة)
+                    رقم الواتساب
                   </label>
                   <input
                     type="text"
                     id="whatsappNumber"
                     name="whatsappNumber"
-                    placeholder="201012345678"
+                    placeholder="01012345678"
                     defaultValue={store.whatsappNumber || ""}
                     dir="ltr"
                     className="w-full px-3 py-2 bg-white border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-success-500/20 focus:border-success-500 transition-colors"

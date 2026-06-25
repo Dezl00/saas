@@ -4,6 +4,7 @@ import { Store as StoreIcon, ShoppingBag, MapPin, Phone, MessageCircle, Link as 
 import { CartProvider } from "@/components/store/CartProvider";
 import { CartSidebar } from "@/components/store/CartSidebar";
 import { CartHeaderButton } from "@/components/store/CartHeaderButton";
+import { formatWhatsappNumber } from "@/lib/utils";
 
 // SVG Icons for Brands
 const FacebookIcon = ({ className }: { className?: string }) => (
@@ -251,7 +252,7 @@ export default async function StoreLayout({
             <div className="relative group">
               <div className="absolute inset-0 bg-[#25D366] rounded-full animate-ping opacity-75"></div>
               <a 
-                href={`https://wa.me/${store.whatsappNumber.replace(/[^0-9]/g, '')}`} 
+                href={`https://wa.me/${formatWhatsappNumber(store.whatsappNumber)}`} 
                 target="_blank" 
                 rel="noreferrer"
                 className="relative w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center hover:bg-[#20bd5a] transition-all shadow-xl shadow-[#25D366]/40 hover:scale-110"

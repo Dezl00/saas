@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, Plus, Minus, ShoppingBag, Truck, Store as StoreIcon, Loader2, Check } from "lucide-react";
 import { useCart } from "./CartProvider";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatWhatsappNumber } from "@/lib/utils";
 import { placeOrderAction } from "@/app/store/[subdomain]/actions";
 import toast from "react-hot-toast";
 
@@ -96,7 +96,7 @@ export function CartSidebar({
 
       if (store.enableWhatsappOrders && store.whatsappNumber) {
         // Redirect to WhatsApp
-        const waNumber = store.whatsappNumber.replace(/[^0-9]/g, '');
+        const waNumber = formatWhatsappNumber(store.whatsappNumber);
         let msg = `*طلب جديد من ${store.name}*\n\n`;
         msg += `*الاسم:* ${formData.get("customerName")}\n`;
         msg += `*الهاتف:* ${formData.get("customerPhone")}\n`;
