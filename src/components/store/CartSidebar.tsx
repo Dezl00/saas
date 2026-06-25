@@ -151,16 +151,14 @@ export function CartSidebar({
         {/* Header */}
         <div className="p-4 border-b border-surface-200 flex items-center justify-between bg-surface-50">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary-100 flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5 text-primary-600" />
-            </div>
+            <ShoppingBag className="w-6 h-6 text-primary-600" />
             <h2 className="text-lg font-bold text-surface-950">
               {isCheckout ? "إتمام الطلب" : "سلة المشتريات"}
             </h2>
           </div>
           <button
             onClick={() => { setIsCartOpen(false); setIsCheckout(false); }}
-            className="w-10 h-10 bg-white border border-surface-200 flex items-center justify-center hover:bg-surface-100 transition-colors"
+            className="w-10 h-10 bg-surface-100/50 rounded-full border-none flex items-center justify-center hover:bg-surface-200 transition-colors"
           >
             <X className="w-5 h-5 text-surface-600" />
           </button>
@@ -175,17 +173,16 @@ export function CartSidebar({
             </div>
           ) : (
             !isCheckout ? (
-              // Cart Items List
               items.map((item) => (
-                <div key={item.id} className="flex gap-4 bg-white border border-surface-200 p-3">
+                <div key={item.id} className="flex gap-4 bg-white border border-surface-100 rounded-3xl p-3 shadow-sm transition-all hover:shadow-md">
                   {item.image ? (
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-20 h-20 object-cover border border-surface-200"
+                      className="w-20 h-20 object-cover rounded-2xl border-none shadow-sm"
                     />
                   ) : (
-                    <div className="w-20 h-20 bg-surface-100 flex items-center justify-center border border-surface-200">
+                    <div className="w-20 h-20 bg-surface-100 flex items-center justify-center rounded-2xl border-none shadow-sm">
                       <ShoppingBag className="w-8 h-8 text-surface-300" />
                     </div>
                   )}
@@ -207,17 +204,17 @@ export function CartSidebar({
                       </div>
                       
                       {/* Quantity Controls */}
-                      <div className="flex items-center gap-3 bg-surface-50 p-1 border border-surface-200">
+                      <div className="flex items-center bg-primary-50 rounded-xl p-1 border border-primary-100/50 h-10">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-7 h-7 flex items-center justify-center bg-white border border-surface-200 text-surface-600 hover:text-primary-600"
+                          className="w-8 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95 shadow-sm"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="font-bold text-sm w-4 text-center">{item.quantity}</span>
+                        <span className="font-medium text-base w-8 text-center text-primary-900">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-7 h-7 flex items-center justify-center bg-white border border-surface-200 text-surface-600 hover:text-primary-600"
+                          className="w-8 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95 shadow-sm"
                         >
                           <Plus className="w-3 h-3" />
                         </button>

@@ -137,11 +137,11 @@ export default async function StoreLayout({
             </>
           )}
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
-            <div className="w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center mb-5">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5">
               {store.logo ? (
-                <img src={store.logo} alt={store.name} className="w-full h-full object-contain drop-shadow-lg" />
+                <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
               ) : (
-                <StoreIcon className="w-20 h-20 text-white opacity-80" />
+                <StoreIcon className="w-12 h-12 text-primary-600" />
               )}
             </div>
             
@@ -285,21 +285,20 @@ export default async function StoreLayout({
           )}
         </div>
 
+          {/* Global Cart Sidebar */}
+          <CartSidebar 
+            store={{
+              id: store.id,
+              name: store.name,
+              whatsappNumber: store.whatsappNumber,
+              enableWhatsappOrders: store.enableWhatsappOrders,
+              currency: store.currency,
+              primaryColor: store.primaryColor,
+            }}
+            branches={store.branches}
+            deliveryAreas={store.deliveryAreas.map(a => ({ id: a.id, name: a.name, fee: Number(a.deliveryFee) }))}
+          />
       </div>
-      
-      {/* Global Cart Sidebar */}
-      <CartSidebar 
-        store={{
-          id: store.id,
-          name: store.name,
-          whatsappNumber: store.whatsappNumber,
-          enableWhatsappOrders: store.enableWhatsappOrders,
-          currency: store.currency,
-          primaryColor: store.primaryColor,
-        }}
-        branches={store.branches}
-        deliveryAreas={store.deliveryAreas.map(a => ({ id: a.id, name: a.name, fee: Number(a.deliveryFee) }))}
-      />
     </CartProvider>
   );
 }
