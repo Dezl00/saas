@@ -60,7 +60,8 @@ export default async function DefaultProductsPage(props: {
       where: { storeId: 'DEFAULT_STORE' },
       orderBy: [
         { category: { sortOrder: 'asc' } },
-        { sortOrder: 'asc' }
+        { sortOrder: 'asc' },
+        { createdAt: 'asc' }
       ],
       include: { category: true, sizes: true, addons: true }
     }),

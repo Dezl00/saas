@@ -27,7 +27,8 @@ export default async function MenuPage() {
       where: { storeId: session.user.storeId },
       orderBy: [
         { category: { sortOrder: 'asc' } },
-        { sortOrder: 'asc' }
+        { sortOrder: 'asc' },
+        { createdAt: 'asc' }
       ],
       include: { category: true, sizes: true, addons: true }
     }),

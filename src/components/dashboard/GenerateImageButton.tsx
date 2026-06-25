@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Sparkles, Dices, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export function GenerateImageButton({ itemId, hasImage }: { itemId: string, hasImage: boolean }) {
   const [isGenerating, setIsGenerating] = useState(false);
+  const router = useRouter();
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -28,8 +30,8 @@ export function GenerateImageButton({ itemId, hasImage }: { itemId: string, hasI
       }
 
       toast.success("تم توليد الصورة وحفظها بنجاح!", { id: toastId });
-      // Refresh the page to show the new image
-      window.location.reload();
+      // Refresh the page to show the new image smoothly
+      router.refresh();
       
     } catch (error: any) {
       toast.error(error.message, { id: toastId });

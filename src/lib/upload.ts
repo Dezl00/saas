@@ -30,9 +30,18 @@ export async function uploadImageToCloudinary(file: File): Promise<string> {
 }
 
 export async function uploadUrlToCloudinary(url: string): Promise<string> {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Failed to fetch image from generator");
+  
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const base64String = buffer.toString('base64');
+  const contentType = response.headers.get("content-type") || "image/jpeg";
+  const dataUri = `data:${contentType};base64,${base64String}`;
+
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
-      url,
+      dataUri,
       { folder: 'menura' },
       (error, result) => {
         if (error || !result) {
