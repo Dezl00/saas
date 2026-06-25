@@ -25,6 +25,9 @@ export async function POST(
         id: itemId,
         ...(session.user.role !== "ADMIN" ? { storeId: session.user.storeId! } : {}),
       },
+      include: {
+        category: true,
+      }
     });
 
     if (!item || (session.user.role === "ADMIN" && item.storeId !== "DEFAULT_STORE")) {
@@ -32,7 +35,10 @@ export async function POST(
     }
 
     // البناء الثابت للـ Prompt بناءً على نصيحة المستخدم
-    const promptString = `Professional food photography, ${item.name}, restaurant menu, white background, high quality, soft lighting, ultra realistic, 4k`;
+    const categoryName = item.category?.name ? `${item.category.name} category, ` : "";
+    const itemDescription = item.description ? `Description: ${item.description}, ` : "";
+    
+    const promptString = `Professional food photography, ${item.name}, ${categoryName}${itemDescription}restaurant menu item, delicious, fresh ingredients, white background, high quality, soft lighting, ultra realistic, 4k`;
     
     // استخدام Pollinations.ai بشكل مجاني وبدون توكنز
     const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptString)}?width=800&height=800&nologo=true&seed=${seed}`;
