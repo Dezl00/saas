@@ -155,29 +155,23 @@ export default async function StoreLayout({
             
             {/* Social Media Icons in Hero */}
             <div className="flex items-center justify-center gap-3 mt-4">
-              {store.snapchatUrl && (
-                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
-                  <SnapchatIcon className="w-5 h-5" />
-                </a>
-              )}
+              <a href={store.facebookUrl || "#"} target={store.facebookUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                <FacebookIcon className="w-5 h-5" />
+              </a>
+              <a href={store.instagramUrl || "#"} target={store.instagramUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                <InstagramIcon className="w-5 h-5" />
+              </a>
+              <a href={store.twitterUrl || "#"} target={store.twitterUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                <XIcon className="w-5 h-5" />
+              </a>
               {store.tiktokUrl && (
                 <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <TiktokIcon className="w-5 h-5" />
                 </a>
               )}
-              {store.twitterUrl && (
-                <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
-                  <XIcon className="w-5 h-5" />
-                </a>
-              )}
-              {store.instagramUrl && (
-                <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
-                  <InstagramIcon className="w-5 h-5" />
-                </a>
-              )}
-              {store.facebookUrl && (
-                <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
-                  <FacebookIcon className="w-5 h-5" />
+              {store.snapchatUrl && (
+                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <SnapchatIcon className="w-5 h-5" />
                 </a>
               )}
             </div>
