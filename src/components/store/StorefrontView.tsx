@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "./CartProvider";
-import { LayoutGrid, List, Filter, X, Plus, Minus, Check, ShoppingBag } from "lucide-react";
+import { LayoutGrid, List, Filter, X, Plus, Minus, Check, ShoppingBag, Loader2 } from "lucide-react";
 
 type Size = { id: string; name: string; price: number };
 type Addon = { id: string; name: string; price: number };
@@ -61,6 +61,7 @@ export function StorefrontView({
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState<"default" | "price_desc" | "price_asc" | "popular">("default");
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Modal State
   const [selectedSize, setSelectedSize] = useState<Size | null>(null);
@@ -77,7 +78,28 @@ export function StorefrontView({
     setSelectedSize(item.sizes.length > 0 ? item.sizes[0] : null);
     setSelectedAddons([]);
     setQuantity(1);
+    
+    // Push state to browser history to catch back button
+    window.history.pushState({ modal: `product-${item.id}` }, "", `#product-${item.id}`);
   };
+
+  const closeProductModal = () => {
+    setSelectedProduct(null);
+    if (window.location.hash.startsWith("#product-")) {
+      window.history.back(); // Remove the hash from URL cleanly
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      // If user presses back button, the hash will change/disappear
+      if (selectedProduct && !window.location.hash.startsWith("#product-")) {
+        setSelectedProduct(null);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [selectedProduct]);
 
   const handleToggleAddon = (addon: Addon) => {
     if (selectedAddons.find(a => a.id === addon.id)) {
@@ -109,19 +131,24 @@ export function StorefrontView({
     if (selectedSize) nameWithDetails += ` (${selectedSize.name})`;
     if (addonsText) nameWithDetails += ` + ${addonsText}`;
 
-    addItem({
-      id: uniqueCartItemId, // Use unique ID to separate different sizes/addons of same product
-      name: nameWithDetails,
-      price: finalPrice,
-      quantity,
-      image: selectedProduct.image,
-    });
+    setIsAddingToCart(true);
 
-    setToastItem({ name: nameWithDetails, image: selectedProduct.image });
-    setSelectedProduct(null); // close modal
+    setTimeout(() => {
+      addItem({
+        id: uniqueCartItemId, // Use unique ID to separate different sizes/addons of same product
+        name: nameWithDetails,
+        price: finalPrice,
+        quantity,
+        image: selectedProduct.image,
+      });
 
-    // Auto close toast after 5s
-    setTimeout(() => setToastItem(null), 5000);
+      setToastItem({ name: nameWithDetails, image: selectedProduct.image });
+      setIsAddingToCart(false);
+      closeProductModal(); // close modal
+
+      // Auto close toast after 5s
+      setTimeout(() => setToastItem(null), 5000);
+    }, 400); // fraction of a second loading
   };
 
   if (categories.length === 0) {
@@ -308,8 +335,13 @@ export function StorefrontView({
 
       {/* Product Modal */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-none p-4 animate-fade-in">
-          <div className="bg-white w-full max-w-md max-h-[85vh] flex flex-col animate-zoom-in overflow-hidden border border-surface-200 rounded-2xl shadow-2xl">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-none p-4 animate-fade-in"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeProductModal();
+          }}
+        >
+          <div className="bg-white w-full max-w-md max-h-[85vh] flex flex-col animate-zoom-in overflow-hidden border border-surface-200 rounded-[2rem] shadow-none">
             {/* Modal Header Image */}
             <div className="relative h-48 sm:h-56 bg-surface-100 shrink-0">
               {selectedProduct.image ? (
@@ -328,7 +360,7 @@ export function StorefrontView({
             {/* Modal Content */}
             <div className="p-5 flex-1 overflow-y-auto space-y-6">
               <div>
-                <h2 className="text-2xl font-black text-surface-950">{selectedProduct.name}</h2>
+                <h2 className="text-xl font-bold text-surface-950">{selectedProduct.name}</h2>
                 {selectedProduct.description && (
                   <p className="text-surface-500 text-sm mt-2">{selectedProduct.description}</p>
                 )}
@@ -339,7 +371,7 @@ export function StorefrontView({
 
               {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                 <div>
-                  <h3 className="font-bold text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">اختر الحجم (إجباري)</h3>
+                  <h3 className="font-medium text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">اختر الحجم (إجباري)</h3>
                   <div className="space-y-2">
                     {selectedProduct.sizes.map(size => (
                       <label key={size.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${selectedSize?.id === size.id ? 'border-primary-500 bg-primary-50' : 'border-surface-200 hover:bg-surface-50'}`}>
@@ -363,7 +395,7 @@ export function StorefrontView({
               {/* Addons */}
               {selectedProduct.addons && selectedProduct.addons.length > 0 && (
                 <div>
-                  <h3 className="font-bold text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">إضافات (اختياري)</h3>
+                  <h3 className="font-medium text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">إضافات (اختياري)</h3>
                   <div className="space-y-2">
                     {selectedProduct.addons.map(addon => {
                       const isSelected = selectedAddons.some(a => a.id === addon.id);
@@ -389,17 +421,17 @@ export function StorefrontView({
 
             {/* Modal Footer (Quantity + Add to Cart) */}
             <div className="p-4 border-t border-surface-200 bg-white flex items-center gap-3">
-              <div className="flex items-center bg-surface-100 rounded-xl border border-surface-200 h-12">
+              <div className="flex items-center bg-primary-50 rounded-xl p-1 border border-primary-100/50 h-12">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-full flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-s-xl transition-colors"
+                  className="w-10 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="font-black text-lg w-6 text-center text-surface-950">{quantity}</span>
+                <span className="font-bold text-lg w-8 text-center text-primary-900">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-full flex items-center justify-center hover:bg-surface-200 text-surface-600 rounded-e-xl transition-colors"
+                  className="w-10 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -407,11 +439,18 @@ export function StorefrontView({
 
               <button 
                 onClick={handleAddToCart}
-                className="flex-[2] h-12 text-white font-bold rounded-xl transition-colors flex items-center justify-center gap-2 px-4 shadow-lg bg-primary-500 hover:bg-primary-600"
+                disabled={isAddingToCart}
+                className="flex-[2] h-12 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 px-4 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] disabled:opacity-80"
               >
-                <span>إضافة</span>
-                <span className="text-white/50 font-normal">|</span>
-                <span>{formatPrice(calculateModalTotal(), store.currency)}</span>
+                {isAddingToCart ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <span>إضافة</span>
+                    <span className="text-white/50 font-normal">|</span>
+                    <span>{formatPrice(calculateModalTotal(), store.currency)}</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

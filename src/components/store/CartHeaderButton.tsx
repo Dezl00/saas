@@ -2,16 +2,20 @@
 
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "./CartProvider";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export function CartHeaderButton() {
-  const { items, setIsCartOpen } = useCart();
+  const { items } = useCart();
+  const params = useParams();
+  const subdomain = params?.subdomain as string;
   
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <button
-      onClick={() => setIsCartOpen(true)}
-      className="relative p-2 rounded-xl hover:bg-surface-100 transition-colors"
+    <Link
+      href={`/store/${subdomain}/cart`}
+      className="relative p-2 hover:opacity-80 transition-opacity active:scale-95 flex items-center justify-center"
     >
       <ShoppingBag className="w-6 h-6 text-surface-700" />
       {totalQuantity > 0 && (
@@ -19,6 +23,6 @@ export function CartHeaderButton() {
           {totalQuantity}
         </span>
       )}
-    </button>
+    </Link>
   );
 }

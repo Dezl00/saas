@@ -30,6 +30,11 @@
   --color-surface-50: oklch(0.985 0.002 250);
   --color-surface-100: oklch(0.97 0.003 250);
   --color-surface-200: oklch(0.94 0.005 250);
+  --color-surface-300: oklch(0.88 0.01 250);
+  --color-surface-400: oklch(0.75 0.015 250);
+  --color-surface-500: oklch(0.6 0.02 250);
+  --color-surface-600: oklch(0.45 0.02 250);
+  --color-surface-700: oklch(0.35 0.02 250);
   --color-surface-800: oklch(0.25 0.015 250);
   --color-surface-900: oklch(0.2 0.02 250);
   --color-surface-950: oklch(0.15 0.02 250);
@@ -92,6 +97,21 @@ html {
 body {
   background-color: var(--color-surface-50);
   color: var(--color-surface-950);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark {
+  --color-surface-50: oklch(0.15 0.01 250);
+  --color-surface-100: oklch(0.2 0.015 250);
+  --color-surface-200: oklch(0.28 0.02 250); /* Thin light borders */
+  --color-surface-300: oklch(0.35 0.02 250);
+  --color-surface-400: oklch(0.45 0.02 250);
+  --color-surface-500: oklch(0.65 0.02 250);
+  --color-surface-600: oklch(0.75 0.02 250);
+  --color-surface-700: oklch(0.85 0.02 250);
+  --color-surface-800: oklch(0.92 0.01 250);
+  --color-surface-900: oklch(0.96 0.005 250);
+  --color-surface-950: oklch(0.985 0.002 250);
 }
 
 /* Scrollbar */

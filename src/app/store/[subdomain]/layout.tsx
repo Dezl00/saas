@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Store as StoreIcon, ShoppingBag, MapPin, Phone, MessageCircle, Link as LinkIcon } from "lucide-react";
 import { CartProvider } from "@/components/store/CartProvider";
-import { CartSidebar } from "@/components/store/CartSidebar";
 import { CartHeaderButton } from "@/components/store/CartHeaderButton";
+import { ThemeToggle } from "@/components/store/ThemeToggle";
 import { formatWhatsappNumber } from "@/lib/utils";
 
 // SVG Icons for Brands
@@ -110,18 +110,13 @@ export default async function StoreLayout({
           <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
             {/* Store Minimal Info */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center overflow-hidden border border-surface-200">
-                {store.logo ? (
-                  <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
-                ) : (
-                  <StoreIcon className="w-5 h-5 text-primary-600" />
-                )}
-              </div>
-              <h1 className="font-bold text-base text-surface-950">{store.name}</h1>
+              <h1 className="font-bold text-lg text-surface-950">{store.name}</h1>
             </div>
 
-            {/* Cart Button */}
-            <CartHeaderButton />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <CartHeaderButton />
+            </div>
           </div>
         </header>
 
@@ -203,13 +198,13 @@ export default async function StoreLayout({
         </div>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-surface-200 mt-12 py-10">
+        <footer className="bg-surface-50 border-t border-surface-200 mt-12 py-10">
           <div className="max-w-5xl mx-auto px-4 text-center space-y-4">
-            <div className="w-12 h-12 mx-auto bg-surface-100 rounded-full flex items-center justify-center mb-4 border border-surface-200 overflow-hidden">
+            <div className="w-24 h-24 mx-auto flex items-center justify-center mb-4">
               {store.logo ? (
-                <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
+                <img src={store.logo} alt={store.name} className="w-full h-full object-contain drop-shadow-sm" />
               ) : (
-                <StoreIcon className="w-6 h-6 text-surface-400" />
+                <StoreIcon className="w-12 h-12 text-surface-400" />
               )}
             </div>
             <h2 className="font-bold text-xl text-surface-950">{store.name}</h2>
@@ -291,19 +286,6 @@ export default async function StoreLayout({
           )}
         </div>
 
-        {/* Global Cart Sidebar */}
-        <CartSidebar 
-          store={{
-            id: store.id,
-            name: store.name,
-            whatsappNumber: store.whatsappNumber,
-            enableWhatsappOrders: store.enableWhatsappOrders,
-            currency: store.currency,
-            primaryColor: store.primaryColor
-          }}
-          branches={store.branches.map(b => ({ id: b.id, name: b.name, address: b.address }))}
-          deliveryAreas={store.deliveryAreas.map(a => ({ id: a.id, name: a.name, fee: Number(a.deliveryFee) }))}
-        />
       </div>
     </CartProvider>
   );
