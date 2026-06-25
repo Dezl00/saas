@@ -18,14 +18,14 @@ export default function NewStorePage() {
           <ArrowRight className="w-5 h-5 rtl:-scale-x-100 text-surface-600" />
         </Link>
         <div>
-          <h1 className="text-3xl font-black text-surface-950">إضافة متجر جديد</h1>
+          <h1 className="text-2xl font-bold text-surface-950">إضافة متجر جديد</h1>
           <p className="text-surface-800/60 mt-1">أدخل بيانات المتجر وصاحب المتجر للإنشاء الفوري</p>
         </div>
       </div>
 
       <form action={formAction} className="space-y-8">
         {state?.error && (
-          <div className="p-4 bg-error-50 text-error-600 font-bold rounded-xl border border-error-200 animate-slide-up">
+          <div className="p-4 bg-error-50 text-error-600 font-medium rounded-xl border border-error-200 animate-slide-up">
             {state.error}
           </div>
         )}
@@ -33,14 +33,14 @@ export default function NewStorePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Store Information Card */}
           <div className="bg-white rounded-2xl p-6 border border-surface-200 space-y-6">
-            <h2 className="text-xl font-bold text-surface-950 mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-surface-950 mb-4 flex items-center gap-2">
               <Store className="w-5 h-5 text-primary-500" />
               بيانات المتجر
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-surface-950 mb-1">اسم المتجر</label>
+                <label className="block text-sm font-medium text-surface-950 mb-1">اسم المتجر</label>
                 <div className="relative">
                   <Store className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                   <input
@@ -56,7 +56,7 @@ export default function NewStorePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-surface-950 mb-1">رابط الشعار (Logo URL)</label>
+                <label className="block text-sm font-medium text-surface-950 mb-1">رابط الشعار (Logo URL)</label>
                 <div className="relative">
                   <ImageIcon className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                   <input
@@ -72,7 +72,7 @@ export default function NewStorePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-surface-950 mb-1">اللون الأساسي</label>
+                <label className="block text-sm font-medium text-surface-950 mb-1">اللون الأساسي</label>
                 <div className="relative flex items-center gap-2">
                   <Palette className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                   <input
@@ -96,7 +96,7 @@ export default function NewStorePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-surface-950 mb-1">رابط المتجر (Subdomain)</label>
+                <label className="block text-sm font-medium text-surface-950 mb-1">رابط المتجر (Subdomain)</label>
                 <div className="relative flex items-center">
                   <LinkIcon className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400 z-10" />
                   <input
@@ -120,14 +120,14 @@ export default function NewStorePage() {
           {/* Contact & Owner Card */}
           <div className="space-y-6">
             <div className="bg-white rounded-2xl p-6 border border-surface-200 space-y-6">
-              <h2 className="text-xl font-bold text-surface-950 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-surface-950 mb-4 flex items-center gap-2">
                 <Phone className="w-5 h-5 text-accent-500" />
                 معلومات التواصل
               </h2>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-surface-950 mb-1">العنوان</label>
+                  <label className="block text-sm font-medium text-surface-950 mb-1">العنوان</label>
                   <div className="relative">
                     <MapPin className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                     <input
@@ -143,7 +143,7 @@ export default function NewStorePage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-surface-950 mb-1">رقم الهاتف</label>
+                    <label className="block text-sm font-medium text-surface-950 mb-1">رقم الهاتف</label>
                     <div className="relative">
                       <Phone className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
                       <input
@@ -158,7 +158,7 @@ export default function NewStorePage() {
                     {state?.fieldErrors?.phone && <p className="text-sm text-error-500 mt-1">{state.fieldErrors.phone[0]}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-surface-950 mb-1">رقم الواتساب</label>
+                    <label className="block text-sm font-medium text-surface-950 mb-1">رقم الواتساب</label>
                     <div className="relative">
                       <MessageCircle className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
                       <input
@@ -177,14 +177,14 @@ export default function NewStorePage() {
             </div>
 
             <div className="bg-white rounded-2xl p-6 border border-surface-200 space-y-6">
-              <h2 className="text-xl font-bold text-surface-950 mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-surface-950 mb-4 flex items-center gap-2">
                 <Lock className="w-5 h-5 text-warning-500" />
                 حساب صاحب المتجر
               </h2>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-surface-950 mb-1">البريد الإلكتروني</label>
+                  <label className="block text-sm font-medium text-surface-950 mb-1">البريد الإلكتروني</label>
                   <div className="relative">
                     <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                     <input
@@ -201,7 +201,7 @@ export default function NewStorePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-surface-950 mb-1">كلمة المرور</label>
+                  <label className="block text-sm font-medium text-surface-950 mb-1">كلمة المرور</label>
                   <div className="relative">
                     <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                     <input
@@ -229,7 +229,7 @@ export default function NewStorePage() {
           <button
             type="submit"
             disabled={isPending}
-            className="flex items-center gap-2 px-8 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-8 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isPending ? (
               <Loader2 className="w-5 h-5 animate-spin" />

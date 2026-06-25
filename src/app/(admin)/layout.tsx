@@ -110,7 +110,7 @@ export default async function AdminLayout({
             ) : (
               <item.icon className="w-5 h-5" />
             )}
-            <span className="text-[10px] font-bold">{item.label}</span>
+            <span className="text-[10px] font-medium">{item.label}</span>
           </Link>
         ))}
         <form
@@ -125,7 +125,7 @@ export default async function AdminLayout({
             className="flex flex-col items-center gap-1 p-2 text-error-500 hover:text-error-600 transition-colors"
           >
             <LogOut className="w-5 h-5" />
-            <span className="text-[10px] font-bold">خروج</span>
+            <span className="text-[10px] font-medium">خروج</span>
           </button>
         </form>
       </nav>

@@ -24,11 +24,11 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
         <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
           <Link href="/admin" className="hover:text-primary-600 transition-colors">الرئيسية</Link>
           <span>/</span>
-          <span className="text-surface-900 font-bold">المتاجر</span>
+          <span className="text-surface-900 font-semibold">المتاجر</span>
         </div>
         <Link
           href="/admin/stores/new"
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors"
         >
           <Store className="w-5 h-5" />
           إضافة متجر جديد
@@ -55,11 +55,11 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-lg text-surface-950">
+                    <h3 className="font-semibold text-base text-surface-950">
                       {store.name}
                     </h3>
                     <span
-                      className={`inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                      className={`inline-flex px-2 py-0.5 rounded-md text-[10px] font-medium ${
                         store.status === "ACTIVE"
                           ? "bg-green-100 text-green-700"
                           : store.status === "SUSPENDED"
@@ -85,19 +85,19 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
               {/* Stats */}
               <div className="flex items-center gap-6 text-sm">
                 <div className="text-center">
-                  <p className="font-bold text-surface-950">
+                  <p className="font-semibold text-surface-950">
                     {store._count.categories}
                   </p>
                   <p className="text-xs text-surface-800/50">أقسام</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-bold text-surface-950">
+                  <p className="font-semibold text-surface-950">
                     {store._count.menuItems}
                   </p>
                   <p className="text-xs text-surface-800/50">أصناف</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-bold text-surface-950">
+                  <p className="font-semibold text-surface-950">
                     {store._count.orders}
                   </p>
                   <p className="text-xs text-surface-800/50">طلبات</p>

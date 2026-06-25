@@ -72,8 +72,8 @@ export default async function AdminDashboard() {
                 <stat.icon className="w-6 h-6" />
               </div>
             </div>
-            <p className="text-3xl font-black mb-1">{stat.value}</p>
-            <p className={`text-sm font-bold ${stat.labelClasses}`}>{stat.label}</p>
+            <p className="text-2xl font-bold mb-1">{stat.value}</p>
+            <p className={`text-sm font-semibold ${stat.labelClasses}`}>{stat.label}</p>
           </div>
         ))}
       </div>
@@ -81,7 +81,7 @@ export default async function AdminDashboard() {
       {/* Recent Stores */}
       <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
         <div className="p-6 border-b border-surface-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-surface-950">آخر المتاجر المسجلة</h2>
+          <h2 className="text-base font-semibold text-surface-950">آخر المتاجر المسجلة</h2>
           <Link
             href="/admin/stores"
             className="text-sm text-primary-500 hover:text-primary-600 font-medium"
@@ -93,19 +93,19 @@ export default async function AdminDashboard() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-surface-100 bg-surface-50">
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   المتجر
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   المالك
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   النوع
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   الحالة
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   الطلبات
                 </th>
               </tr>
@@ -122,7 +122,7 @@ export default async function AdminDashboard() {
                         <Store className="w-5 h-5 text-primary-600" />
                       </div>
                       <div>
-                        <p className="font-bold text-surface-950">
+                        <p className="font-semibold text-surface-950">
                           {store.name}
                         </p>
                         {store.subdomain && (
@@ -164,7 +164,7 @@ export default async function AdminDashboard() {
                           : "محذوف"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm font-bold text-surface-950">
+                  <td className="px-6 py-4 text-sm font-medium text-surface-950">
                     {store._count.orders}
                   </td>
                 </tr>

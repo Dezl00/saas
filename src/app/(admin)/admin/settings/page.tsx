@@ -27,15 +27,15 @@ export default async function AdminSettingsPage() {
         <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
           <Link href="/admin" className="hover:text-primary-600 transition-colors">الرئيسية</Link>
           <span>/</span>
-          <span className="text-surface-900 font-bold">إعدادات المنصة</span>
+          <span className="text-surface-900 font-semibold">إعدادات المنصة</span>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* إعدادات المنصة الأساسية */}
-        <div className="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm">
-          <h3 className="text-xl font-bold text-surface-950 mb-6 flex items-center gap-2">
+        <div className="bg-white rounded-2xl border border-surface-200 p-6">
+          <h3 className="text-xl font-semibold text-surface-950 mb-6 flex items-center gap-2">
             <Settings className="w-6 h-6 text-primary-500" />
             الهوية البصرية للمنصة
           </h3>
@@ -75,7 +75,7 @@ export default async function AdminSettingsPage() {
             </div>
 
             <SubmitButton
-              className="mt-6 w-full py-3 px-8 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+              className="mt-6 w-full py-3 px-8 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" />
               حفظ بيانات المنصة
@@ -84,8 +84,8 @@ export default async function AdminSettingsPage() {
         </div>
 
         {/* تغيير كلمة مرور الأدمن */}
-        <div className="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm self-start">
-          <h3 className="text-xl font-bold text-surface-950 mb-6 flex items-center gap-2">
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 self-start">
+          <h3 className="text-xl font-semibold text-surface-950 mb-6 flex items-center gap-2">
             <Lock className="w-6 h-6 text-surface-700" />
             تغيير كلمة المرور الخاصة بك
           </h3>
@@ -107,7 +107,7 @@ export default async function AdminSettingsPage() {
             </div>
 
             <SubmitButton
-              className="mt-6 w-full py-3 px-8 bg-surface-950 hover:bg-surface-800 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+              className="mt-6 w-full py-3 px-8 bg-surface-950 hover:bg-surface-800 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" />
               تحديث كلمة المرور

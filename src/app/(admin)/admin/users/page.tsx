@@ -21,7 +21,7 @@ export default async function AdminUsersPage() {
         <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
           <Link href="/admin" className="hover:text-primary-600 transition-colors">الرئيسية</Link>
           <span>/</span>
-          <span className="text-surface-900 font-bold">المستخدمين</span>
+          <span className="text-surface-900 font-semibold">المستخدمين</span>
         </div>
       </div>
 
@@ -30,28 +30,28 @@ export default async function AdminUsersPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-surface-100 bg-surface-50">
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   المستخدم
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   البريد الإلكتروني
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   رقم الهاتف
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   المتجر
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   النوع
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   الحالة
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   تاريخ التسجيل
                 </th>
-                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                <th className="text-start px-6 py-3 text-xs font-medium text-surface-800/60 uppercase">
                   إجراءات
                 </th>
               </tr>

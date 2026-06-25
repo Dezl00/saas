@@ -19,7 +19,7 @@ export function StoreTabs({ currentStatus }: { currentStatus?: string }) {
           <Link
             key={tab.value}
             href={`/admin/stores${tab.value ? `?status=${tab.value}` : ""}`}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-colors border ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-colors border ${
               isActive
                 ? `${tab.activeColor} border-transparent`
                 : "bg-white text-surface-600 border-surface-200 hover:bg-surface-50"

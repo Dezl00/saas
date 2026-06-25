@@ -226,9 +226,9 @@ export function GlobalSearch() {
               <div className="w-16 h-16 bg-surface-100 text-surface-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
                 {selectedUser.name.charAt(0)}
               </div>
-              <h3 className="text-xl font-bold text-surface-950">{selectedUser.name}</h3>
+              <h3 className="text-lg font-bold text-surface-950">{selectedUser.name}</h3>
               <div className="mt-2">
-                <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-bold ${
+                <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium ${
                   selectedUser.status === "ACTIVE" ? "bg-green-100 text-green-700" :
                   "bg-red-100 text-red-700"
                 }`}>
@@ -241,14 +241,14 @@ export function GlobalSearch() {
               <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
                 <Phone className="w-5 h-5 text-primary-500" />
                 <div className="flex-1">
-                  <p className="text-xs text-surface-500 font-bold">رقم الهاتف</p>
+                  <p className="text-xs text-surface-500 font-medium">رقم الهاتف</p>
                   <p className="font-medium text-surface-900 text-sm" dir="ltr">{selectedUser.phone || 'غير محدد'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
                 <Mail className="w-5 h-5 text-primary-500" />
                 <div className="flex-1 overflow-hidden">
-                  <p className="text-xs text-surface-500 font-bold">البريد الإلكتروني</p>
+                  <p className="text-xs text-surface-500 font-medium">البريد الإلكتروني</p>
                   <p className="font-medium text-surface-900 text-sm truncate" dir="ltr">{selectedUser.email}</p>
                 </div>
               </div>
@@ -257,7 +257,7 @@ export function GlobalSearch() {
                   <div className="flex items-center gap-3 overflow-hidden">
                     <Store className="w-5 h-5 text-primary-500" />
                     <div className="flex-1 overflow-hidden">
-                      <p className="text-xs text-surface-500 font-bold">متجره</p>
+                      <p className="text-xs text-surface-500 font-medium">متجره</p>
                       <p className="font-medium text-surface-900 text-sm truncate">{selectedUser.store.name}</p>
                     </div>
                   </div>
@@ -266,7 +266,7 @@ export function GlobalSearch() {
                       href={`https://${selectedUser.store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-1.5 bg-primary-100 text-primary-700 text-xs font-bold rounded-lg hover:bg-primary-200 transition-colors flex-shrink-0"
+                      className="px-3 py-1.5 bg-primary-100 text-primary-700 text-xs font-medium rounded-lg hover:bg-primary-200 transition-colors flex-shrink-0"
                     >
                       زيارة
                     </a>
@@ -276,12 +276,12 @@ export function GlobalSearch() {
             </div>
 
             <div className="mt-4 text-center">
-              <p className="text-[10px] text-surface-400 font-bold">تاريخ الانضمام: {new Date(selectedUser.createdAt).toLocaleDateString('ar-EG')}</p>
+              <p className="text-[10px] text-surface-400 font-medium">تاريخ الانضمام: {new Date(selectedUser.createdAt).toLocaleDateString('ar-EG')}</p>
             </div>
 
             <button
               onClick={() => setSelectedUser(null)}
-              className="w-full mt-6 px-4 py-2.5 bg-surface-100 text-surface-700 font-bold rounded-xl hover:bg-surface-200 transition-colors"
+              className="w-full mt-6 px-4 py-2.5 bg-surface-100 text-surface-700 font-medium rounded-xl hover:bg-surface-200 transition-colors"
             >
               إغلاق
             </button>

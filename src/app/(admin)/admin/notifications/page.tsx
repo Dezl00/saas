@@ -45,14 +45,14 @@ export default async function AdminNotificationsPage() {
         <div className="flex items-center gap-2 text-sm text-surface-500 font-medium">
           <Link href="/admin" className="hover:text-primary-600 transition-colors">الرئيسية</Link>
           <span>/</span>
-          <span className="text-surface-900 font-bold">الإشعارات</span>
+          <span className="text-surface-900 font-semibold">الإشعارات</span>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden">
         <div className="p-6 border-b border-surface-100 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-black text-surface-950 flex items-center gap-2">
+            <h1 className="text-xl font-bold text-surface-950 flex items-center gap-2">
               <Bell className="w-6 h-6 text-primary-500" />
               كل الإشعارات
             </h1>
@@ -64,7 +64,7 @@ export default async function AdminNotificationsPage() {
             <form action={markAllAsRead}>
               <button
                 type="submit"
-                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 font-bold rounded-xl hover:bg-primary-100 transition-colors"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 font-medium rounded-xl hover:bg-primary-100 transition-colors"
               >
                 <CheckCheck className="w-5 h-5" />
                 تحديد الكل كمقروء
@@ -78,7 +78,7 @@ export default async function AdminNotificationsPage() {
             <div className="w-20 h-20 rounded-full bg-surface-50 flex items-center justify-center">
               <Bell className="w-10 h-10 text-surface-300" />
             </div>
-            <p className="text-lg font-bold text-surface-900">لا توجد إشعارات حتى الآن</p>
+            <p className="text-lg font-semibold text-surface-900">لا توجد إشعارات حتى الآن</p>
             <p className="text-sm">لم يقم النظام بتسجيل أي أحداث بعد.</p>
           </div>
         ) : (
@@ -93,13 +93,13 @@ export default async function AdminNotificationsPage() {
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h3 className={`text-base truncate ${!notif.isRead ? 'font-black text-surface-950' : 'font-bold text-surface-800'}`}>
+                    <h3 className={`text-base truncate ${!notif.isRead ? 'font-bold text-surface-950' : 'font-medium text-surface-800'}`}>
                       {notif.title}
                     </h3>
                     <p className={`text-sm mt-1 ${!notif.isRead ? 'text-surface-700 font-medium' : 'text-surface-600'}`}>
                       {notif.message}
                     </p>
-                    <p className="text-xs text-surface-400 mt-2 font-bold" dir="ltr">
+                    <p className="text-xs text-surface-400 mt-2 font-medium" dir="ltr">
                       {getTimeAgo(notif.createdAt)} • {new Date(notif.createdAt).toLocaleDateString('ar-EG')}
                     </p>
                   </div>
@@ -107,7 +107,7 @@ export default async function AdminNotificationsPage() {
                     {notif.link && (
                       <Link
                         href={notif.link}
-                        className="px-4 py-2 bg-white border border-surface-200 text-surface-700 text-sm font-bold rounded-xl hover:bg-surface-50 transition-colors whitespace-nowrap shadow-sm"
+                        className="px-4 py-2 bg-white border border-surface-200 text-surface-700 text-sm font-medium rounded-xl hover:bg-surface-50 transition-colors whitespace-nowrap shadow-sm"
                       >
                         عرض التفاصيل
                       </Link>
