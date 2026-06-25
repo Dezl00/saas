@@ -1,11 +1,11 @@
-export function InfinityLoader() {
+export function InfinityLoader({ colorClass = "text-primary-600" }: { colorClass?: string }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm animate-delayed-fade-in opacity-0" style={{ animationFillMode: 'forwards' }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white animate-fade-in">
       <div className="flex flex-col items-center gap-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 100 50"
-          className="w-24 h-12 text-primary-600"
+          className={`w-24 h-12 ${colorClass}`}
         >
           <path
             fill="none"
@@ -18,17 +18,9 @@ export function InfinityLoader() {
             d="M 25 25 C 10 10, 10 40, 25 25 C 40 10, 60 40, 75 25 C 90 10, 90 40, 75 25 C 60 10, 40 40, 25 25"
           />
         </svg>
-        <p className="text-sm font-bold text-primary-600 animate-pulse">جاري التحميل...</p>
+        <p className={`text-sm font-bold animate-pulse ${colorClass}`}>جاري التحميل...</p>
       </div>
       <style dangerouslySetInnerHTML={{__html: `
-        @keyframes delayed-fade-in {
-          0% { opacity: 0; }
-          70% { opacity: 0; }
-          100% { opacity: 1; }
-        }
-        .animate-delayed-fade-in {
-          animation: delayed-fade-in 0.6s ease-in-out forwards;
-        }
         @keyframes infinity-trace {
           0% { stroke-dashoffset: 150; }
           50% { stroke-dashoffset: 0; }

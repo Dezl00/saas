@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { GlobalSearch } from "@/components/admin/GlobalSearch";
 import { AdminHeaderNotifications } from "@/components/admin/AdminHeaderNotifications";
+import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
 
 export default async function AdminLayout({
   children,
@@ -35,6 +36,7 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-surface-50 flex flex-col md:flex-row w-full overflow-x-hidden">
+      <PageTransitionLoader colorClass="text-primary-600" />
       {/* Sidebar (Desktop) */}
       <aside className="hidden md:flex md:flex-col fixed inset-y-0 right-0 w-64 bg-white border-l border-surface-200 z-30">
         <div className="p-6 border-b border-surface-100 flex-shrink-0">

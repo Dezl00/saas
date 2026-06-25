@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Toaster } from "react-hot-toast";
+import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
 
 export default async function DashboardLayout({
   children,
@@ -32,6 +33,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-surface-50 overflow-hidden" dir="rtl">
+      <PageTransitionLoader colorClass="text-primary-600" />
       <Sidebar />
       <main className="flex-1 overflow-auto flex flex-col pb-20 md:pb-0">
         {children}
