@@ -313,10 +313,10 @@ export function OnboardingClient({
       {step === 3 && (
         <div className="text-center animate-fade-in pt-4">
           <div className="mb-6 relative">
-            <div className="w-32 h-32 bg-success-50 rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="w-32 h-32 bg-success-50/60 rounded-full flex items-center justify-center mx-auto mb-8">
               <PartyPopper className="w-16 h-16 text-success-600" />
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-5 flex items-center justify-center gap-2">
+            <h2 className="text-3xl sm:text-4xl font-semibold mb-5 flex items-center justify-center gap-2">
               <span className="text-success-600">مبروك!</span>
               <span className="text-surface-950">متجرك جاهز</span>
             </h2>
@@ -344,7 +344,7 @@ export function OnboardingClient({
               <a 
                 href={`https://${storeLink}`} 
                 target="_blank" 
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center text-sm gap-2"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-medium transition-colors flex items-center justify-center text-sm gap-2"
               >
                 زيارة المتجر
                 <ExternalLink className="w-4 h-4" />
@@ -352,7 +352,7 @@ export function OnboardingClient({
               <button 
                 type="button"
                 onClick={isPreview ? onPreviewNext : () => finishOnboarding()} 
-                className="w-full bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-900 py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center text-sm gap-2"
+                className="w-full bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-900 py-3.5 rounded-xl font-medium transition-colors flex items-center justify-center text-sm gap-2"
               >
                 <ArrowRight className="w-4 h-4 rtl:-scale-x-100" />
                 الانتقال للوحة التحكم
