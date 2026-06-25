@@ -156,6 +156,20 @@ export async function verifyOtpAction(email: string, otp: string) {
       data: { isVerified: true, otpCode: null, otpExpiry: null }
     });
 
+    // Notify Admins
+    try {
+      await prisma.adminNotification.create({
+        data: {
+          title: "مستخدم جديد",
+          message: `سجل ${user.name} حساباً جديداً بالمنصة.`,
+          type: "NEW_USER",
+          link: `/admin/users`
+        }
+      });
+    } catch (e) {
+      console.error("Failed to notify admin", e);
+    }
+
     return { success: true };
   } catch (error) {
     return { error: "حدث خطأ أثناء التحقق من الكود" };

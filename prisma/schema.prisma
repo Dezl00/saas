@@ -65,6 +65,11 @@ enum DeliveryType {
   PICKUP
 }
 
+enum AdminNotificationType {
+  NEW_USER
+  SYSTEM
+}
+
 // ===== MODELS =====
 
 model User {
@@ -325,4 +330,15 @@ model PlatformSetting {
   logo            String?
   supportWhatsapp String?
   updatedAt       DateTime @updatedAt
+}
+
+model AdminNotification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      AdminNotificationType @default(NEW_USER)
+  link      String?
+  isRead    Boolean  @default(false)
+  
+  createdAt DateTime @default(now())
 }

@@ -36,7 +36,7 @@ export async function globalSearch(query: string) {
       ],
     },
     include: {
-      store: { select: { name: true, status: true, type: true } },
+      store: { select: { name: true, status: true, type: true, subdomain: true } },
     },
     take: 5,
   });

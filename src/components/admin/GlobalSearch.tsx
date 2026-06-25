@@ -253,14 +253,30 @@ export function GlobalSearch() {
                 </div>
               </div>
               {selectedUser.store && (
-                <div className="flex items-center gap-3 p-3 bg-surface-50 rounded-xl">
-                  <Store className="w-5 h-5 text-primary-500" />
-                  <div className="flex-1 overflow-hidden">
-                    <p className="text-xs text-surface-500 font-bold">متجره</p>
-                    <p className="font-medium text-surface-900 text-sm truncate">{selectedUser.store.name}</p>
+                <div className="flex items-center justify-between p-3 bg-surface-50 rounded-xl">
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    <Store className="w-5 h-5 text-primary-500" />
+                    <div className="flex-1 overflow-hidden">
+                      <p className="text-xs text-surface-500 font-bold">متجره</p>
+                      <p className="font-medium text-surface-900 text-sm truncate">{selectedUser.store.name}</p>
+                    </div>
                   </div>
+                  {selectedUser.store.subdomain && (
+                    <a
+                      href={`https://${selectedUser.store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 bg-primary-100 text-primary-700 text-xs font-bold rounded-lg hover:bg-primary-200 transition-colors flex-shrink-0"
+                    >
+                      زيارة
+                    </a>
+                  )}
                 </div>
               )}
+            </div>
+
+            <div className="mt-4 text-center">
+              <p className="text-[10px] text-surface-400 font-bold">تاريخ الانضمام: {new Date(selectedUser.createdAt).toLocaleDateString('ar-EG')}</p>
             </div>
 
             <button

@@ -11,6 +11,7 @@ import {
   Search,
 } from "lucide-react";
 import { GlobalSearch } from "@/components/admin/GlobalSearch";
+import { AdminHeaderNotifications } from "@/components/admin/AdminHeaderNotifications";
 
 export default async function AdminLayout({
   children,
@@ -85,8 +86,8 @@ export default async function AdminLayout({
           <div className="flex-1 max-w-xl">
             <GlobalSearch />
           </div>
-          <div className="mr-4 flex items-center">
-            {/* Additional header actions could go here */}
+          <div className="mr-4 flex items-center gap-2">
+            <AdminHeaderNotifications />
           </div>
         </header>
 
