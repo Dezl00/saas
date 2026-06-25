@@ -56,6 +56,6 @@ export async function POST(
 
   } catch (error: any) {
     console.error("Image generation error:", error);
-    return NextResponse.json({ error: "فشل توليد الصورة أو رفعها" }, { status: 500 });
+    return NextResponse.json({ error: "فشل توليد الصورة أو رفعها: " + (error.message || String(error)) }, { status: 500 });
   }
 }
