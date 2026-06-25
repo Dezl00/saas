@@ -28,3 +28,20 @@ export async function uploadImageToCloudinary(file: File): Promise<string> {
     );
   });
 }
+
+export async function uploadUrlToCloudinary(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      url,
+      { folder: 'menura' },
+      (error, result) => {
+        if (error || !result) {
+          console.error("Cloudinary upload error:", error);
+          reject(error || new Error("Failed to upload URL to Cloudinary"));
+        } else {
+          resolve(result.secure_url);
+        }
+      }
+    );
+  });
+}

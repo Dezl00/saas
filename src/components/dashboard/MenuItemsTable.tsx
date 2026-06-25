@@ -5,6 +5,7 @@ import { ImageIcon, Trash2, CheckSquare, Square, Loader2 } from "lucide-react";
 import { toggleMenuItemStatus, deleteMenuItem, bulkDeleteMenuItems } from "@/app/(dashboard)/dashboard/menu/actions";
 import { MenuItemEditButton } from "@/components/dashboard/MenuItemEditButton";
 import { DeleteConfirmButton } from "@/components/dashboard/DeleteConfirmButton";
+import { GenerateImageButton } from "@/components/dashboard/GenerateImageButton";
 import toast from "react-hot-toast";
 
 type MenuItemType = {
@@ -167,6 +168,7 @@ export function MenuItemsTable({
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
+                        <GenerateImageButton itemId={item.id} hasImage={!!item.image} />
                         <MenuItemEditButton 
                           item={{
                             ...item,
