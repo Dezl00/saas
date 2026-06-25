@@ -315,7 +315,6 @@ export function OnboardingClient({
           <div className="mb-6 relative">
             <div className="w-32 h-32 bg-success-50/60 rounded-full flex items-center justify-center mx-auto mb-8 relative">
               <Rocket className="w-16 h-16 text-success-600" strokeWidth={1.25} />
-              <Sparkles className="w-6 h-6 text-success-400 absolute top-4 right-4 animate-pulse" strokeWidth={1.5} />
             </div>
             <h2 className="text-3xl sm:text-4xl font-semibold mb-5 flex items-center justify-center gap-2">
               <span className="text-success-600">مبروك!</span>
