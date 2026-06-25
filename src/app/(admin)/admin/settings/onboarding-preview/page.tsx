@@ -12,6 +12,10 @@ export default function OnboardingPreviewPage() {
     else setStep(1); // loop back to step 1 when clicking "Go to Dashboard"
   };
 
+  const handlePrev = () => {
+    if (step > 1) setStep(step - 1);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -35,15 +39,16 @@ export default function OnboardingPreviewPage() {
         </div>
       </div>
 
-      <div className="bg-surface-50 flex flex-col items-center justify-center p-4 py-12 rounded-[2rem] border border-surface-200 shadow-inner" dir="rtl">
-        <div className="w-full max-w-lg bg-white rounded-[2rem] overflow-hidden shadow-sm border border-surface-100">
-          <div className="p-6 md:p-8">
+      <div className="bg-surface-50 flex flex-col items-center justify-center p-4 py-4 rounded-[2rem] border border-surface-200" dir="rtl">
+        <div className="w-full max-w-lg bg-white rounded-[2rem] overflow-hidden border border-surface-200">
+          <div className="p-4 md:p-6">
             <OnboardingClient 
               step={step} 
               storeName="متجر الذواقة" 
               subdomain="aldhawaqa" 
               isPreview={true}
               onPreviewNext={handleNext}
+              onPreviewPrev={handlePrev}
             />
           </div>
         </div>

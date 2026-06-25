@@ -1,27 +1,31 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { submitStep1, submitStep2, skipStep, finishOnboarding } from "./actions";
-import { Loader2, ArrowLeft, Check, Store, Phone, Link as LinkIcon, ExternalLink, CloudUpload, ArrowRight, Lock, ImageIcon } from "lucide-react";
+import { submitStep1, submitStep2, finishOnboarding } from "./actions";
+import { Loader2, ArrowLeft, Check, Store, Phone, ExternalLink, CloudUpload, ArrowRight, PartyPopper, Sparkles, CheckCircle2 } from "lucide-react";
 import confetti from "canvas-confetti";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function OnboardingClient({ 
   step, 
   storeName, 
   subdomain,
   isPreview,
-  onPreviewNext
+  onPreviewNext,
+  onPreviewPrev
 }: { 
   step: number; 
   storeName: string; 
   subdomain: string;
   isPreview?: boolean;
   onPreviewNext?: () => void;
+  onPreviewPrev?: () => void;
 }) {
   const [isPending, setIsPending] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const steps = [
     { id: 1, title: "هوية المتجر", icon: Store },
@@ -67,15 +71,30 @@ export function OnboardingClient({
     }
   };
 
+  const storeLink = `${subdomain || 'your-store'}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(`https://${storeLink}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
+  };
+
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      {copied && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-slide-up flex items-center gap-2 px-4 py-3 bg-success-50 text-success-700 font-medium rounded-xl border border-success-200 shadow-lg shadow-success-500/10">
+          <CheckCircle2 className="w-5 h-5 text-success-600" />
+          تم نسخ الرابط بنجاح!
+        </div>
+      )}
+
       {/* Progress Indicator */}
-      <div className="mb-10 relative">
+      <div className="mb-8 relative">
         <div className="flex items-center justify-between relative z-10 px-2 sm:px-8">
           {/* Dashed background lines */}
           <div className="absolute top-6 left-[10%] right-[10%] border-t border-dashed border-surface-200 -z-10" />
           
-          {steps.map((s, index) => {
+          {steps.map((s) => {
             const Icon = s.icon;
             const isActive = s.id === step;
             const isCompleted = s.id < step;
@@ -91,7 +110,7 @@ export function OnboardingClient({
                 >
                   <Icon className={`w-5 h-5 ${!isActive && !isCompleted ? "text-surface-950" : ""}`} />
                 </div>
-                <span className={`text-sm font-bold ${isActive ? "text-primary-600" : isCompleted ? "text-success-600" : "text-surface-500"}`}>
+                <span className={`text-sm font-semibold ${isActive ? "text-primary-600" : isCompleted ? "text-success-600" : "text-surface-500"}`}>
                   {s.title}
                 </span>
               </div>
@@ -105,17 +124,17 @@ export function OnboardingClient({
         <form action={isPreview ? onPreviewNext : (data) => { setIsPending(true); submitStep1(data).finally(() => setIsPending(false)); }} className="animate-fade-in">
           <div className="text-center mb-8 relative">
             <div className="inline-flex items-center justify-center gap-2 mb-2">
-              <h2 className="text-2xl sm:text-3xl font-black text-[#0f172a]">مرحباً بك! لنبدأ بتهيئة متجرك</h2>
-              <span className="text-primary-500 text-3xl">✨</span>
+              <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">مرحباً بك! لنبدأ بتهيئة متجرك</h2>
+              <Sparkles className="w-6 h-6 text-primary-500" />
             </div>
-            <p className="text-surface-500 text-base">اختر اسماً مميزاً وشعاراً يعكس هويتك التجارية</p>
+            <p className="text-surface-500 text-sm">اختر اسماً مميزاً وشعاراً يعكس هويتك التجارية</p>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-bold text-surface-950 mb-2">شعار المتجر <span className="text-surface-500 font-medium">(اختياري)</span></label>
+              <label className="block text-sm font-semibold text-surface-950 mb-2">شعار المتجر <span className="text-surface-500 font-medium">(اختياري)</span></label>
               <div 
-                className="border border-dashed border-primary-200 bg-primary-50/30 rounded-2xl p-8 text-center cursor-pointer hover:bg-primary-50/50 transition-colors relative"
+                className="border border-dashed border-primary-200 bg-primary-50/30 rounded-2xl p-6 text-center cursor-pointer hover:bg-primary-50/50 transition-colors relative"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <input 
@@ -128,24 +147,23 @@ export function OnboardingClient({
                 />
                 
                 {logoPreview ? (
-                  <div className="relative w-24 h-24 mx-auto rounded-xl overflow-hidden border border-surface-200">
+                  <div className="relative w-20 h-20 mx-auto rounded-xl overflow-hidden border border-surface-200">
                     <img src={logoPreview} alt="Preview" className="w-full h-full object-cover" />
                   </div>
                 ) : (
                   <>
-                    <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CloudUpload className="w-8 h-8" />
+                    <div className="w-14 h-14 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <CloudUpload className="w-6 h-6" />
                     </div>
-                    <p className="font-bold text-surface-950 text-base mb-1">اسحب وأفلت الصورة هنا</p>
-                    <p className="text-sm text-surface-500 mb-4">أو اضغط للاختيار من معرض الصور</p>
-                    <p className="text-xs text-surface-400">الصيغ المدعومة: JPG, PNG, WebP (الحد الأقصى 5MB)</p>
+                    <p className="font-semibold text-surface-950 text-sm mb-1">اسحب وأفلت الصورة هنا</p>
+                    <p className="text-xs text-surface-500">أو اضغط للاختيار من معرض الصور</p>
                   </>
                 )}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-surface-950 mb-2">اسم المتجر</label>
+              <label className="block text-sm font-semibold text-surface-950 mb-2">اسم المتجر</label>
               <div className="relative">
                 <Store className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                 <input 
@@ -154,32 +172,20 @@ export function OnboardingClient({
                   defaultValue={storeName} 
                   required 
                   placeholder="مثال: مطعم الذواقة"
-                  className="block w-full ps-11 pe-4 py-3.5 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-base" 
+                  className="block w-full ps-11 pe-4 py-3 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm" 
                 />
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-bold text-surface-950">اللون الأساسي <span className="text-surface-500 font-medium">(اختياري)</span></label>
-              </div>
-              <p className="text-sm text-surface-500 mb-3">اختر لوناً يعبر عن هويتك البصرية</p>
-              
-              <div className="flex flex-wrap items-center gap-3">
-                {colors.map((color) => (
-                  <label key={color} className="relative cursor-pointer group">
-                    <input type="radio" name="primaryColor" value={color} className="peer sr-only" defaultChecked={color === "#f97316"} />
-                    <div 
-                      className="w-10 h-10 rounded-full border-2 border-transparent peer-checked:border-primary-500 peer-checked:p-0.5 transition-all"
-                    >
-                      <div className="w-full h-full rounded-full" style={{ backgroundColor: color }} />
-                    </div>
-                  </label>
-                ))}
-                
-                <label className="relative cursor-pointer ms-2 group">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <label className="block text-sm font-semibold text-surface-950">اللون الأساسي <span className="text-surface-500 font-medium">(اختياري)</span></label>
+                  <p className="text-xs text-surface-500 mt-1">اختر لوناً يعبر عن هويتك البصرية</p>
+                </div>
+                <label className="relative cursor-pointer group">
                   <input type="radio" name="primaryColor" value="custom" id="customColorRadio" className="peer sr-only" />
-                  <div className="w-10 h-10 rounded-xl border-2 border-transparent peer-checked:border-primary-500 p-0.5 transition-all relative overflow-hidden flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl border-2 border-transparent peer-checked:border-primary-500 p-0.5 transition-all relative overflow-hidden flex items-center justify-center shadow-sm">
                     <input 
                       type="color" 
                       id="customColorPicker"
@@ -198,27 +204,31 @@ export function OnboardingClient({
                   </div>
                 </label>
               </div>
+              
+              <div className="flex flex-wrap items-center gap-3">
+                {colors.map((color) => (
+                  <label key={color} className="relative cursor-pointer group">
+                    <input type="radio" name="primaryColor" value={color} className="peer sr-only" defaultChecked={color === "#f97316"} />
+                    <div 
+                      className="w-10 h-10 rounded-full border-2 border-transparent peer-checked:border-primary-500 peer-checked:p-0.5 transition-all shadow-sm"
+                    >
+                      <div className="w-full h-full rounded-full" style={{ backgroundColor: color }} />
+                    </div>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="pt-8 mt-8 border-t border-surface-100">
-            <div className="flex gap-4 mb-4">
-              <button type="button" onClick={isPreview ? onPreviewNext : () => skipStep(1)} className="px-8 bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-950 py-3.5 rounded-xl font-bold transition-colors">
-                تخطي
-              </button>
-              <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
-                {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : (
-                  <>
-                    التالي
-                    <ArrowLeft className="w-5 h-5 rtl:-scale-x-100" />
-                  </>
-                )}
-              </button>
-            </div>
-            <div className="flex items-center justify-center gap-1 text-surface-500 text-xs font-medium">
-              سيتم استخدام هذا الاسم لإنشاء رابط متجرك الخاص
-              <Lock className="w-3 h-3" />
-            </div>
+          <div className="pt-6 mt-6 border-t border-surface-100">
+            <button type="submit" disabled={isPending} className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2">
+              {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                <>
+                  التالي
+                  <ArrowLeft className="w-5 h-5 rtl:-scale-x-100" />
+                </>
+              )}
+            </button>
           </div>
         </form>
       )}
@@ -228,60 +238,65 @@ export function OnboardingClient({
         <form action={isPreview ? onPreviewNext : (data) => { setIsPending(true); submitStep2(data).finally(() => setIsPending(false)); }} className="animate-fade-in">
           <div className="text-center mb-8 relative">
             <div className="inline-flex items-center justify-center gap-2 mb-2">
-              <h2 className="text-2xl sm:text-3xl font-black text-[#0f172a]">بيانات التواصل</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a]">بيانات التواصل</h2>
             </div>
-            <p className="text-surface-500 text-base">أضف أرقام التواصل ليتمكن عملائك من الوصول إليك بسهولة</p>
+            <p className="text-surface-500 text-sm">أضف أرقام التواصل ليتمكن عملائك من الوصول إليك بسهولة</p>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-bold text-surface-950 mb-2">رقم الهاتف العام</label>
+              <label className="block text-sm font-semibold text-surface-950 mb-2">رقم الهاتف العام</label>
               <div className="relative">
                 <Phone className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                 <input 
                   type="text" 
                   name="phone" 
                   placeholder="مثال: 01xxxxxxxxx" 
-                  className="block w-full ps-11 pe-4 py-3.5 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-base" 
+                  className="block w-full ps-11 pe-4 py-3 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm" 
                   dir="ltr" 
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-surface-950 mb-2">رقم الواتساب (لاستقبال الطلبات)</label>
+              <label className="block text-sm font-semibold text-surface-950 mb-2">رقم الواتساب (لاستقبال الطلبات)</label>
               <div className="relative">
                 <Phone className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                 <input 
                   type="text" 
                   name="whatsappNumber" 
                   placeholder="مع كود الدولة مثل +20" 
-                  className="block w-full ps-11 pe-4 py-3.5 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-base" 
+                  className="block w-full ps-11 pe-4 py-3 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm" 
                   dir="ltr" 
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-surface-950 mb-2">العنوان الرئيسي</label>
+              <label className="block text-sm font-semibold text-surface-950 mb-2">العنوان الرئيسي</label>
               <div className="relative">
                 <Store className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
                 <input 
                   type="text" 
                   name="address" 
                   placeholder="مثال: شارع النيل، القاهرة" 
-                  className="block w-full ps-11 pe-4 py-3.5 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-base" 
+                  className="block w-full ps-11 pe-4 py-3 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm" 
                 />
               </div>
             </div>
           </div>
 
-          <div className="pt-8 mt-8 border-t border-surface-100">
-            <div className="flex gap-4 mb-4">
-              <button type="button" onClick={isPreview ? onPreviewNext : () => skipStep(2)} className="px-8 bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-950 py-3.5 rounded-xl font-bold transition-colors">
-                تخطي
+          <div className="pt-6 mt-6 border-t border-surface-100">
+            <div className="flex gap-3">
+              <button 
+                type="button" 
+                onClick={isPreview ? onPreviewPrev : () => router.push("?step=1")} 
+                className="px-6 bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-950 py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+              >
+                <ArrowRight className="w-5 h-5 rtl:-scale-x-100" />
+                السابق
               </button>
-              <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
+              <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2">
                 {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                   <>
                     التالي
@@ -298,30 +313,27 @@ export function OnboardingClient({
       {step === 3 && (
         <div className="text-center animate-fade-in pt-4">
           <div className="mb-6 relative">
-            <div className="w-24 h-24 bg-success-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-5xl">🎉</span>
+            <div className="w-20 h-20 bg-success-50 text-success-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <PartyPopper className="w-10 h-10" />
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
               <span className="text-surface-950">مبروك</span>{" "}
               <span className="text-success-600">متجرك جاهز!</span>
             </h2>
-            <p className="text-surface-600 text-base leading-relaxed max-w-md mx-auto">
+            <p className="text-surface-600 text-sm leading-relaxed max-w-md mx-auto">
               لقد تم إعداد متجرك بنجاح. يمكنك الآن مشاركة الرابط مع عملائك للبدء في استقبال الطلبات.
             </p>
           </div>
 
-          <div className="border border-surface-200 rounded-2xl p-6 text-start mb-6">
-            <p className="text-sm font-bold text-surface-950 mb-3">رابط متجرك</p>
+          <div className="border border-surface-200 rounded-2xl p-6 text-start">
+            <p className="text-sm font-semibold text-surface-950 mb-3">رابط متجرك</p>
             <div className="flex items-center justify-between bg-primary-50 rounded-xl p-3 border border-primary-100">
               <span className="font-medium text-primary-700 text-sm sm:text-base truncate" dir="ltr">
-                {subdomain ? `menura.site/store/${subdomain}` : "menura.site/store/your-store"}
+                {storeLink}
               </span>
               <button 
                 type="button"
-                onClick={() => {
-                  navigator.clipboard.writeText(`https://menura.site/store/${subdomain}`);
-                  alert("تم نسخ الرابط!");
-                }}
+                onClick={handleCopy}
                 className="p-2 text-primary-600 hover:bg-primary-100 rounded-lg transition-colors flex-shrink-0"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -330,30 +342,21 @@ export function OnboardingClient({
             
             <div className="mt-4 flex flex-col gap-3">
               <a 
-                href={`/store/${subdomain}`} 
+                href={`https://${storeLink}`} 
                 target="_blank" 
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center text-base gap-2"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center text-sm gap-2"
               >
                 زيارة المتجر
-                <ExternalLink className="w-5 h-5" />
+                <ExternalLink className="w-4 h-4" />
               </a>
               <button 
                 type="button"
                 onClick={isPreview ? onPreviewNext : () => finishOnboarding()} 
-                className="w-full bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-900 py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center text-base gap-2"
+                className="w-full bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-900 py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center text-sm gap-2"
               >
-                <ArrowRight className="w-5 h-5 rtl:-scale-x-100" />
+                <ArrowRight className="w-4 h-4 rtl:-scale-x-100" />
                 الانتقال للوحة التحكم
               </button>
-            </div>
-          </div>
-
-          <div className="bg-success-50 border border-success-100 rounded-xl p-4 flex items-start gap-3 text-start">
-            <Check className="w-6 h-6 text-success-600 flex-shrink-0 mt-0.5 border-2 border-success-600 rounded-md p-0.5" />
-            <div>
-              <p className="text-sm font-bold text-success-800">
-                <span className="font-black">نصيحة:</span> شارك رابط متجرك الآن مع عملائك على واتساب ووسائل التواصل الاجتماعي.
-              </p>
             </div>
           </div>
         </div>

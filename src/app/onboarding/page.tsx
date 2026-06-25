@@ -28,9 +28,9 @@ export default async function OnboardingPage({ searchParams }: { searchParams: {
   const actualStep = Math.min(currentStep, user.onboardingStep || 1);
 
   return (
-    <div className="min-h-screen bg-surface-50 flex flex-col items-center justify-center p-4 py-12" dir="rtl">
-      <div className="w-full max-w-lg bg-white rounded-[2rem] overflow-hidden animate-fade-in shadow-sm border border-surface-100">
-        <div className="p-6 md:p-8">
+    <div className="min-h-screen bg-surface-50 flex flex-col items-center justify-center p-4 py-4" dir="rtl">
+      <div className="w-full max-w-lg bg-white rounded-[2rem] overflow-hidden animate-fade-in border border-surface-200">
+        <div className="p-4 md:p-6">
           <OnboardingClient 
             step={actualStep} 
             storeName={user.store?.name || ""} 
