@@ -201,9 +201,10 @@ export default function NewStorePage() {
 
         <div className="flex justify-end pt-4">
           <SubmitButton 
-            text="إنشاء المتجر وتفعيل الحساب" 
             className="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-500/20 w-full md:w-auto"
-          />
+          >
+            إنشاء المتجر وتفعيل الحساب
+          </SubmitButton>
         </div>
       </form>
     </div>
