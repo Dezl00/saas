@@ -3,18 +3,17 @@
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "./CartProvider";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useStoreUrl } from "./useStoreUrl";
 
 export function CartHeaderButton() {
   const { items } = useCart();
-  const params = useParams();
-  const subdomain = params?.subdomain as string;
+  const { getUrl } = useStoreUrl();
   
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <Link
-      href={`/store/${subdomain}/cart`}
+      href={getUrl("/cart")}
       className="relative p-2 hover:opacity-80 transition-opacity active:scale-95 flex items-center justify-center"
     >
       <ShoppingBag className="w-6 h-6 text-surface-700" />

@@ -7,7 +7,8 @@ import { formatPrice, formatWhatsappNumber } from "@/lib/utils";
 import { placeOrderAction } from "@/app/store/[subdomain]/actions";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useStoreUrl } from "@/components/store/useStoreUrl";
 
 type Branch = { id: string; name: string; address: string | null };
 type DeliveryArea = { id: string; name: string; fee: number };
@@ -23,9 +24,8 @@ export function StoreCheckoutView({
   deliveryAreas: DeliveryArea[];
 }) {
   const { items, total, clearCart } = useCart();
-  const params = useParams();
   const router = useRouter();
-  const subdomain = params?.subdomain as string;
+  const { getUrl, subdomain } = useStoreUrl();
   
   const [deliveryType, setDeliveryType] = useState<"DELIVERY" | "PICKUP">("DELIVERY");
   const [selectedArea, setSelectedArea] = useState<string>("");
@@ -35,7 +35,7 @@ export function StoreCheckoutView({
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   if (items.length === 0) {
-    router.replace(`/store/${subdomain}/cart`);
+    router.replace(getUrl("/cart"));
     return null;
   }
 
@@ -116,10 +116,10 @@ export function StoreCheckoutView({
         msg += `\n*الإجمالي المطلوب:* ${formatPrice(finalTotal, store.currency)}`;
         
         window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-        router.push(`/store/${subdomain}`);
+        router.push(getUrl("/"));
       } else {
         toast.success("تم إرسال طلبك بنجاح!");
-        router.push(`/store/${subdomain}`);
+        router.push(getUrl("/"));
       }
 
     } catch (err) {
@@ -132,7 +132,7 @@ export function StoreCheckoutView({
     <div className="animate-fade-in">
       <div className="flex items-center gap-3 mb-6 px-2">
         <Link 
-          href={`/store/${subdomain}/cart`}
+          href={getUrl("/cart")}
           className="w-10 h-10 bg-white border border-surface-200 rounded-xl flex items-center justify-center text-surface-600 hover:bg-surface-100 transition-colors active:scale-95"
         >
           <ArrowRight className="w-5 h-5" />

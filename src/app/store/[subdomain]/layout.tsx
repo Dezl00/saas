@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { Store as StoreIcon, ShoppingBag, MapPin, Phone, MessageCircle, Link as LinkIcon } from "lucide-react";
 import { CartProvider } from "@/components/store/CartProvider";
 import { CartHeaderButton } from "@/components/store/CartHeaderButton";
-import { ThemeToggle } from "@/components/store/ThemeToggle";
 import { formatWhatsappNumber } from "@/lib/utils";
 
 // SVG Icons for Brands
@@ -114,7 +113,6 @@ export default async function StoreLayout({
             </div>
 
             <div className="flex items-center gap-2">
-              <ThemeToggle />
               <CartHeaderButton />
             </div>
           </div>

@@ -4,12 +4,11 @@ import { useCart } from "@/components/store/CartProvider";
 import { ShoppingBag, ArrowRight, Minus, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
-import { useParams } from "next/navigation";
+import { useStoreUrl } from "@/components/store/useStoreUrl";
 
 export function StoreCartView({ store }: { store: { id: string; name: string; currency: string; primaryColor?: string | null } }) {
   const { items, updateQuantity, removeItem, total } = useCart();
-  const params = useParams();
-  const subdomain = params?.subdomain as string;
+  const { getUrl } = useStoreUrl();
 
   if (items.length === 0) {
     return (
@@ -20,7 +19,7 @@ export function StoreCartView({ store }: { store: { id: string; name: string; cu
         <h2 className="text-2xl font-black text-surface-950 mb-2">السلة فارغة</h2>
         <p className="text-surface-600 mb-8 max-w-sm mx-auto">لم تقم بإضافة أي طلبات إلى سلتك حتى الآن، تصفح المنيو وأضف ما تشتهيه!</p>
         <Link
-          href={`/store/${subdomain}`}
+          href={getUrl("/")}
           className="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-all active:scale-95 shadow-lg shadow-primary-500/20"
         >
           تصفح المنيو
@@ -33,7 +32,7 @@ export function StoreCartView({ store }: { store: { id: string; name: string; cu
     <div className="animate-fade-in">
       <div className="flex items-center gap-3 mb-6 px-2">
         <Link 
-          href={`/store/${subdomain}`}
+          href={getUrl("/")}
           className="w-10 h-10 bg-white border border-surface-200 rounded-xl flex items-center justify-center text-surface-600 hover:bg-surface-100 transition-colors active:scale-95"
         >
           <ArrowRight className="w-5 h-5" />
@@ -103,7 +102,7 @@ export function StoreCartView({ store }: { store: { id: string; name: string; cu
         </div>
         
         <Link
-          href={`/store/${subdomain}/checkout`}
+          href={getUrl("/checkout")}
           className="w-full flex items-center justify-center gap-2 py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold text-lg rounded-2xl transition-transform active:scale-[0.98] shadow-lg shadow-primary-500/20"
         >
           <ShoppingBag className="w-5 h-5" />
