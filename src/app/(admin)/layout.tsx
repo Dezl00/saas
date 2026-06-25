@@ -10,6 +10,7 @@ import {
   Home,
   Search,
 } from "lucide-react";
+import { GlobalSearch } from "@/components/admin/GlobalSearch";
 
 export default async function AdminLayout({
   children,
@@ -82,14 +83,7 @@ export default async function AdminLayout({
         {/* Simple Header with Search */}
         <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-surface-200 shadow-sm h-16 flex items-center justify-between px-4 md:px-8 w-full">
           <div className="flex-1 max-w-xl">
-            <div className="relative">
-              <Search className="w-4 h-4 text-surface-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input 
-                type="search" 
-                placeholder="ابحث عن متجر أو مستخدم..." 
-                className="w-full pl-4 pr-10 py-2 bg-surface-50 border border-surface-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm"
-              />
-            </div>
+            <GlobalSearch />
           </div>
           <div className="mr-4 flex items-center">
             {/* Additional header actions could go here */}
