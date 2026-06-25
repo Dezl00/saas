@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
@@ -17,18 +17,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "الرجاء إرفاق صورة صالحة" }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: "مفتاح GEMINI_API_KEY غير موجود في إعدادات البيئة." }, { status: 500 });
+      return NextResponse.json({ error: "مفتاح GROQ_API_KEY غير موجود في إعدادات البيئة." }, { status: 500 });
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const base64Data = buffer.toString("base64");
     
-    const genAI = new GoogleGenerativeAI(apiKey);
+    const groq = new Groq({ apiKey: apiKey });
     const modelsToTry = [
-      "gemini-2.0-flash"
+      "llama-3.2-90b-vision-preview",
+      "llama-3.2-11b-vision-preview"
     ];
 
     const prompt = `أنت مساعد ذكي متخصص في قراءة قوائم الطعام (Menus). 
@@ -58,24 +59,33 @@ export async function POST(req: Request) {
   ]
 }`;
 
-    const imageParts = [
-      {
-        inlineData: {
-          data: base64Data,
-          mimeType: file.type,
-        },
-      },
-    ];
-
     let responseText = "";
     let lastError: any = null;
 
     for (const modelName of modelsToTry) {
       console.log("Trying model:", modelName);
       try {
-        const model = genAI.getGenerativeModel({ model: modelName });
-        const result = await model.generateContent([prompt, ...imageParts]);
-        responseText = result.response.text();
+        const chatCompletion = await groq.chat.completions.create({
+          messages: [
+            {
+              role: "user",
+              content: [
+                { type: "text", text: prompt },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:${file.type};base64,${base64Data}`,
+                  },
+                },
+              ],
+            },
+          ],
+          model: modelName,
+          temperature: 0.1,
+          max_tokens: 4096,
+        });
+
+        responseText = chatCompletion.choices[0]?.message?.content || "";
         break; // Success
       } catch (modelError: any) {
         lastError = modelError;
@@ -85,7 +95,8 @@ export async function POST(req: Request) {
         if (
           msg.includes("404") ||
           msg.includes("503") ||
-          msg.includes("429")
+          msg.includes("429") ||
+          msg.includes("rate_limit_exceeded")
         ) {
           continue;
         }
@@ -96,10 +107,10 @@ export async function POST(req: Request) {
 
     if (!responseText) {
       const errMsg = lastError?.message || "";
-      if (errMsg.includes("429") || errMsg.includes("quota")) {
-        return NextResponse.json({ error: "تم تجاوز حصة الاستخدام المجانية للذكاء الاصطناعي." }, { status: 429 });
+      if (errMsg.includes("429") || errMsg.includes("rate_limit_exceeded")) {
+        return NextResponse.json({ error: "تم تجاوز حصة الاستخدام للذكاء الاصطناعي (Groq)." }, { status: 429 });
       }
-      if (errMsg.includes("503") || errMsg.includes("Service Unavailable")) {
+      if (errMsg.includes("503")) {
         return NextResponse.json({ error: "السيرفرات تواجه ضغطاً عالياً حالياً. يرجى المحاولة بعد قليل." }, { status: 503 });
       }
       return NextResponse.json({ error: `خطأ من الذكاء الاصطناعي: ${errMsg}` }, { status: 500 });
