@@ -64,13 +64,18 @@ export default async function StoreLayout({
   params: Promise<{ subdomain: string }>;
 }) {
   const params = await paramsPromise;
-  const store = await prisma.store.findUnique({
+  const storePromise = prisma.store.findUnique({
     where: { subdomain: params.subdomain },
     include: {
       branches: { where: { isActive: true } },
       deliveryAreas: { where: { isActive: true } }
     }
   });
+
+  const settingsPromise = prisma.platformSetting.findUnique({ where: { id: "1" } });
+
+  const [store, settings] = await Promise.all([storePromise, settingsPromise]);
+  const platformName = settings?.name || "Menura";
 
   if (!store || store.status === "DELETED") {
     notFound();
@@ -235,7 +240,7 @@ export default async function StoreLayout({
             </div>
             
             <div className="text-xs text-surface-400 mt-10 pt-6 border-t border-surface-100 flex items-center justify-center gap-2">
-              مدعوم بواسطة <a href="https://menura.site" target="_blank" className="font-bold text-surface-950 hover:text-surface-700">Menura</a> &copy; {new Date().getFullYear()}
+              مدعوم بواسطة <a href="https://menura.site" target="_blank" className="font-bold text-surface-950 hover:text-surface-700">{platformName}</a> &copy; {new Date().getFullYear()}
             </div>
           </div>
         </footer>
