@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { submitStep1, submitStep2, finishOnboarding } from "./actions";
-import { Loader2, ArrowLeft, Check, Store, Phone, ExternalLink, CloudUpload, ArrowRight, PartyPopper, Sparkles, CheckCircle2, Copy } from "lucide-react";
+import { Loader2, ArrowLeft, Check, Store, Phone, ExternalLink, CloudUpload, ArrowRight, PartyPopper, Sparkles, CheckCircle2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
 
@@ -312,47 +312,50 @@ export function OnboardingClient({
       {/* Step 3: Success */}
       {step === 3 && (
         <div className="text-center animate-fade-in pt-4">
-          <div className="mb-8 relative">
-            <PartyPopper className="w-20 h-20 text-surface-950 mx-auto mb-6" strokeWidth={1.5} />
-            <h2 className="text-3xl sm:text-4xl font-black mb-4 text-surface-950">
-              مبروك! متجرك جاهز
+          <div className="mb-6 relative">
+            <div className="w-32 h-32 bg-success-50 rounded-full flex items-center justify-center mx-auto mb-8">
+              <PartyPopper className="w-16 h-16 text-success-600" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-5 flex items-center justify-center gap-2">
+              <span className="text-success-600">مبروك!</span>
+              <span className="text-surface-950">متجرك جاهز</span>
             </h2>
-            <p className="text-surface-600 text-base leading-relaxed max-w-md mx-auto">
+            <p className="text-surface-600 text-sm leading-relaxed max-w-md mx-auto">
               لقد تم إعداد متجرك بنجاح. يمكنك الآن مشاركة الرابط مع عملائك للبدء في استقبال الطلبات.
             </p>
           </div>
 
           <div className="border border-surface-200 rounded-2xl p-6 text-start">
-            <p className="text-sm font-bold text-surface-950 mb-3">رابط متجرك</p>
-            <div className="flex items-center justify-between bg-primary-50/50 rounded-xl p-4 mb-6 border border-primary-100/50">
-              <span className="font-medium text-primary-700 text-base truncate" dir="ltr">
+            <p className="text-sm font-semibold text-surface-950 mb-3">رابط متجرك</p>
+            <div className="flex items-center justify-between bg-primary-50 rounded-xl p-3 border border-primary-100">
+              <span className="font-medium text-primary-700 text-sm sm:text-base truncate" dir="ltr">
                 {storeLink}
               </span>
               <button 
                 type="button"
                 onClick={handleCopy}
-                className="text-primary-600 hover:text-primary-700 transition-colors flex-shrink-0"
+                className="p-2 text-primary-600 hover:bg-primary-100 rounded-lg transition-colors flex-shrink-0"
               >
-                <Copy className="w-5 h-5" />
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
               </button>
             </div>
             
-            <div className="flex flex-col gap-3">
+            <div className="mt-4 flex flex-col gap-3">
               <a 
                 href={`https://${storeLink}`} 
                 target="_blank" 
-                className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center text-base gap-2"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center text-sm gap-2"
               >
                 زيارة المتجر
-                <ExternalLink className="w-5 h-5" />
+                <ExternalLink className="w-4 h-4" />
               </a>
               <button 
                 type="button"
                 onClick={isPreview ? onPreviewNext : () => finishOnboarding()} 
-                className="w-full bg-white border border-surface-200 hover:bg-surface-50 text-surface-950 py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center text-base gap-2"
+                className="w-full bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-900 py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center text-sm gap-2"
               >
+                <ArrowRight className="w-4 h-4 rtl:-scale-x-100" />
                 الانتقال للوحة التحكم
-                <ArrowLeft className="w-5 h-5" />
               </button>
             </div>
           </div>
