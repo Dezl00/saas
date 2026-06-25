@@ -71,7 +71,7 @@ export function GlobalSearch() {
 
       {/* Dropdown Results */}
       {isOpen && (query.trim().length > 0) && (
-        <div className="absolute top-full right-0 left-0 mt-2 bg-white rounded-2xl shadow-xl border border-surface-200 overflow-hidden z-50 max-h-[60vh] overflow-y-auto">
+        <div className="absolute top-full right-0 left-0 mt-2 bg-white rounded-2xl border border-surface-100 overflow-hidden z-50 max-h-[60vh] overflow-y-auto">
           {loading ? (
             <div className="p-4 text-center text-sm text-surface-500 animate-pulse">جاري البحث...</div>
           ) : results.stores.length === 0 && results.users.length === 0 ? (
