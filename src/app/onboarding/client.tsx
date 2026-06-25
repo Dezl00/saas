@@ -82,7 +82,7 @@ export function OnboardingClient({
   return (
     <div className="w-full relative">
       {copied && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-slide-up flex items-center gap-2 px-4 py-3 bg-success-50 text-success-700 font-medium rounded-xl border border-success-200 shadow-lg shadow-success-500/10">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-slide-up flex items-center gap-2 px-6 py-3 bg-success-100/90 backdrop-blur-md text-success-700 font-medium rounded-full">
           <CheckCircle2 className="w-5 h-5 text-success-600" />
           تم نسخ الرابط بنجاح!
         </div>
@@ -181,7 +181,7 @@ export function OnboardingClient({
               <div className="flex items-center gap-3 mb-4">
                 <label className="relative cursor-pointer group shrink-0">
                   <input type="radio" name="primaryColor" value="custom" id="customColorRadio" className="peer sr-only" />
-                  <div className="w-10 h-10 rounded-xl border-2 border-transparent peer-checked:border-primary-500 p-0.5 transition-all relative overflow-hidden flex items-center justify-center shadow-sm">
+                  <div className="w-8 h-8 rounded-lg relative overflow-hidden flex items-center justify-center">
                     <input 
                       type="color" 
                       id="customColorPicker"
@@ -313,11 +313,11 @@ export function OnboardingClient({
       {step === 3 && (
         <div className="text-center animate-fade-in pt-4">
           <div className="mb-6 relative">
-            <div className="w-20 h-20 bg-success-50 text-success-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <PartyPopper className="w-10 h-10" />
+            <div className="w-28 h-28 bg-success-50/80 text-success-500 rounded-full flex items-center justify-center mx-auto mb-8">
+              <PartyPopper className="w-14 h-14" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">
-              <span className="text-surface-950">مبروك</span>{" "}
+            <h2 className="text-2xl sm:text-3xl font-bold mb-5 flex items-center justify-center gap-3">
+              <span className="bg-surface-950 text-white px-4 py-1.5 rounded-xl">مبروك</span>
               <span className="text-success-600">متجرك جاهز!</span>
             </h2>
             <p className="text-surface-600 text-sm leading-relaxed max-w-md mx-auto">
