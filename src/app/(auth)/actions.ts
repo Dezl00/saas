@@ -27,16 +27,17 @@ export async function loginAction(prevState: any, formData: FormData) {
     });
 
     if (result?.error) {
-      return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
+      return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة", values: rawData };
     }
     
     // Manual redirect after successful sign in
     redirect(redirectTo);
   } catch (error) {
+    const rawData = Object.fromEntries(formData);
     if (error && typeof error === 'object' && ('errors' in error || 'issues' in error)) {
       const issues = (error as any).errors || (error as any).issues;
       if (Array.isArray(issues) && issues.length > 0) {
-        return { error: issues[0].message };
+        return { error: issues[0].message, values: rawData };
       }
     }
     const isCredentialsError = 
@@ -45,9 +46,9 @@ export async function loginAction(prevState: any, formData: FormData) {
 
     if (isCredentialsError) {
       if ((error as any)?.cause?.err?.message === "UNVERIFIED") {
-        return { error: "يرجى تفعيل حسابك أولاً. قم بإنشاء حساب بنفس البريد لإعادة إرسال الكود." };
+        return { error: "يرجى تفعيل حسابك أولاً. قم بإنشاء حساب بنفس البريد لإعادة إرسال الكود.", values: rawData };
       }
-      return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" };
+      return { error: "البريد الإلكتروني أو كلمة المرور غير صحيحة", values: rawData };
     }
     // Check if it's a NEXT_REDIRECT error thrown by Next.js or Auth.js
     if (error instanceof Error && error.message === "NEXT_REDIRECT") {
@@ -64,7 +65,7 @@ export async function loginAction(prevState: any, formData: FormData) {
     }
 
     // Return any other unexpected error safely to avoid 500 Internal Server Error
-    return { error: "خطأ غير متوقع: " + (error instanceof Error ? error.message : String(error)) };
+    return { error: "خطأ غير متوقع: " + (error instanceof Error ? error.message : String(error)), values: rawData };
   }
 }
 
@@ -83,7 +84,7 @@ export async function registerAction(prevState: any, formData: FormData) {
 
     if (existingUser) {
       if (existingUser.isVerified) {
-        return { error: "البريد الإلكتروني مستخدم بالفعل" };
+        return { error: "البريد الإلكتروني مستخدم بالفعل", values: rawData };
       }
       // If not verified, just update the OTP and resend
       await prisma.user.update({
@@ -118,19 +119,20 @@ export async function registerAction(prevState: any, formData: FormData) {
 
     const sent = await sendOTP(validatedData.email, otpCode);
     if (!sent) {
-      return { error: "حدث خطأ أثناء إرسال كود التحقق" };
+      return { error: "حدث خطأ أثناء إرسال كود التحقق", values: rawData };
     }
 
-    return { requiresOtp: true, email: validatedData.email };
+    return { requiresOtp: true, email: validatedData.email, values: rawData };
   } catch (error) {
     console.error("REGISTER ERROR:", error);
+    const rawData = Object.fromEntries(formData);
     if (error && typeof error === 'object' && ('errors' in error || 'issues' in error)) {
       const issues = (error as any).errors || (error as any).issues;
       if (Array.isArray(issues) && issues.length > 0) {
-        return { error: issues[0].message };
+        return { error: issues[0].message, values: rawData };
       }
     }
-    return { error: "خطأ داخلي: " + (error instanceof Error ? error.message : String(error)) };
+    return { error: "خطأ داخلي: " + (error instanceof Error ? error.message : String(error)), values: rawData };
   }
 }
 

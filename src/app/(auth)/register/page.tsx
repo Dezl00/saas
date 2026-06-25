@@ -136,6 +136,7 @@ export default function RegisterPage() {
                 name="name"
                 type="text"
                 required
+                defaultValue={registerState?.values?.name as string || ""}
                 className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="أحمد محمد"
               />
@@ -156,6 +157,7 @@ export default function RegisterPage() {
                 type="email"
                 autoComplete="email"
                 required
+                defaultValue={registerState?.values?.email as string || ""}
                 className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="اسم@example.com"
                 dir="ltr"
@@ -173,6 +175,7 @@ export default function RegisterPage() {
                 name="phone"
                 type="text"
                 required
+                defaultValue={registerState?.values?.phone as string || ""}
                 className="block w-full px-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="01xxxxxxxxx"
                 dir="ltr"
@@ -194,6 +197,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 required
+                defaultValue={registerState?.values?.password as string || ""}
                 className="block w-full ps-10 pe-10 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="••••••••"
                 dir="ltr"

@@ -42,6 +42,7 @@ export default function LoginPage() {
                 name="email"
                 type="email"
                 autoComplete="email"
+                defaultValue={state?.values?.email as string || ""}
                 required
                 className="block w-full ps-10 pe-3 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="اسم@example.com"
@@ -74,6 +75,7 @@ export default function LoginPage() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
+                defaultValue={state?.values?.password as string || ""}
                 required
                 className="block w-full ps-10 pe-10 py-2.5 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
                 placeholder="••••••••"
