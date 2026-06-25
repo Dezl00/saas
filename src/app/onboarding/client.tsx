@@ -178,12 +178,8 @@ export function OnboardingClient({
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <label className="block text-sm font-semibold text-surface-950">اللون الأساسي <span className="text-surface-500 font-medium">(اختياري)</span></label>
-                  <p className="text-xs text-surface-500 mt-1">اختر لوناً يعبر عن هويتك البصرية</p>
-                </div>
-                <label className="relative cursor-pointer group">
+              <div className="flex items-center gap-3 mb-4">
+                <label className="relative cursor-pointer group shrink-0">
                   <input type="radio" name="primaryColor" value="custom" id="customColorRadio" className="peer sr-only" />
                   <div className="w-10 h-10 rounded-xl border-2 border-transparent peer-checked:border-primary-500 p-0.5 transition-all relative overflow-hidden flex items-center justify-center shadow-sm">
                     <input 
@@ -203,6 +199,10 @@ export function OnboardingClient({
                     <div id="customColorBox" className="w-full h-full rounded-lg bg-orange-500" />
                   </div>
                 </label>
+                <div>
+                  <label className="block text-sm font-semibold text-surface-950">اللون الأساسي <span className="text-surface-500 font-medium">(اختياري)</span></label>
+                  <p className="text-xs text-surface-500 mt-1">اختر لوناً يعبر عن هويتك البصرية</p>
+                </div>
               </div>
               
               <div className="flex flex-wrap items-center gap-3">
