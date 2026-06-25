@@ -74,7 +74,6 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
                           : "محذوف"}
                     </span>
                   </div>
-                  </div>
                   {store.subdomain && (
                     <p className="text-xs text-primary-500 mt-1 font-medium" dir="ltr">
                       {store.subdomain}.{process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}
