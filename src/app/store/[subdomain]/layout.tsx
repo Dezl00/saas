@@ -296,10 +296,9 @@ export default async function StoreLayout({
           enableWhatsappOrders: store.enableWhatsappOrders,
           currency: store.currency,
           primaryColor: store.primaryColor,
-          secondaryColor: store.secondaryColor,
         }}
         branches={store.branches}
-        deliveryAreas={store.deliveryAreas}
+        deliveryAreas={store.deliveryAreas.map(a => ({ id: a.id, name: a.name, fee: Number(a.deliveryFee) }))}
       />
     </CartProvider>
   );

@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 type Branch = { id: string; name: string; address: string | null };
 type DeliveryArea = { id: string; name: string; fee: number };
-type StoreData = { id: string; name: string; whatsappNumber: string | null; enableWhatsappOrders: boolean; currency: string; primaryColor?: string | null; secondaryColor?: string | null };
+type StoreData = { id: string; name: string; whatsappNumber: string | null; enableWhatsappOrders: boolean; currency: string; primaryColor?: string | null };
 
 export function CartSidebar({
   store,
