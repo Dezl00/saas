@@ -30,7 +30,7 @@ export default async function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-surface-50 flex">
+    <div className="min-h-screen bg-surface-50 flex flex-col md:flex-row w-full overflow-x-hidden">
       {/* Sidebar (Desktop) */}
       <aside className="hidden md:flex md:flex-col fixed inset-y-0 right-0 w-64 bg-white border-l border-surface-200 z-30">
         <div className="p-6 border-b border-surface-100 flex-shrink-0">
@@ -78,9 +78,9 @@ export default async function AdminLayout({
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 md:mr-64 flex flex-col min-h-screen relative">
+      <div className="flex-1 md:mr-64 flex flex-col min-h-screen relative w-full max-w-full">
         {/* Simple Header with Search */}
-        <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-surface-200 shadow-sm h-16 flex items-center justify-between px-4 md:px-8">
+        <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-surface-200 shadow-sm h-16 flex items-center justify-between px-4 md:px-8 w-full">
           <div className="flex-1 max-w-xl">
             <div className="relative">
               <Search className="w-4 h-4 text-surface-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -97,7 +97,7 @@ export default async function AdminLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto pb-20 md:pb-8">
+        <main className="flex-1 pb-20 md:pb-8 w-full max-w-full overflow-x-hidden">
           <div className="p-4 md:p-8 max-w-6xl mx-auto w-full">{children}</div>
         </main>
       </div>

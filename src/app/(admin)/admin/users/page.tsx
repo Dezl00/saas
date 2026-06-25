@@ -34,7 +34,10 @@ export default async function AdminUsersPage() {
                   المستخدم
                 </th>
                 <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
-                  تواصل
+                  البريد الإلكتروني
+                </th>
+                <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
+                  رقم الهاتف
                 </th>
                 <th className="text-start px-6 py-3 text-xs font-bold text-surface-800/60 uppercase">
                   المتجر
@@ -65,10 +68,10 @@ export default async function AdminUsersPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-surface-800/70">
-                    <div className="flex flex-col gap-1">
-                      <span>{user.email}</span>
-                      {user.phone && <span className="text-xs" dir="ltr">{user.phone}</span>}
-                    </div>
+                    <span dir="ltr" className="inline-block">{user.email}</span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-surface-800/70">
+                    <span dir="ltr" className="inline-block">{user.phone || '—'}</span>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-surface-950">
                     {user.store?.name || "—"}
@@ -100,7 +103,7 @@ export default async function AdminUsersPage() {
               {users.length === 0 && (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={8}
                     className="px-6 py-16 text-center"
                   >
                     <UsersIcon className="w-12 h-12 text-surface-800/20 mx-auto mb-4" />
