@@ -313,12 +313,12 @@ export function OnboardingClient({
       {step === 3 && (
         <div className="text-center animate-fade-in pt-4">
           <div className="mb-6 relative">
-            <div className="w-28 h-28 bg-success-50/80 text-success-500 rounded-full flex items-center justify-center mx-auto mb-8">
-              <PartyPopper className="w-14 h-14" />
+            <div className="w-32 h-32 bg-success-50 rounded-full flex items-center justify-center mx-auto mb-8">
+              <PartyPopper className="w-16 h-16 text-success-600" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-5 flex items-center justify-center gap-3">
-              <span className="bg-surface-950 text-white px-4 py-1.5 rounded-xl">مبروك</span>
-              <span className="text-success-600">متجرك جاهز!</span>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-5 flex items-center justify-center gap-2">
+              <span className="text-success-600">مبروك!</span>
+              <span className="text-surface-950">متجرك جاهز</span>
             </h2>
             <p className="text-surface-600 text-sm leading-relaxed max-w-md mx-auto">
               لقد تم إعداد متجرك بنجاح. يمكنك الآن مشاركة الرابط مع عملائك للبدء في استقبال الطلبات.
