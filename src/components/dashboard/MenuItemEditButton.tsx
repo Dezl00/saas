@@ -6,7 +6,7 @@ import { MenuItemForm, MenuItemData } from "./MenuItemForm";
 
 type Category = { id: string; name: string };
 
-export function MenuItemEditButton({ item, categories }: { item: MenuItemData, categories: Category[] }) {
+export function MenuItemEditButton({ item, categories, storeId }: { item: MenuItemData, categories: Category[], storeId?: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -29,7 +29,7 @@ export function MenuItemEditButton({ item, categories }: { item: MenuItemData, c
               </button>
             </div>
             <div className="p-6">
-              <MenuItemForm categories={categories} initialData={item} onSuccess={() => setIsOpen(false)} />
+              <MenuItemForm categories={categories} initialData={item} onSuccess={() => setIsOpen(false)} storeId={storeId} />
             </div>
           </div>
         </div>

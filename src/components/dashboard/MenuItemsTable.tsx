@@ -29,10 +29,12 @@ type CategoryType = {
 
 export function MenuItemsTable({ 
   menuItems, 
-  categories 
+  categories,
+  storeId
 }: { 
   menuItems: MenuItemType[], 
-  categories: CategoryType[] 
+  categories: CategoryType[],
+  storeId?: string 
 }) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [isDeletingBulk, setIsDeletingBulk] = useState(false);
@@ -61,7 +63,7 @@ export function MenuItemsTable({
     if (!confirm(`هل أنت متأكد من حذف ${selectedIds.size} صنف؟`)) return;
 
     setIsDeletingBulk(true);
-    const result = await bulkDeleteMenuItems(Array.from(selectedIds));
+    const result = await bulkDeleteMenuItems(Array.from(selectedIds), storeId);
     
     if (result?.error) {
       toast.error(result.error);
@@ -151,7 +153,7 @@ export function MenuItemsTable({
                       <span className="font-bold text-surface-950">{Number(item.price).toFixed(2)}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <form action={toggleMenuItemStatus.bind(null, item.id, item.isAvailable) as any}>
+                      <form action={toggleMenuItemStatus.bind(null, item.id, item.isAvailable, storeId) as any}>
                         <button
                           type="submit"
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
@@ -170,6 +172,7 @@ export function MenuItemsTable({
                       <div className="flex items-center justify-end gap-2">
                         <GenerateImageButton itemId={item.id} hasImage={!!item.image} />
                         <MenuItemEditButton 
+                          storeId={storeId}
                           item={{
                             ...item,
                             price: item.price.toString(),
@@ -178,7 +181,7 @@ export function MenuItemsTable({
                           }} 
                           categories={categories.map(c => ({ id: c.id, name: c.name }))} 
                         />
-                        <DeleteConfirmButton action={deleteMenuItem.bind(null, item.id) as any} />
+                        <DeleteConfirmButton action={deleteMenuItem.bind(null, item.id, storeId) as any} />
                       </div>
                     </td>
                   </tr>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Store as StoreIcon, ShoppingBag, MapPin, Phone, MessageCircle, Link as LinkIcon } from "lucide-react";
 import { CartProvider } from "@/components/store/CartProvider";
 import { CartHeaderButton } from "@/components/store/CartHeaderButton";
+import { CartSidebar } from "@/components/store/CartSidebar";
 import { formatWhatsappNumber } from "@/lib/utils";
 
 // SVG Icons for Brands
@@ -136,11 +137,11 @@ export default async function StoreLayout({
             </>
           )}
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
-            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5">
+            <div className="w-40 h-40 sm:w-48 sm:h-48 flex items-center justify-center mb-5">
               {store.logo ? (
-                <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
+                <img src={store.logo} alt={store.name} className="w-full h-full object-contain drop-shadow-lg" />
               ) : (
-                <StoreIcon className="w-12 h-12 text-primary-600" />
+                <StoreIcon className="w-20 h-20 text-white opacity-80" />
               )}
             </div>
             
@@ -198,11 +199,11 @@ export default async function StoreLayout({
         {/* Footer */}
         <footer className="bg-surface-50 border-t border-surface-200 mt-12 py-10">
           <div className="max-w-5xl mx-auto px-4 text-center space-y-4">
-            <div className="w-24 h-24 mx-auto flex items-center justify-center mb-4">
+            <div className="w-32 h-32 mx-auto flex items-center justify-center mb-4">
               {store.logo ? (
                 <img src={store.logo} alt={store.name} className="w-full h-full object-contain drop-shadow-sm" />
               ) : (
-                <StoreIcon className="w-12 h-12 text-surface-400" />
+                <StoreIcon className="w-16 h-16 text-surface-400" />
               )}
             </div>
             <h2 className="font-bold text-xl text-surface-950">{store.name}</h2>
@@ -285,6 +286,21 @@ export default async function StoreLayout({
         </div>
 
       </div>
+      
+      {/* Global Cart Sidebar */}
+      <CartSidebar 
+        store={{
+          id: store.id,
+          name: store.name,
+          whatsappNumber: store.whatsappNumber,
+          enableWhatsappOrders: store.enableWhatsappOrders,
+          currency: store.currency,
+          primaryColor: store.primaryColor,
+          secondaryColor: store.secondaryColor,
+        }}
+        branches={store.branches}
+        deliveryAreas={store.deliveryAreas}
+      />
     </CartProvider>
   );
 }

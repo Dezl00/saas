@@ -9,6 +9,7 @@ import {
   Settings,
   Home,
   Search,
+  PackageSearch,
 } from "lucide-react";
 import { GlobalSearch } from "@/components/admin/GlobalSearch";
 import { AdminHeaderNotifications } from "@/components/admin/AdminHeaderNotifications";
@@ -28,6 +29,7 @@ export default async function AdminLayout({
     { href: "/admin", icon: LayoutDashboard, label: "الرئيسية" },
     { href: "/admin/users", icon: Users, label: "المستخدمين" },
     { href: "/admin/stores", icon: Store, label: "المتاجر" },
+    { href: "/admin/default-products", icon: PackageSearch, label: "المنتجات الافتراضية" },
     { href: "/admin/settings", icon: Settings, label: "إعدادات المنصة" },
   ];
 

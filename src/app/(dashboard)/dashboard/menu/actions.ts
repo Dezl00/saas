@@ -10,6 +10,12 @@ export async function createMenuItem(formData: FormData) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
   }
 
+  const targetStoreId = formData.get("storeId") as string;
+  let storeIdToUse = session.user.storeId;
+  if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
+    storeIdToUse = "DEFAULT_STORE";
+  }
+
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);
@@ -50,7 +56,7 @@ export async function createMenuItem(formData: FormData) {
       where: { id: categoryId }
     });
 
-    if (category?.storeId !== session.user.storeId) {
+    if (category?.storeId !== storeIdToUse) {
       return { error: "القسم المحدد غير صحيح" };
     }
 
@@ -62,7 +68,7 @@ export async function createMenuItem(formData: FormData) {
         image: imageStr || null,
         sortOrder,
         categoryId,
-        storeId: session.user.storeId,
+        storeId: storeIdToUse,
         sizes: {
           create: sizes.filter(s => s.name && s.price).map(s => ({
             name: s.name,
@@ -90,6 +96,12 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
   const session = await auth();
   if (!session?.user?.storeId) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  const targetStoreId = formData.get("storeId") as string;
+  let storeIdToUse = session.user.storeId;
+  if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
+    storeIdToUse = "DEFAULT_STORE";
   }
 
   const name = formData.get("name") as string;
@@ -127,10 +139,10 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
 
   try {
     const item = await prisma.menuItem.findUnique({ where: { id: menuItemId } });
-    if (item?.storeId !== session.user.storeId) return { error: "غير مصرح لك" };
+    if (item?.storeId !== storeIdToUse) return { error: "غير مصرح لك" };
 
     const category = await prisma.category.findUnique({ where: { id: categoryId } });
-    if (category?.storeId !== session.user.storeId) return { error: "القسم المحدد غير صحيح" };
+    if (category?.storeId !== storeIdToUse) return { error: "القسم المحدد غير صحيح" };
 
     await prisma.menuItem.update({
       where: { id: menuItemId },
@@ -166,10 +178,15 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
   }
 }
 
-export async function toggleMenuItemStatus(menuItemId: string, currentStatus: boolean) {
+export async function toggleMenuItemStatus(menuItemId: string, currentStatus: boolean, targetStoreId?: string) {
   const session = await auth();
   if (!session?.user?.storeId) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  let storeIdToUse = session.user.storeId;
+  if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
+    storeIdToUse = "DEFAULT_STORE";
   }
 
   try {
@@ -177,7 +194,7 @@ export async function toggleMenuItemStatus(menuItemId: string, currentStatus: bo
       where: { id: menuItemId },
     });
 
-    if (item?.storeId !== session.user.storeId) {
+    if (item?.storeId !== storeIdToUse) {
       return { error: "غير مصرح لك بتعديل هذا الصنف" };
     }
 
@@ -194,10 +211,15 @@ export async function toggleMenuItemStatus(menuItemId: string, currentStatus: bo
   }
 }
 
-export async function deleteMenuItem(menuItemId: string) {
+export async function deleteMenuItem(menuItemId: string, targetStoreId?: string) {
   const session = await auth();
   if (!session?.user?.storeId) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  let storeIdToUse = session.user.storeId;
+  if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
+    storeIdToUse = "DEFAULT_STORE";
   }
 
   try {
@@ -205,7 +227,7 @@ export async function deleteMenuItem(menuItemId: string) {
       where: { id: menuItemId },
     });
 
-    if (item?.storeId !== session.user.storeId) {
+    if (item?.storeId !== storeIdToUse) {
       return { error: "غير مصرح لك بحذف هذا الصنف" };
     }
 
@@ -221,10 +243,15 @@ export async function deleteMenuItem(menuItemId: string) {
   }
 }
 
-export async function bulkDeleteMenuItems(menuItemIds: string[]) {
+export async function bulkDeleteMenuItems(menuItemIds: string[], targetStoreId?: string) {
   const session = await auth();
   if (!session?.user?.storeId) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  let storeIdToUse = session.user.storeId;
+  if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
+    storeIdToUse = "DEFAULT_STORE";
   }
 
   try {
@@ -232,7 +259,7 @@ export async function bulkDeleteMenuItems(menuItemIds: string[]) {
     const items = await prisma.menuItem.findMany({
       where: {
         id: { in: menuItemIds },
-        storeId: session.user.storeId
+        storeId: storeIdToUse
       }
     });
 
@@ -243,7 +270,7 @@ export async function bulkDeleteMenuItems(menuItemIds: string[]) {
     await prisma.menuItem.deleteMany({
       where: {
         id: { in: menuItemIds },
-        storeId: session.user.storeId
+        storeId: storeIdToUse
       }
     });
 

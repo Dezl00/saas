@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Plus, Minus, ShoppingBag, Truck, Store as StoreIcon, Loader2, Check } from "lucide-react";
 import { useCart } from "./CartProvider";
 import { formatPrice, formatWhatsappNumber } from "@/lib/utils";
@@ -29,6 +29,22 @@ export function CartSidebar({
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setIsCartOpen(false);
+      setIsCheckout(false);
+    };
+
+    if (isCartOpen) {
+      window.history.pushState({ cart: true }, "");
+      window.addEventListener("popstate", handlePopState);
+    }
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isCartOpen, setIsCartOpen]);
 
   if (!isCartOpen) return null;
 
@@ -322,7 +338,7 @@ export function CartSidebar({
                   <span>{formatPrice(deliveryFee, store?.currency)}</span>
                 </div>
               )}
-              <div className="flex justify-between font-black text-lg text-surface-950 pt-2 border-t border-surface-200">
+              <div className="flex justify-between font-bold text-lg text-surface-950 pt-2 border-t border-surface-200">
                 <span>الإجمالي النهائي</span>
                 <span className="text-primary-600">{formatPrice(finalTotal, store?.currency)}</span>
               </div>
@@ -333,6 +349,7 @@ export function CartSidebar({
                 onClick={() => setIsCheckout(true)}
                 className="w-full py-4 text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600"
               >
+                <ShoppingBag className="w-5 h-5" />
                 المتابعة لإتمام الطلب
               </button>
             ) : (

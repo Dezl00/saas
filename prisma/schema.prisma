@@ -115,6 +115,7 @@ model Store {
   showTiktok           Boolean @default(true)
   snapchatUrl          String?
   showSnapchat         Boolean @default(true)
+  showDefaultProducts  Boolean @default(true)
 
   // Relations
   userId         String          @unique

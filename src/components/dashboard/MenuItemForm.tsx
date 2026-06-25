@@ -18,7 +18,7 @@ export type MenuItemData = {
   addons: { id?: string; name: string; price: string | number }[];
 };
 
-export function MenuItemForm({ categories, initialData, onSuccess }: { categories: Category[], initialData?: MenuItemData, onSuccess?: () => void }) {
+export function MenuItemForm({ categories, initialData, onSuccess, storeId }: { categories: Category[], initialData?: MenuItemData, onSuccess?: () => void, storeId?: string }) {
   const [sizes, setSizes] = useState<{ name: string; price: string }[]>(
     initialData?.sizes ? initialData.sizes.map(s => ({ name: s.name, price: s.price.toString() })) : []
   );
@@ -76,6 +76,7 @@ export function MenuItemForm({ categories, initialData, onSuccess }: { categorie
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {storeId && <input type="hidden" name="storeId" value={storeId} />}
       <div className="space-y-4">
         <div>
           <label htmlFor="categoryId" className="block text-sm font-bold text-surface-950 mb-1">القسم *</label>

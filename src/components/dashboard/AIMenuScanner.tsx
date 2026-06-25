@@ -18,7 +18,7 @@ type ParsedItem = {
   selected?: boolean; // added for UI
 };
 
-export function AIMenuScanner() {
+export function AIMenuScanner({ storeId }: { storeId?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -164,7 +164,7 @@ export function AIMenuScanner() {
       })).filter(c => c.items.length > 0) // Remove empty categories
     };
 
-    const result = await importAIMenuItems(filteredData);
+    const result = await importAIMenuItems(filteredData, storeId);
 
     if (result?.error) {
       toast.error(result.error);

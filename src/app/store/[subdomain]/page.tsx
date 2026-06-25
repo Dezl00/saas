@@ -26,8 +26,36 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
     notFound();
   }
 
+  let categoriesToDisplay = store.categories;
+  let menuItemsToDisplay = store.menuItems;
+
+  if (store.categories.length === 0 && store.showDefaultProducts) {
+    const defaultStore = await prisma.store.findUnique({
+      where: { id: 'DEFAULT_STORE' },
+      include: {
+        categories: {
+          where: { isActive: true },
+          orderBy: { sortOrder: 'asc' }
+        },
+        menuItems: {
+          where: { isAvailable: true },
+          orderBy: { sortOrder: 'asc' },
+          include: {
+            sizes: true,
+            addons: true,
+          }
+        }
+      }
+    });
+
+    if (defaultStore) {
+      categoriesToDisplay = defaultStore.categories;
+      menuItemsToDisplay = defaultStore.menuItems;
+    }
+  }
+
   // Convert Decimal to numbers for client components
-  const serializedMenuItems = store.menuItems.map(item => ({
+  const serializedMenuItems = menuItemsToDisplay.map(item => ({
     id: item.id,
     name: item.name,
     description: item.description,
@@ -42,7 +70,7 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
     <div className="animate-fade-in">
       <StorefrontView 
         store={{ name: store.name, currency: store.currency }}
-        categories={store.categories.map(c => ({ id: c.id, name: c.name }))}
+        categories={categoriesToDisplay.map(c => ({ id: c.id, name: c.name }))}
         menuItems={serializedMenuItems}
       />
     </div>

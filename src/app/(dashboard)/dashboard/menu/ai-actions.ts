@@ -4,13 +4,17 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-export async function importAIMenuItems(parsedData: any) {
+export async function importAIMenuItems(parsedData: any, targetStoreId?: string) {
   const session = await auth();
   if (!session?.user?.storeId) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
   }
 
-  const storeId = session.user.storeId;
+  let storeId = session.user.storeId;
+  if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
+    storeId = "DEFAULT_STORE";
+  }
+  
   let addedItemsCount = 0;
 
   try {

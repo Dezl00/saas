@@ -350,7 +350,7 @@ export function StorefrontView({
                 <div className="w-full h-full flex items-center justify-center"><ShoppingBag className="w-10 h-10 text-surface-300" /></div>
               )}
               <button 
-                onClick={() => setSelectedProduct(null)}
+                onClick={closeProductModal}
                 className="absolute top-4 end-4 w-8 h-8 bg-black/50 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-black/70 transition-colors"
               >
                 <X className="w-5 h-5" />
@@ -360,11 +360,11 @@ export function StorefrontView({
             {/* Modal Content */}
             <div className="p-5 flex-1 overflow-y-auto space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-surface-950">{selectedProduct.name}</h2>
+                <h2 className="text-xl font-medium text-surface-950">{selectedProduct.name}</h2>
                 {selectedProduct.description && (
                   <p className="text-surface-500 text-sm mt-2">{selectedProduct.description}</p>
                 )}
-                <div className="mt-3 font-bold text-primary-600 text-lg">
+                <div className="mt-3 font-medium text-primary-600 text-lg">
                   {formatPrice(selectedProduct.price, store.currency)}
                 </div>
               </div>
@@ -383,9 +383,9 @@ export function StorefrontView({
                             onChange={() => setSelectedSize(size)}
                             className="w-4 h-4 text-primary-600"
                           />
-                          <span className="font-medium text-surface-950">{size.name}</span>
+                          <span className="font-normal text-surface-950">{size.name}</span>
                         </div>
-                        <span className="font-bold text-surface-950">{formatPrice(size.price, store.currency)}</span>
+                        <span className="font-medium text-surface-950">{formatPrice(size.price, store.currency)}</span>
                       </label>
                     ))}
                   </div>
@@ -408,9 +408,9 @@ export function StorefrontView({
                               onChange={() => handleToggleAddon(addon)}
                               className="w-4 h-4 text-primary-600 rounded"
                             />
-                            <span className="font-medium text-surface-950">{addon.name}</span>
+                            <span className="font-normal text-surface-950">{addon.name}</span>
                           </div>
-                          <span className="font-bold text-surface-500">+{formatPrice(addon.price, store.currency)}</span>
+                          <span className="font-medium text-surface-500">+{formatPrice(addon.price, store.currency)}</span>
                         </label>
                       );
                     })}
@@ -428,7 +428,7 @@ export function StorefrontView({
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="font-bold text-lg w-8 text-center text-primary-900">{quantity}</span>
+                <span className="font-medium text-lg w-8 text-center text-primary-900">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
                   className="w-10 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95"
@@ -440,7 +440,7 @@ export function StorefrontView({
               <button 
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="flex-[2] h-12 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-2 px-4 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] disabled:opacity-80"
+                className="flex-[2] h-12 text-white font-medium rounded-2xl transition-all flex items-center justify-center gap-2 px-4 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] disabled:opacity-80"
               >
                 {isAddingToCart ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
