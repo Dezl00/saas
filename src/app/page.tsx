@@ -32,28 +32,28 @@ export default async function HomePage() {
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-3">
               {platformLogo ? (
-                <div className="w-16 h-16 flex items-center justify-center overflow-hidden">
-                  <img src={platformLogo} alt="Logo" className="w-full h-full object-contain drop-shadow-sm" />
+                <div className="w-20 h-20 flex items-center justify-center">
+                  <img src={platformLogo} alt="Logo" className="w-full h-full object-contain" />
                 </div>
               ) : (
-                <div className="w-14 h-14 rounded-2xl bg-primary-600 flex items-center justify-center">
-                  <Store className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 flex items-center justify-center">
+                  <Store className="w-10 h-10 text-primary-600" />
                 </div>
               )}
               {/* تمت إزالة اسم المنصة بجوار اللوجو بناءً على طلبك */}
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Link
                 href="/login"
-                className="hidden sm:block px-4 py-2.5 text-sm font-bold text-slate-600 hover:text-primary-600 transition-colors"
+                className="px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-primary-600 transition-colors"
               >
-                تسجيل الدخول
+                دخول
               </Link>
               <Link
                 href="/register"
-                className="px-6 py-3 text-sm font-bold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors duration-300"
+                className="px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-bold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors duration-300"
               >
-                جرب 7 أيام ببلاش
+                جرب ببلاش
               </Link>
             </div>
           </div>
@@ -70,7 +70,7 @@ export default async function HomePage() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 leading-tight mb-8 animate-slide-up">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6 animate-slide-up">
             اعمل متجرك الأونلاين
             <br />
             <span className="text-primary-600">
@@ -78,38 +78,38 @@ export default async function HomePage() {
             </span>
           </h1>
 
-          <p className="text-lg sm:text-2xl text-slate-600 max-w-3xl mx-auto mb-12 animate-slide-up leading-relaxed">
+          <p className="text-base sm:text-xl text-slate-600 max-w-3xl mx-auto mb-10 animate-slide-up leading-relaxed">
             منصة متكاملة للمطاعم والصيدليات والماركت. ارفع المنيو بتاعك، خلي الذكاء الاصطناعي يظبطلك الصور، وشارك رابطك الخاص مع عملائك في ثواني.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-slide-up">
+          <div className="flex flex-row items-center justify-center gap-3 sm:gap-5 animate-slide-up">
             <Link
               href="/register"
-              className="group w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-5 text-lg font-bold text-white bg-primary-600 rounded-2xl hover:bg-primary-700 transition-colors duration-300"
+              className="group flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-white bg-primary-600 rounded-xl hover:bg-primary-700 transition-colors duration-300"
             >
-              اعمل متجرك دلوقتي (7 أيام ببلاش)
-              <ChevronLeft className="w-6 h-6 rtl:rotate-180" />
+              جرب دلوقتي
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" />
             </Link>
             <Link
               href="#features"
-              className="w-full sm:w-auto px-10 py-5 text-lg font-bold text-slate-700 bg-white rounded-2xl border-2 border-slate-200 hover:border-slate-300 transition-colors duration-300"
+              className="flex-1 sm:flex-none flex items-center justify-center px-4 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-slate-700 bg-white rounded-xl border-2 border-slate-200 hover:border-slate-300 transition-colors duration-300"
             >
               اكتشف المميزات
             </Link>
           </div>
 
           {/* Hero Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-20 mt-20 animate-fade-in">
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 mt-16 animate-fade-in">
             {[
               { value: "7 أيام", label: "تجربة مجانية بالكامل" },
               { value: "∞", label: "أصناف بدون حدود" },
               { value: "رابط", label: "باسم متجرك الخاص" },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <div className="text-3xl sm:text-4xl font-black text-slate-900 mb-2">
+                <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1">
                   {stat.value}
                 </div>
-                <div className="text-sm sm:text-base font-medium text-slate-500">
+                <div className="text-xs sm:text-sm font-medium text-slate-500">
                   {stat.label}
                 </div>
               </div>
@@ -121,12 +121,12 @@ export default async function HomePage() {
       {/* Features Section */}
       <section id="features" className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mb-6">
+          <div className="text-center mb-16">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mb-4">
               كل اللي هتحتاجه عشان{" "}
               <span className="text-primary-600">تدير أوردراتك</span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
               تطبيقك متكامل من الألف للياء، مصمم مخصوص عشان يريحك ويزود مبيعاتك
             </p>
           </div>
@@ -184,15 +184,15 @@ export default async function HomePage() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className={`p-8 rounded-3xl ${feature.bgColor} transition-transform hover:-translate-y-1 duration-300`}
+                className={`p-6 sm:p-8 rounded-3xl ${feature.bgColor} transition-transform hover:-translate-y-1 duration-300`}
               >
-                <div className="mb-6">
-                  <feature.icon className={`w-12 h-12 ${feature.iconColor}`} />
+                <div className="mb-5">
+                  <feature.icon className={`w-10 h-10 ${feature.iconColor}`} />
                 </div>
-                <h3 className={`text-2xl font-black ${feature.textColor} mb-4`}>
+                <h3 className={`text-xl font-bold ${feature.textColor} mb-3`}>
                   {feature.title}
                 </h3>
-                <p className={`${feature.textColor} opacity-80 text-lg leading-relaxed`}>
+                <p className={`${feature.textColor} opacity-80 text-sm sm:text-base leading-relaxed`}>
                   {feature.desc}
                 </p>
               </div>
@@ -204,11 +204,11 @@ export default async function HomePage() {
       {/* How it Works */}
       <section className="py-24 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 mb-6">
+          <div className="text-center mb-16">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mb-4">
               هتبدأ <span className="text-primary-600">إزاي؟</span>
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-base sm:text-lg text-slate-600">
               3 خطوات بسيطة جداً تفصلك عن أول أوردر
             </p>
           </div>
@@ -238,14 +238,14 @@ export default async function HomePage() {
               },
             ].map((item, i) => (
               <div key={i} className="relative text-center">
-                <div className="relative z-10 w-24 h-24 mx-auto mb-8 rounded-full bg-slate-50 border-4 border-white flex flex-col items-center justify-center text-primary-600">
-                  <item.icon className="w-8 h-8 mb-1" />
-                  <span className="text-xl font-black">{item.step}</span>
+                <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 rounded-full bg-slate-50 border-4 border-white flex flex-col items-center justify-center text-primary-600">
+                  <item.icon className="w-6 h-6 sm:w-8 sm:h-8 mb-1" />
+                  <span className="text-lg sm:text-xl font-extrabold">{item.step}</span>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3">
                   {item.title}
                 </h3>
-                <p className="text-lg text-slate-600">{item.desc}</p>
+                <p className="text-sm sm:text-base text-slate-600">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -253,29 +253,29 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-primary-600">
+      <section className="py-20 bg-primary-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-8">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">
             مستني إيه؟ ابدأ دلوقتي!
           </h2>
-          <p className="text-xl text-primary-100 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-primary-100 mb-10 max-w-2xl mx-auto leading-relaxed">
             انضم لينا وكبّر البيزنس بتاعك بطريقة عصرية. جرب المنصة بالكامل مجاناً لمدة 7 أيام وشوف الفرق بنفسك.
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center gap-3 px-12 py-5 text-xl font-bold text-primary-600 bg-white rounded-2xl hover:bg-primary-50 transition-colors duration-300"
+            className="inline-flex items-center gap-2 px-8 py-3.5 sm:px-10 sm:py-4 text-base sm:text-lg font-bold text-primary-600 bg-white rounded-xl hover:bg-primary-50 transition-colors duration-300"
           >
-            جرب مجاناً لمدة 7 أيام
-            <ChevronLeft className="w-6 h-6 rtl:rotate-180" />
+            جرب مجاناً
+            <ChevronLeft className="w-5 h-5 rtl:rotate-180" />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-10 bg-slate-900 text-slate-400">
+      <footer className="py-5 bg-slate-900 text-slate-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center">
-            <p className="text-base font-medium">
+            <p className="text-sm font-medium">
               © {new Date().getFullYear()} {platformName}. جميع الحقوق محفوظة.
             </p>
           </div>
