@@ -7,7 +7,7 @@ export const maxDuration = 60; // Allow 60s for fetching and uploading
 
 export async function POST(
   req: Request,
-  { params }: { params: { itemId: string } }
+  { params }: { params: Promise<{ itemId: string }> }
 ) {
   try {
     const session = await auth();
@@ -15,7 +15,8 @@ export async function POST(
       return NextResponse.json({ error: "غير مصرح لك" }, { status: 401 });
     }
 
-    const itemId = params.itemId;
+    const resolvedParams = await params;
+    const itemId = resolvedParams.itemId;
     const body = await req.json().catch(() => ({}));
     const seed = body.seed || Math.floor(Math.random() * 100000);
 
