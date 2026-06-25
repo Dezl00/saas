@@ -106,10 +106,15 @@ export async function updateContactSettings(formData: FormData) {
   const whatsappNumber = formData.get("whatsappNumber") as string;
   const enableWhatsappOrders = formData.get("enableWhatsappOrders") === "on";
   const facebookUrl = formData.get("facebookUrl") as string;
+  const showFacebook = formData.get("showFacebook") === "on";
   const instagramUrl = formData.get("instagramUrl") as string;
+  const showInstagram = formData.get("showInstagram") === "on";
   const twitterUrl = formData.get("twitterUrl") as string;
+  const showTwitter = formData.get("showTwitter") === "on";
   const tiktokUrl = formData.get("tiktokUrl") as string;
+  const showTiktok = formData.get("showTiktok") === "on";
   const snapchatUrl = formData.get("snapchatUrl") as string;
+  const showSnapchat = formData.get("showSnapchat") === "on";
 
   try {
     await prisma.store.update({
@@ -118,10 +123,15 @@ export async function updateContactSettings(formData: FormData) {
         whatsappNumber,
         enableWhatsappOrders,
         facebookUrl,
+        showFacebook,
         instagramUrl,
+        showInstagram,
         twitterUrl,
+        showTwitter,
         tiktokUrl,
+        showTiktok,
         snapchatUrl,
+        showSnapchat,
       },
     });
 

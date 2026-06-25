@@ -36,13 +36,13 @@ export default async function DeliveryAreasPage() {
           <form action={addDeliveryArea as any} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-surface-950 mb-1">اسم المنطقة *</label>
-              <input type="text" name="name" id="name" required placeholder="مثال: مدينة نصر" className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none" />
+              <input type="text" name="name" id="name" required placeholder="مثال: مدينة نصر" className="w-full px-4 py-2.5 bg-white border border-surface-200 rounded-xl text-surface-950 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-colors" />
             </div>
             <div>
               <label htmlFor="fee" className="block text-sm font-medium text-surface-950 mb-1">رسوم التوصيل *</label>
-              <input type="number" step="0.01" min="0" name="fee" id="fee" required placeholder="0.00" className="w-full px-3 py-2 bg-white border border-surface-200 text-surface-950 focus:border-primary-500 outline-none text-end" dir="ltr" />
+              <input type="number" step="0.01" min="0" name="fee" id="fee" required placeholder="0.00" className="w-full px-4 py-2.5 bg-white border border-surface-200 rounded-xl text-surface-950 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none text-end transition-colors" dir="ltr" />
             </div>
-            <button type="submit" className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold transition-colors">
+            <button type="submit" className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-colors">
               حفظ المنطقة
             </button>
           </form>
@@ -51,13 +51,13 @@ export default async function DeliveryAreasPage() {
         {/* قائمة المناطق */}
         <div className="lg:col-span-2 space-y-4">
           {areas.length === 0 ? (
-            <div className="text-center py-16 bg-white border border-surface-200">
+            <div className="text-center py-16 bg-white border border-surface-200 rounded-2xl">
               <Map className="w-12 h-12 text-surface-300 mx-auto mb-3" />
               <p className="text-surface-500">لا توجد مناطق توصيل مضافة حالياً.</p>
             </div>
           ) : (
             areas.map(area => (
-              <div key={area.id} className="bg-white border border-surface-200 p-5 flex items-center justify-between">
+              <div key={area.id} className="bg-white border border-surface-200 rounded-2xl p-5 flex items-center justify-between transition-colors hover:border-surface-300">
                 <div>
                   <h4 className="font-bold text-lg text-surface-950">{area.name}</h4>
                   <p className="text-sm font-black text-primary-600 mt-1">رسوم التوصيل: {Number(area.deliveryFee)}</p>

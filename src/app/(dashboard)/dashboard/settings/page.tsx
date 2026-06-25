@@ -242,9 +242,21 @@ export default async function SettingsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label htmlFor="facebookUrl" className="block text-sm font-medium text-surface-950 mb-1">
-                  رابط فيسبوك
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label htmlFor="facebookUrl" className="block text-sm font-medium text-surface-950">
+                    رابط فيسبوك
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer" title="تفعيل/إلغاء تفعيل الأيقونة في المتجر">
+                    <input 
+                      type="checkbox" 
+                      name="showFacebook" 
+                      value="on"
+                      defaultChecked={(store as any).showFacebook ?? true}
+                      className="sr-only peer" 
+                    />
+                    <div className="w-9 h-5 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:-translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-success-500"></div>
+                  </label>
+                </div>
                 <input
                   type="url"
                   id="facebookUrl"
@@ -257,9 +269,21 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label htmlFor="instagramUrl" className="block text-sm font-medium text-surface-950 mb-1">
-                  رابط انستجرام
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label htmlFor="instagramUrl" className="block text-sm font-medium text-surface-950">
+                    رابط انستجرام
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer" title="تفعيل/إلغاء تفعيل الأيقونة في المتجر">
+                    <input 
+                      type="checkbox" 
+                      name="showInstagram" 
+                      value="on"
+                      defaultChecked={(store as any).showInstagram ?? true}
+                      className="sr-only peer" 
+                    />
+                    <div className="w-9 h-5 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:-translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-success-500"></div>
+                  </label>
+                </div>
                 <input
                   type="url"
                   id="instagramUrl"
@@ -272,9 +296,21 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label htmlFor="twitterUrl" className="block text-sm font-medium text-surface-950 mb-1">
-                  رابط X (تويتر)
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label htmlFor="twitterUrl" className="block text-sm font-medium text-surface-950">
+                    رابط X (تويتر)
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer" title="تفعيل/إلغاء تفعيل الأيقونة في المتجر">
+                    <input 
+                      type="checkbox" 
+                      name="showTwitter" 
+                      value="on"
+                      defaultChecked={(store as any).showTwitter ?? true}
+                      className="sr-only peer" 
+                    />
+                    <div className="w-9 h-5 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:-translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-success-500"></div>
+                  </label>
+                </div>
                 <input
                   type="url"
                   id="twitterUrl"
@@ -287,9 +323,21 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label htmlFor="tiktokUrl" className="block text-sm font-medium text-surface-950 mb-1">
-                  رابط تيك توك
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label htmlFor="tiktokUrl" className="block text-sm font-medium text-surface-950">
+                    رابط تيك توك
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer" title="تفعيل/إلغاء تفعيل الأيقونة في المتجر">
+                    <input 
+                      type="checkbox" 
+                      name="showTiktok" 
+                      value="on"
+                      defaultChecked={(store as any).showTiktok ?? true}
+                      className="sr-only peer" 
+                    />
+                    <div className="w-9 h-5 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:-translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-success-500"></div>
+                  </label>
+                </div>
                 <input
                   type="url"
                   id="tiktokUrl"
@@ -302,9 +350,21 @@ export default async function SettingsPage() {
               </div>
 
               <div>
-                <label htmlFor="snapchatUrl" className="block text-sm font-medium text-surface-950 mb-1">
-                  رابط سناب شات
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label htmlFor="snapchatUrl" className="block text-sm font-medium text-surface-950">
+                    رابط سناب شات
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer" title="تفعيل/إلغاء تفعيل الأيقونة في المتجر">
+                    <input 
+                      type="checkbox" 
+                      name="showSnapchat" 
+                      value="on"
+                      defaultChecked={(store as any).showSnapchat ?? true}
+                      className="sr-only peer" 
+                    />
+                    <div className="w-9 h-5 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:-translate-x-full rtl:peer-checked:after:-translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-surface-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-success-500"></div>
+                  </label>
+                </div>
                 <input
                   type="url"
                   id="snapchatUrl"

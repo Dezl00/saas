@@ -29,7 +29,7 @@ export function StorefrontView({
   categories: Category[];
   menuItems: MenuItem[];
 }) {
-  const [activeTab, setActiveTab] = useState(categories[0]?.id || "");
+  const [activeTab, setActiveTab] = useState<string>("all");
   const [gridCols, setGridCols] = useState<1 | 2>(2);
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -149,13 +149,20 @@ export function StorefrontView({
       <div className="sticky top-16 z-20 bg-surface-50 py-2 flex items-center gap-2 border-b border-surface-200">
         {/* Categories Tabs - Scrollable */}
         <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2 pb-1">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border rounded-2xl ${
+              activeTab === "all"
+                ? "bg-primary-500 text-white border-primary-500"
+                : "bg-white text-surface-600 border-surface-200 hover:bg-surface-100"
+            }`}
+          >
+            الكل
+          </button>
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => {
-                setActiveTab(cat.id);
-                document.getElementById(`category-${cat.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
+              onClick={() => setActiveTab(cat.id)}
               className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border rounded-2xl ${
                 activeTab === cat.id
                   ? "bg-primary-500 text-white border-primary-500"
@@ -215,7 +222,7 @@ export function StorefrontView({
 
       {/* Menu Items */}
       <div className="space-y-12">
-        {categories.map((category) => {
+        {categories.filter(c => activeTab === "all" || c.id === activeTab).map((category) => {
           let items = menuItems.filter((item) => item.categoryId === category.id);
           if (items.length === 0) return null;
 

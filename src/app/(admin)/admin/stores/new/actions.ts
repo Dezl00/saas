@@ -9,7 +9,7 @@ import { auth } from "@/lib/auth";
 
 const createStoreSchema = z.object({
   name: z.string().min(2, "اسم المتجر يجب أن يكون حرفين على الأقل"),
-  logo: z.string().optional(),
+  logo: z.any().optional(),
   primaryColor: z.string().optional(),
   address: z.string().optional(),
   whatsappNumber: z.string().optional(),
@@ -54,6 +54,15 @@ export async function createStoreFromAdminAction(prevState: any, formData: FormD
     // Hash the password
     const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
+    // Handle Image Upload
+    let logoStr = "";
+    if (validatedData.logo instanceof File && validatedData.logo.size > 0) {
+      const { uploadImageToCloudinary } = await import("@/lib/upload");
+      logoStr = await uploadImageToCloudinary(validatedData.logo);
+    } else if (typeof validatedData.logo === "string") {
+      logoStr = validatedData.logo;
+    }
+
     // Create User and Store in a transaction
     await prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
@@ -69,7 +78,7 @@ export async function createStoreFromAdminAction(prevState: any, formData: FormD
       await tx.store.create({
         data: {
           name: validatedData.name,
-          logo: validatedData.logo,
+          logo: logoStr,
           primaryColor: validatedData.primaryColor,
           address: validatedData.address,
           whatsappNumber: validatedData.whatsappNumber,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { UploadCloud, X, ImageIcon } from "lucide-react";
+import { CloudUpload, X, ImageIcon } from "lucide-react";
 
 interface ImageUploadProps {
   name: string;
@@ -99,11 +99,11 @@ export function ImageUpload({ name, defaultValue, className = "", label = "اخ�
         onDragLeave={onDragLeave}
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}
-        className={`relative w-full border-2 border-dashed rounded-xl overflow-hidden cursor-pointer transition-colors ${
+        className={`relative w-full border border-dashed rounded-2xl p-6 text-center cursor-pointer transition-colors ${
           isDragging 
             ? "border-primary-500 bg-primary-50" 
-            : "border-surface-300 bg-surface-50 hover:bg-surface-100 hover:border-surface-400"
-        } ${preview ? "h-48" : "h-32"}`}
+            : "border-primary-200 bg-primary-50/30 hover:bg-primary-50/50"
+        } ${preview ? "" : ""}`}
       >
         <input 
           type="file" 
@@ -115,8 +115,8 @@ export function ImageUpload({ name, defaultValue, className = "", label = "اخ�
         />
 
         {preview ? (
-          <div className="relative w-full h-full group">
-            <img src={preview} alt="Preview" className="w-full h-full object-contain bg-surface-100" />
+          <div className="relative w-full h-48 group rounded-xl overflow-hidden border border-surface-200 bg-white">
+            <img src={preview} alt="Preview" className="w-full h-full object-contain" />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
               <span className="text-white font-bold text-sm">تغيير الصورة</span>
             </div>
@@ -129,10 +129,12 @@ export function ImageUpload({ name, defaultValue, className = "", label = "اخ�
             </button>
           </div>
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center">
-            <UploadCloud className={`w-8 h-8 mb-2 ${isDragging ? "text-primary-500" : "text-surface-400"}`} />
-            <p className="text-sm font-bold text-surface-700">اسحب وأفلت الصورة هنا</p>
-            <p className="text-xs text-surface-500 mt-1">أو اضغط للاختيار، أو قم باللصق (Ctrl+V)</p>
+          <div className="w-full h-full flex flex-col items-center justify-center py-4">
+            <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 transition-colors ${isDragging ? "bg-primary-500 text-white" : "bg-primary-100 text-primary-600"}`}>
+              <CloudUpload className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-bold text-surface-950 mb-1">اسحب وأفلت الصورة هنا</p>
+            <p className="text-xs text-surface-500">أو اضغط للاختيار، أو قم باللصق (Ctrl+V)</p>
           </div>
         )}
       </div>

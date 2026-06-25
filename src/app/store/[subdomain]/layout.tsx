@@ -33,13 +33,13 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 const TiktokIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v7.02c0 1.65-.54 3.32-1.58 4.62-1.05 1.3-2.58 2.1-4.24 2.37-1.66.27-3.41.07-4.94-.65-1.54-.72-2.8-2.01-3.5-3.52-.7-1.52-.84-3.26-.41-4.88.42-1.61 1.4-3.03 2.74-4.01 1.34-.98 3.01-1.43 4.67-1.28.05 1.36.01 2.73.04 4.09-.64-.1-1.32-.05-1.92.23-.61.27-1.12.74-1.42 1.33-.3.6-.37 1.29-.2 1.91.17.61.6 1.14 1.14 1.47.53.32 1.19.42 1.8.27.6-.15 1.14-.52 1.49-1.05.35-.53.53-1.18.52-1.83V0z"/>
+    <path d="M12.525.02C13.84 0 15.14.01 16.44.03c.06 1.5.54 2.92 1.48 4.09A6.9 6.9 0 0 0 22 5.92v3.94a11.13 11.13 0 0 1-4.04-1.02c-.54-.25-1.04-.56-1.52-.92v6.62c0 1.54-.5 3.03-1.42 4.22a7.1 7.1 0 0 1-4.04 2.22 7 7 0 0 1-4.72-.6A6.9 6.9 0 0 1 2.94 17a6.9 6.9 0 0 1-.36-4.5 7.1 7.1 0 0 1 2.5-3.66c1.23-.9 2.76-1.34 4.31-1.22.04 1.25.02 2.51.04 3.75-.58-.08-1.18-.04-1.74.2a3.03 3.03 0 0 0-1.27 1.18c-.27.53-.34 1.14-.19 1.7.15.54.54 1 1.03 1.3.48.3 1.07.4 1.6.26.54-.14 1.03-.47 1.34-.96.3-.47.46-1.04.45-1.61v-14.3Z"/>
   </svg>
 );
 
 const SnapchatIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M11.835 1.777c-.502-.1-1.002-.158-1.503-.173-.423-.014-.848.005-1.27.054a10.2 10.2 0 0 0-1.83.35 10.51 10.51 0 0 0-1.503.541A5.3 5.3 0 0 0 4.135 4.31a3.67 3.67 0 0 0-.583 2.014c-.007.48.016.96.069 1.438.077.683.21 1.353.393 2.008a3.1 3.1 0 0 1 .1.436c.01.075.012.152.007.228a.5.5 0 0 1-.223.364c-.201.127-.428.214-.66.257l-.372.062a7.35 7.35 0 0 0-.895.228 1.59 1.59 0 0 0-.77.5c-.173.2-.294.437-.354.693a1.47 1.47 0 0 0 .092.936c.148.337.402.614.73.794a3.17 3.17 0 0 0 1.205.344 7.55 7.55 0 0 0 1.408.014c.23-.018.459-.053.687-.104.148-.035.302-.046.452-.032l.067.009c.093.013.184.037.27.072a.6.6 0 0 1 .301.272c.1.182.164.38.191.583a2.3 2.3 0 0 1 .01.55c-.01.082-.02.163-.032.245a4.2 4.2 0 0 0-.012.449c.007.135.02.268.04.4.015.08.04.156.075.227a.54.54 0 0 0 .317.276 4.3 4.3 0 0 0 .524.168 18 18 0 0 0 1.83.43c.753.136 1.517.224 2.285.263l.31.01a4 4 0 0 0 .381-.005 10 10 0 0 0 1.226-.145c.421-.073.84-.158 1.258-.255a9 9 0 0 0 1.282-.363 4 4 0 0 0 .58-.23.63.63 0 0 0 .285-.239.52.52 0 0 0 .085-.306c-.004-.15-.02-.3-.045-.45a4.5 4.5 0 0 1 .035-.919 2.5 2.5 0 0 1 .151-.555.57.57 0 0 1 .232-.244c.105-.05.22-.08.336-.089l.06-.004c.142-.01.285.006.425.045a5 5 0 0 0 .61.126 8.3 8.3 0 0 0 1.492.052 3.6 3.6 0 0 0 1.341-.302 1.6 1.6 0 0 0 .798-.755 1.4 1.4 0 0 0 .11-.905 1.54 1.54 0 0 0-.356-.7 1.6 1.6 0 0 0-.756-.5c-.328-.109-.672-.16-1.018-.15a8 8 0 0 0-1.127.11 3.5 3.5 0 0 1-.685.011c-.114-.012-.224-.047-.323-.102a.5.5 0 0 1-.22-.328 1.3 1.3 0 0 1-.035-.302 5.5 5.5 0 0 1 .118-.694c.164-.67.288-1.353.37-2.043.05-.469.07-.942.062-1.414a3.6 3.6 0 0 0-.544-1.956 5.3 5.3 0 0 0-1.54-1.72 10.3 10.3 0 0 0-1.63-.615 10.2 10.2 0 0 0-1.97-.328c-.461-.044-.925-.058-1.388-.04l-.066.002Z"/>
+    <path d="M12.27.026C11.5-.04 10.74-.01 9.98.05a9.38 9.38 0 0 0-1.72.31A10 10 0 0 0 6.9.82C5.92 1.2 4.96 1.8 4.2 2.59c-.48.5-.89 1.07-1.18 1.69-.17.37-.3.77-.38 1.17-.1.45-.16.92-.15 1.39.02.43.08.86.19 1.28.16.57.38 1.12.67 1.63.1.18.23.36.36.53.07.09.15.17.23.25.02.02.05.03.07.05a.4.4 0 0 1-.16.33c-.15.1-.32.17-.49.23-.17.06-.35.1-.53.13-.18.03-.35.05-.53.07l-.27.03a6.52 6.52 0 0 0-.6.13c-.1.03-.2.07-.3.12a1.44 1.44 0 0 0-.39.26c-.13.12-.24.26-.34.42-.1.17-.18.36-.23.55a1.27 1.27 0 0 0 .04.81c.12.3.34.56.62.72.28.16.6.25.93.31.65.13 1.31.18 1.98.17a16 16 0 0 0 1.95-.12c.15-.02.3-.04.44-.06.13-.02.25-.04.38-.04l.05-.01h.05c.07.01.15.03.21.07.06.04.1.1.13.17.02.04.03.09.04.14.01.05.02.1.03.14.03.14.07.28.12.41a4.23 4.23 0 0 0 .28.59c.2.33.45.62.75.87.54.43 1.21.67 1.9.72.17.01.33.01.5.01l.24.01a3.53 3.53 0 0 0 .34-.02c.3-.02.6-.05.9-.11.38-.07.75-.17 1.1-.32.36-.14.7-.31 1-.52.27-.18.52-.41.73-.67.19-.24.34-.51.46-.8a4.11 4.11 0 0 0 .19-.87c.01-.13.01-.26.02-.38.01-.11.02-.23.03-.34 0-.11 0-.22-.01-.33a3.52 3.52 0 0 1 .02-.7c.01-.11.05-.2.11-.27a.5.5 0 0 1 .18-.14 1.15 1.15 0 0 1 .25-.07c.08-.02.16-.03.24-.04l.05 0c.13 0 .25-.01.38.01a4 4 0 0 0 .54.08 7.22 7.22 0 0 0 1.26.06c.65.01 1.29-.02 1.92-.12a3.15 3.15 0 0 0 1.1-.31 1.48 1.48 0 0 0 .68-.64c.15-.26.21-.57.17-.86a1.36 1.36 0 0 0-.29-.7c-.19-.23-.44-.4-.71-.51a4 4 0 0 0-1.11-.25 7 7 0 0 0-1.25-.04c-.39.02-.78.07-1.16.14l-.06.01a1.05 1.05 0 0 1-.22.02c-.08.01-.16.02-.25.01a.48.48 0 0 1-.2-.1.5.5 0 0 1-.13-.19c-.06-.11-.08-.24-.07-.37.01-.12.04-.24.07-.36.03-.12.08-.24.13-.35a3.9 3.9 0 0 0 .19-.46c.11-.32.2-.66.27-1 .11-.53.18-1.07.21-1.61.03-.5.05-1.01.03-1.52a8.55 8.55 0 0 0-.46-2.22 8.7 8.7 0 0 0-1.09-2.07A8.6 8.6 0 0 0 15 2.15 8.87 8.87 0 0 0 12.27.026Z"/>
   </svg>
 );
 
@@ -155,22 +155,28 @@ export default async function StoreLayout({
             
             {/* Social Media Icons in Hero */}
             <div className="flex items-center justify-center gap-3 mt-4">
-              <a href={store.facebookUrl || "#"} target={store.facebookUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
-                <FacebookIcon className="w-5 h-5" />
-              </a>
-              <a href={store.instagramUrl || "#"} target={store.instagramUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
-                <InstagramIcon className="w-5 h-5" />
-              </a>
-              <a href={store.twitterUrl || "#"} target={store.twitterUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
-                <XIcon className="w-5 h-5" />
-              </a>
-              {store.tiktokUrl && (
-                <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+              {(store as any).showFacebook !== false && (
+                <a href={store.facebookUrl || "#"} target={store.facebookUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <FacebookIcon className="w-5 h-5" />
+                </a>
+              )}
+              {(store as any).showInstagram !== false && (
+                <a href={store.instagramUrl || "#"} target={store.instagramUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <InstagramIcon className="w-5 h-5" />
+                </a>
+              )}
+              {(store as any).showTwitter !== false && (
+                <a href={store.twitterUrl || "#"} target={store.twitterUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <XIcon className="w-5 h-5" />
+                </a>
+              )}
+              {(store as any).showTiktok !== false && (
+                <a href={store.tiktokUrl || "#"} target={store.tiktokUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <TiktokIcon className="w-5 h-5" />
                 </a>
               )}
-              {store.snapchatUrl && (
-                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+              {(store as any).showSnapchat !== false && (
+                <a href={store.snapchatUrl || "#"} target={store.snapchatUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 bg-primary-500 text-white shadow-lg shadow-primary-500/20">
                   <SnapchatIcon className="w-5 h-5" />
                 </a>
               )}
@@ -227,11 +233,31 @@ export default async function StoreLayout({
             </div>
 
             <div className="flex justify-center items-center gap-4 mt-8">
-              <a href={store.facebookUrl || "#"} target={store.facebookUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><FacebookIcon className="w-5 h-5" /></a>
-              <a href={store.instagramUrl || "#"} target={store.instagramUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><InstagramIcon className="w-5 h-5" /></a>
-              <a href={store.twitterUrl || "#"} target={store.twitterUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><XIcon className="w-5 h-5" /></a>
-              {store.tiktokUrl && <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><TiktokIcon className="w-5 h-5" /></a>}
-              {store.snapchatUrl && <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20"><SnapchatIcon className="w-5 h-5" /></a>}
+              {(store as any).showFacebook !== false && (
+                <a href={store.facebookUrl || "#"} target={store.facebookUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <FacebookIcon className="w-5 h-5" />
+                </a>
+              )}
+              {(store as any).showInstagram !== false && (
+                <a href={store.instagramUrl || "#"} target={store.instagramUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <InstagramIcon className="w-5 h-5" />
+                </a>
+              )}
+              {(store as any).showTwitter !== false && (
+                <a href={store.twitterUrl || "#"} target={store.twitterUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <XIcon className="w-5 h-5" />
+                </a>
+              )}
+              {(store as any).showTiktok !== false && (
+                <a href={store.tiktokUrl || "#"} target={store.tiktokUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <TiktokIcon className="w-5 h-5" />
+                </a>
+              )}
+              {(store as any).showSnapchat !== false && (
+                <a href={store.snapchatUrl || "#"} target={store.snapchatUrl ? "_blank" : undefined} rel="noreferrer" className="w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-primary-500 text-white shadow-lg shadow-primary-500/20">
+                  <SnapchatIcon className="w-5 h-5" />
+                </a>
+              )}
             </div>
             
             <div className="text-xs text-surface-400 mt-10 pt-6 border-t border-surface-100 flex items-center justify-center gap-2">

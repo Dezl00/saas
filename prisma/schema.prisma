@@ -106,10 +106,15 @@ model Store {
   whatsappNumber       String?
   enableWhatsappOrders Boolean @default(true)
   facebookUrl          String?
+  showFacebook         Boolean @default(true)
   instagramUrl         String?
+  showInstagram        Boolean @default(true)
   twitterUrl           String?
+  showTwitter          Boolean @default(true)
   tiktokUrl            String?
+  showTiktok           Boolean @default(true)
   snapchatUrl          String?
+  showSnapchat         Boolean @default(true)
 
   // Relations
   userId         String          @unique
