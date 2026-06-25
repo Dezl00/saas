@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "./CartProvider";
 import { LayoutGrid, List, Filter, X, Plus, Minus, Check, ShoppingBag } from "lucide-react";
@@ -29,7 +29,34 @@ export function StorefrontView({
   categories: Category[];
   menuItems: MenuItem[];
 }) {
-  const [activeTab, setActiveTab] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState(categories[0]?.id || "");
+  const isManualScrolling = useRef(false);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (isManualScrolling.current) return;
+        
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id.replace("category-", "");
+            setActiveTab(id);
+            // Scroll the tab bar to show the active tab
+            document.getElementById(`tab-${id}`)?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+          }
+        });
+      },
+      { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+    );
+
+    categories.forEach((cat) => {
+      const el = document.getElementById(`category-${cat.id}`);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [categories]);
   const [gridCols, setGridCols] = useState<1 | 2>(2);
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -149,20 +176,22 @@ export function StorefrontView({
       <div className="sticky top-16 z-20 bg-surface-50 py-2 flex items-center gap-2 border-b border-surface-200">
         {/* Categories Tabs - Scrollable */}
         <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2 pb-1">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border rounded-2xl ${
-              activeTab === "all"
-                ? "bg-primary-500 text-white border-primary-500"
-                : "bg-white text-surface-600 border-surface-200 hover:bg-surface-100"
-            }`}
-          >
-            الكل
-          </button>
+
           {categories.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setActiveTab(cat.id)}
+              id={`tab-${cat.id}`}
+              onClick={() => {
+                isManualScrolling.current = true;
+                setActiveTab(cat.id);
+                document.getElementById(`category-${cat.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                
+                // Reset manual scrolling flag after scroll animation
+                if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+                scrollTimeout.current = setTimeout(() => {
+                  isManualScrolling.current = false;
+                }, 1000);
+              }}
               className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border rounded-2xl ${
                 activeTab === cat.id
                   ? "bg-primary-500 text-white border-primary-500"
@@ -222,7 +251,7 @@ export function StorefrontView({
 
       {/* Menu Items */}
       <div className="space-y-12">
-        {categories.filter(c => activeTab === "all" || c.id === activeTab).map((category) => {
+        {categories.map((category) => {
           let items = menuItems.filter((item) => item.categoryId === category.id);
           if (items.length === 0) return null;
 
