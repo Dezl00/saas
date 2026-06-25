@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Settings, Save, Lock } from "lucide-react";
+import { Settings, Save, Lock, LayoutTemplate, ArrowLeft } from "lucide-react";
 import { updatePlatformSettings, updateAdminPassword } from "./actions";
 import { SubmitButton } from "@/components/dashboard/SubmitButton";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
@@ -113,6 +113,29 @@ export default async function AdminSettingsPage() {
               تحديث كلمة المرور
             </SubmitButton>
           </form>
+        </div>
+
+        {/* أدوات إضافية */}
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 self-start lg:col-span-2">
+          <h3 className="text-xl font-semibold text-surface-950 mb-6 flex items-center gap-2">
+            <LayoutTemplate className="w-6 h-6 text-primary-500" />
+            أدوات إضافية
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link 
+              href="/admin/settings/onboarding-preview"
+              className="group flex items-center justify-between p-4 rounded-xl border border-surface-200 bg-surface-50 hover:bg-white hover:border-primary-200 hover:shadow-sm transition-all"
+            >
+              <div>
+                <h4 className="font-bold text-surface-950 mb-1 group-hover:text-primary-600 transition-colors">معاينة مراحل التهيئة (Onboarding)</h4>
+                <p className="text-sm text-surface-500">معاينة وتجربة الشاشات التي تظهر للمستخدمين الجدد عند التسجيل</p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-white border border-surface-200 flex items-center justify-center flex-shrink-0 group-hover:border-primary-200 group-hover:bg-primary-50 transition-colors">
+                <ArrowLeft className="w-5 h-5 text-surface-400 group-hover:text-primary-600 rtl:-scale-x-100 transition-colors" />
+              </div>
+            </Link>
+          </div>
         </div>
 
       </div>

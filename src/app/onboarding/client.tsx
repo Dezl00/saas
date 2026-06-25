@@ -6,7 +6,19 @@ import { Loader2, ArrowLeft, Check, Store, Phone, Link as LinkIcon, ExternalLink
 import confetti from "canvas-confetti";
 import Link from "next/link";
 
-export function OnboardingClient({ step, storeName, subdomain }: { step: number; storeName: string; subdomain: string }) {
+export function OnboardingClient({ 
+  step, 
+  storeName, 
+  subdomain,
+  isPreview,
+  onPreviewNext
+}: { 
+  step: number; 
+  storeName: string; 
+  subdomain: string;
+  isPreview?: boolean;
+  onPreviewNext?: () => void;
+}) {
   const [isPending, setIsPending] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -90,7 +102,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
       {/* Step 1: Store Identity */}
       {step === 1 && (
-        <form action={(data) => { setIsPending(true); submitStep1(data).finally(() => setIsPending(false)); }} className="animate-fade-in">
+        <form action={isPreview ? onPreviewNext : (data) => { setIsPending(true); submitStep1(data).finally(() => setIsPending(false)); }} className="animate-fade-in">
           <div className="text-center mb-8 relative">
             <div className="inline-flex items-center justify-center gap-2 mb-2">
               <h2 className="text-2xl sm:text-3xl font-black text-[#0f172a]">مرحباً بك! لنبدأ بتهيئة متجرك</h2>
@@ -191,7 +203,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div className="pt-8 mt-8 border-t border-surface-100">
             <div className="flex gap-4 mb-4">
-              <button type="button" onClick={() => skipStep(1)} className="px-8 bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-950 py-3.5 rounded-xl font-bold transition-colors">
+              <button type="button" onClick={isPreview ? onPreviewNext : () => skipStep(1)} className="px-8 bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-950 py-3.5 rounded-xl font-bold transition-colors">
                 تخطي
               </button>
               <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
@@ -213,7 +225,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
       {/* Step 2: Contact Info */}
       {step === 2 && (
-        <form action={(data) => { setIsPending(true); submitStep2(data).finally(() => setIsPending(false)); }} className="animate-fade-in">
+        <form action={isPreview ? onPreviewNext : (data) => { setIsPending(true); submitStep2(data).finally(() => setIsPending(false)); }} className="animate-fade-in">
           <div className="text-center mb-8 relative">
             <div className="inline-flex items-center justify-center gap-2 mb-2">
               <h2 className="text-2xl sm:text-3xl font-black text-[#0f172a]">بيانات التواصل</h2>
@@ -266,7 +278,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
 
           <div className="pt-8 mt-8 border-t border-surface-100">
             <div className="flex gap-4 mb-4">
-              <button type="button" onClick={() => skipStep(2)} className="px-8 bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-950 py-3.5 rounded-xl font-bold transition-colors">
+              <button type="button" onClick={isPreview ? onPreviewNext : () => skipStep(2)} className="px-8 bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-950 py-3.5 rounded-xl font-bold transition-colors">
                 تخطي
               </button>
               <button type="submit" disabled={isPending} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center gap-2">
@@ -327,7 +339,7 @@ export function OnboardingClient({ step, storeName, subdomain }: { step: number;
               </a>
               <button 
                 type="button"
-                onClick={() => finishOnboarding()} 
+                onClick={isPreview ? onPreviewNext : () => finishOnboarding()} 
                 className="w-full bg-surface-50 border border-surface-200 hover:bg-surface-100 text-surface-900 py-3.5 rounded-xl font-bold transition-colors flex items-center justify-center text-base gap-2"
               >
                 <ArrowRight className="w-5 h-5 rtl:-scale-x-100" />
