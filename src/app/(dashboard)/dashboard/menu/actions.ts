@@ -6,14 +6,14 @@ import { revalidatePath } from "next/cache";
 
 export async function createMenuItem(formData: FormData) {
   const session = await auth();
-  if (!session?.user?.storeId) {
-    return { error: "غير مصرح لك بالقيام بهذه العملية" };
-  }
+  if (!session?.user) return { error: "غير مصرح لك" };
 
   const targetStoreId = formData.get("storeId") as string;
   let storeIdToUse = session.user.storeId;
   if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
     storeIdToUse = "DEFAULT_STORE";
+  } else if (!storeIdToUse) {
+    return { error: "غير مصرح لك" };
   }
 
   const name = formData.get("name") as string;
@@ -84,7 +84,11 @@ export async function createMenuItem(formData: FormData) {
       },
     });
 
-    revalidatePath("/dashboard/menu");
+    if (storeIdToUse === "DEFAULT_STORE") {
+      revalidatePath("/admin/default-products");
+    } else {
+      revalidatePath("/dashboard/menu");
+    }
     return { success: "تم إضافة الصنف بنجاح" };
   } catch (error) {
     console.error("Create Menu Item Error:", error);
@@ -94,14 +98,14 @@ export async function createMenuItem(formData: FormData) {
 
 export async function updateMenuItem(menuItemId: string, formData: FormData) {
   const session = await auth();
-  if (!session?.user?.storeId) {
-    return { error: "غير مصرح لك بالقيام بهذه العملية" };
-  }
+  if (!session?.user) return { error: "غير مصرح لك" };
 
   const targetStoreId = formData.get("storeId") as string;
   let storeIdToUse = session.user.storeId;
   if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
     storeIdToUse = "DEFAULT_STORE";
+  } else if (!storeIdToUse) {
+    return { error: "غير مصرح لك" };
   }
 
   const name = formData.get("name") as string;
@@ -170,7 +174,11 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
       },
     });
 
-    revalidatePath("/dashboard/menu");
+    if (storeIdToUse === "DEFAULT_STORE") {
+      revalidatePath("/admin/default-products");
+    } else {
+      revalidatePath("/dashboard/menu");
+    }
     return { success: "تم تحديث الصنف بنجاح" };
   } catch (error) {
     console.error("Update Menu Item Error:", error);
@@ -180,13 +188,13 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
 
 export async function toggleMenuItemStatus(menuItemId: string, currentStatus: boolean, targetStoreId?: string) {
   const session = await auth();
-  if (!session?.user?.storeId) {
-    return { error: "غير مصرح لك بالقيام بهذه العملية" };
-  }
+  if (!session?.user) return { error: "غير مصرح لك" };
 
   let storeIdToUse = session.user.storeId;
   if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
     storeIdToUse = "DEFAULT_STORE";
+  } else if (!storeIdToUse) {
+    return { error: "غير مصرح لك" };
   }
 
   try {
@@ -203,7 +211,11 @@ export async function toggleMenuItemStatus(menuItemId: string, currentStatus: bo
       data: { isAvailable: !currentStatus },
     });
 
-    revalidatePath("/dashboard/menu");
+    if (storeIdToUse === "DEFAULT_STORE") {
+      revalidatePath("/admin/default-products");
+    } else {
+      revalidatePath("/dashboard/menu");
+    }
     return { success: "تم تحديث حالة الصنف" };
   } catch (error) {
     console.error("Toggle Menu Item Error:", error);
@@ -213,13 +225,13 @@ export async function toggleMenuItemStatus(menuItemId: string, currentStatus: bo
 
 export async function deleteMenuItem(menuItemId: string, targetStoreId?: string) {
   const session = await auth();
-  if (!session?.user?.storeId) {
-    return { error: "غير مصرح لك بالقيام بهذه العملية" };
-  }
+  if (!session?.user) return { error: "غير مصرح لك" };
 
   let storeIdToUse = session.user.storeId;
   if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
     storeIdToUse = "DEFAULT_STORE";
+  } else if (!storeIdToUse) {
+    return { error: "غير مصرح لك" };
   }
 
   try {
@@ -235,7 +247,11 @@ export async function deleteMenuItem(menuItemId: string, targetStoreId?: string)
       where: { id: menuItemId },
     });
 
-    revalidatePath("/dashboard/menu");
+    if (storeIdToUse === "DEFAULT_STORE") {
+      revalidatePath("/admin/default-products");
+    } else {
+      revalidatePath("/dashboard/menu");
+    }
     return { success: "تم حذف الصنف بنجاح" };
   } catch (error) {
     console.error("Delete Menu Item Error:", error);
@@ -245,13 +261,13 @@ export async function deleteMenuItem(menuItemId: string, targetStoreId?: string)
 
 export async function bulkDeleteMenuItems(menuItemIds: string[], targetStoreId?: string) {
   const session = await auth();
-  if (!session?.user?.storeId) {
-    return { error: "غير مصرح لك بالقيام بهذه العملية" };
-  }
+  if (!session?.user) return { error: "غير مصرح لك" };
 
   let storeIdToUse = session.user.storeId;
   if (targetStoreId === "DEFAULT_STORE" && session.user.role === "ADMIN") {
     storeIdToUse = "DEFAULT_STORE";
+  } else if (!storeIdToUse) {
+    return { error: "غير مصرح لك" };
   }
 
   try {
@@ -274,7 +290,11 @@ export async function bulkDeleteMenuItems(menuItemIds: string[], targetStoreId?:
       }
     });
 
-    revalidatePath("/dashboard/menu");
+    if (storeIdToUse === "DEFAULT_STORE") {
+      revalidatePath("/admin/default-products");
+    } else {
+      revalidatePath("/dashboard/menu");
+    }
     return { success: `تم حذف ${items.length} صنف بنجاح` };
   } catch (error: any) {
     console.error("Bulk Delete Menu Items Error:", error);

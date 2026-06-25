@@ -52,13 +52,20 @@ export function MenuItemForm({ categories, initialData, onSuccess, storeId }: { 
     formData.append("addons", JSON.stringify(addons));
 
     try {
+      let result;
       if (initialData) {
-        await updateMenuItem(initialData.id, formData);
-        toast.success("تم تحديث الصنف بنجاح");
+        result = await updateMenuItem(initialData.id, formData);
       } else {
-        await createMenuItem(formData);
-        toast.success("تمت إضافة الصنف بنجاح");
+        result = await createMenuItem(formData);
       }
+
+      if (result?.error) {
+        toast.error(result.error);
+        setIsSubmitting(false);
+        return;
+      }
+      
+      toast.success(initialData ? "تم تحديث الصنف بنجاح" : "تمت إضافة الصنف بنجاح");
       
       // Reset form after successful submission
       if (!initialData) {
