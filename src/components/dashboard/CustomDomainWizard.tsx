@@ -35,7 +35,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
   };
 
   const handleRemove = async () => {
-    if (!confirm("?? ??? ????? ?? ??? ???????? ?????? ????? ?? ????? ???? ??????? ?????.")) return;
+    if (!confirm("هل أنت متأكد من حذف الدومين؟ سيتوقف موقعك عن العمل بهذا الدومين فوراً.")) return;
     setIsSubmitting(true);
     const res = await removeCustomDomain(initialDomain.id);
     if (res?.error) setError(res.error);
@@ -44,7 +44,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert("?? ?????!");
+    alert("تم النسخ!");
   };
 
   if (!initialDomain) {
@@ -53,7 +53,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
         {error && <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">{error}</div>}
         <div>
           <label htmlFor="domain" className="block text-sm font-medium text-surface-950 mb-1">
-            ??????? ?????
+            الدومين الخاص
           </label>
           <div className="flex items-center" dir="ltr">
             <span className="px-4 py-2.5 bg-surface-100 border border-e-0 border-surface-200 rounded-s-xl text-surface-600 font-medium">
@@ -63,7 +63,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
               type="text"
               id="domain"
               name="domain"
-              placeholder="restaurant.com ?? menu.restaurant.com"
+              placeholder="restaurant.com أو menu.restaurant.com"
               className="w-full px-3 py-2.5 bg-white border border-surface-200 text-surface-950 rounded-e-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
               required
             />
@@ -74,7 +74,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
           disabled={isSubmitting}
           className="py-2.5 px-6 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl font-bold transition-all"
         >
-          {isSubmitting ? "???? ???????..." : "????? ???????"}
+          {isSubmitting ? "جاري الإضافة..." : "إضافة الدومين"}
         </button>
       </form>
     );
@@ -87,17 +87,17 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
 
       <div className="flex items-center justify-between p-4 bg-surface-50 border border-surface-200 rounded-xl">
         <div>
-          <p className="text-sm text-surface-500 mb-1">??????? ??????</p>
+          <p className="text-sm text-surface-500 mb-1">الدومين الحالي</p>
           <p className="font-bold text-lg text-surface-950" dir="ltr">{initialDomain.name}</p>
         </div>
         <div className="flex items-center gap-2">
           {initialDomain.status === "CONNECTED" ? (
             <span className="flex items-center gap-1 text-green-600 bg-green-50 px-3 py-1 rounded-full text-sm font-medium">
-              <CheckCircle className="w-4 h-4" /> ????
+              <CheckCircle className="w-4 h-4" /> متصل
             </span>
           ) : (
             <span className="flex items-center gap-1 text-orange-600 bg-orange-50 px-3 py-1 rounded-full text-sm font-medium">
-              <Clock className="w-4 h-4" /> ??? ???????? ({initialDomain.status})
+              <Clock className="w-4 h-4" /> قيد المعالجة ({initialDomain.status})
             </span>
           )}
         </div>
@@ -106,9 +106,9 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
       {initialDomain.status !== "CONNECTED" && initialDomain.dnsRecords && (
         <div className="bg-white border border-surface-200 rounded-xl overflow-hidden">
           <div className="p-4 border-b border-surface-200 bg-surface-50">
-            <h4 className="font-bold text-surface-950">??????? DNS ????????</h4>
+            <h4 className="font-bold text-surface-950">إعدادات DNS المطلوبة</h4>
             <p className="text-sm text-surface-500 mt-1">
-              ???? ????? ??? ??????? ?? ???? ???? ??????? ????? ?? (????: Hostinger, GoDaddy).
+              يرجى إضافة هذه السجلات في لوحة تحكم الدومين الخاص بك (مثال: Hostinger, GoDaddy).
             </p>
           </div>
           <div className="overflow-x-auto">
@@ -128,7 +128,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
                     <td className="px-4 py-3 font-mono text-sm">@</td>
                     <td className="px-4 py-3 font-mono text-sm">{initialDomain.dnsRecords.a}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => copyToClipboard(initialDomain.dnsRecords.a)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">???</button>
+                      <button onClick={() => copyToClipboard(initialDomain.dnsRecords.a)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">نسخ</button>
                     </td>
                   </tr>
                 )}
@@ -138,7 +138,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
                     <td className="px-4 py-3 font-mono text-sm">www</td>
                     <td className="px-4 py-3 font-mono text-sm">{initialDomain.dnsRecords.cname}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => copyToClipboard(initialDomain.dnsRecords.cname)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">???</button>
+                      <button onClick={() => copyToClipboard(initialDomain.dnsRecords.cname)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">نسخ</button>
                     </td>
                   </tr>
                 )}
@@ -148,7 +148,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
                     <td className="px-4 py-3 font-mono text-sm">@</td>
                     <td className="px-4 py-3 font-mono text-sm">{ns}</td>
                     <td className="px-4 py-3 text-right">
-                      <button onClick={() => copyToClipboard(ns)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">???</button>
+                      <button onClick={() => copyToClipboard(ns)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">نسخ</button>
                     </td>
                   </tr>
                 ))}
@@ -165,8 +165,8 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
             disabled={isSubmitting}
             className="flex items-center gap-2 py-2 px-4 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg font-medium transition-colors"
           >
-            <RefreshCw className={w-4 h-4 } />
-            ???? ????
+            <RefreshCw className={`w-4 h-4 ${isSubmitting ? 'animate-spin' : ''}`} />
+            تحقق الآن
           </button>
         )}
         <button
@@ -175,7 +175,7 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
           className="flex items-center gap-2 py-2 px-4 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors"
         >
           <Trash2 className="w-4 h-4" />
-          ??? ???????
+          حذف الدومين
         </button>
       </div>
     </div>
