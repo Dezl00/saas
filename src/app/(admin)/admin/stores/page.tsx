@@ -74,9 +74,9 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
                           : "محذوف"}
                     </span>
                   </div>
-                  {store.subdomain && (
+                  {(store.customDomain || store.subdomain) && (
                     <p className="text-xs text-primary-500 mt-1 font-medium" dir="ltr">
-                      {store.subdomain}.{process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}
+                      {store.customDomain ? store.customDomain : `${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}
                     </p>
                   )}
                 </div>
@@ -108,9 +108,9 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
 
               {/* Actions */}
               <div className="flex items-center gap-2">
-                {store.subdomain && (
+                {(store.customDomain || store.subdomain) && (
                   <Link
-                    href={`https://${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}
+                    href={`https://${store.customDomain || `${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}`}
                     target="_blank"
                     className="p-2 rounded-xl hover:bg-surface-50 text-surface-800/50 hover:text-primary-500 transition-colors"
                     title="عرض المتجر"

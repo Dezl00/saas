@@ -4,8 +4,13 @@ import { StorefrontView } from "@/components/store/StorefrontView";
 
 export default async function StorePage(props: { params: Promise<{ subdomain: string }> }) {
   const params = await props.params;
-  const store = await prisma.store.findUnique({
-    where: { subdomain: params.subdomain },
+  const store = await prisma.store.findFirst({
+    where: {
+      OR: [
+        { subdomain: params.subdomain },
+        { customDomain: params.subdomain }
+      ]
+    },
     include: {
       categories: {
         where: { isActive: true },

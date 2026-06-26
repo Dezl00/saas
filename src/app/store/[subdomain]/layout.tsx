@@ -46,8 +46,13 @@ const SnapchatIcon = ({ className }: { className?: string }) => (
 
 export async function generateMetadata(props: { params: Promise<{ subdomain: string }> }) {
   const params = await props.params;
-  const store = await prisma.store.findUnique({
-    where: { subdomain: params.subdomain },
+  const store = await prisma.store.findFirst({
+    where: {
+      OR: [
+        { subdomain: params.subdomain },
+        { customDomain: params.subdomain }
+      ]
+    },
   });
 
   if (!store) return { title: "المتجر غير موجود" };
@@ -66,8 +71,13 @@ export default async function StoreLayout({
   params: Promise<{ subdomain: string }>;
 }) {
   const params = await paramsPromise;
-  const storePromise = prisma.store.findUnique({
-    where: { subdomain: params.subdomain },
+  const storePromise = prisma.store.findFirst({
+    where: {
+      OR: [
+        { subdomain: params.subdomain },
+        { customDomain: params.subdomain }
+      ]
+    },
     include: {
       branches: { where: { isActive: true } },
       deliveryAreas: { where: { isActive: true } }

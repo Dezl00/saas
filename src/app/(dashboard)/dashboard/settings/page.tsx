@@ -84,6 +84,69 @@ export default async function SettingsPage() {
           </form>
         </div>
 
+        {/* إعدادات الدومين الخاص (Custom Domain) */}
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 lg:col-span-2 relative overflow-hidden">
+          <div className="absolute top-0 start-0 w-1 h-full bg-indigo-500"></div>
+          
+          <h3 className="text-xl font-bold text-surface-950 mb-2 flex items-center gap-2">
+            <Globe className="w-6 h-6 text-indigo-500" />
+            الدومين الخاص (Custom Domain)
+          </h3>
+          <p className="text-surface-500 text-sm mb-6">
+            اربط متجرك بدومينك الخاص (مثل www.your-restaurant.com) لتعزيز علامتك التجارية.
+          </p>
+
+          <form action={updateSubdomain as any} className="max-w-xl">
+            <input type="hidden" name="isCustomDomain" value="true" />
+            <div className="flex flex-col sm:flex-row gap-4 items-end">
+              <div className="flex-1 w-full">
+                <label htmlFor="customDomain" className="block text-sm font-medium text-surface-950 mb-1">
+                  الدومين الخاص
+                </label>
+                <div className="flex items-center" dir="ltr">
+                  <span className="px-4 py-2.5 bg-surface-100 border border-e-0 border-surface-200 rounded-s-xl text-surface-600 font-medium">
+                    https://
+                  </span>
+                  <input
+                    type="text"
+                    id="customDomain"
+                    name="customDomain"
+                    defaultValue={store.customDomain || ""}
+                    placeholder="www.your-restaurant.com"
+                    className="w-full px-3 py-2.5 bg-white border border-surface-200 text-surface-950 rounded-e-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
+                  />
+                </div>
+              </div>
+              <SubmitButton
+                className="py-2.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all whitespace-nowrap"
+              >
+                حفظ الدومين
+              </SubmitButton>
+            </div>
+            
+            <div className="mt-4 p-4 bg-indigo-50 text-indigo-900 rounded-xl border border-indigo-200 text-sm leading-relaxed">
+              <strong>هام جداً:</strong> لكي يعمل دومينك الخاص، يجب عليك الذهاب إلى لوحة تحكم الشركة التي اشتريت منها الدومين (مثل GoDaddy أو Namecheap) وإضافة سجل <strong>CNAME</strong> يوجه إلى:
+              <br/><br/>
+              <code className="bg-white px-2 py-1 rounded text-indigo-700 font-mono border border-indigo-100">cname.vercel-dns.com</code>
+              <br/><br/>
+              أو إضافة سجل <strong>A Record</strong> يوجه إلى:
+              <br/><br/>
+              <code className="bg-white px-2 py-1 rounded text-indigo-700 font-mono border border-indigo-100">76.76.21.21</code>
+              <br/><br/>
+              <em>ملاحظة: قد يستغرق تفعيل الدومين الجديد من 10 دقائق إلى 24 ساعة.</em>
+            </div>
+
+            {store.customDomain && (
+              <div className="mt-4 p-4 bg-success-50 text-success-800 rounded-xl border border-success-200 text-sm">
+                تم ربط دومينك الخاص بنجاح: <br/>
+                <a href={`https://${store.customDomain}`} target="_blank" className="font-bold underline mt-1 inline-block" dir="ltr">
+                  https://{store.customDomain}
+                </a>
+              </div>
+            )}
+          </form>
+        </div>
+
         {/* الإعدادات الأساسية */}
         <div className="bg-white rounded-2xl border border-surface-200 p-6 lg:col-span-2">
           <h3 className="text-xl font-bold text-surface-950 mb-6 flex items-center gap-2">

@@ -71,14 +71,14 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {store?.subdomain && (
+      {(store?.subdomain || store?.customDomain) && (
         <div className="bg-primary-50 border border-primary-100 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h3 className="font-bold text-primary-900">رابط متجرك جاهز!</h3>
             <p className="text-sm text-primary-700 mt-1">شارك هذا الرابط مع عملائك لاستقبال الطلبات</p>
           </div>
           <Link
-            href={`https://${store.subdomain}.menura.site`}
+            href={store.customDomain ? `https://${store.customDomain}` : `https://${store.subdomain}.menura.site`}
             target="_blank"
             className="px-6 py-2 bg-white text-primary-600 font-bold rounded-xl border border-primary-200 hover:bg-primary-50 transition-colors"
           >

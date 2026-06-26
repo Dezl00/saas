@@ -96,6 +96,7 @@ model Store {
   logo        String?
   type        StoreType   @default(RESTAURANT)
   subdomain   String?     @unique
+  customDomain String?    @unique
   status      StoreStatus @default(ACTIVE)
   phone       String?
   address     String?
