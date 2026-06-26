@@ -122,20 +122,33 @@ export function CustomDomainWizard({ initialDomain }: { initialDomain: any }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-200">
-                {initialDomain.dnsRecords.a && (
-                  <tr>
-                    <td className="px-4 py-3 font-mono text-sm">A</td>
-                    <td className="px-4 py-3 font-mono text-sm">@</td>
-                    <td className="px-4 py-3 font-mono text-sm">{initialDomain.dnsRecords.a}</td>
-                    <td className="px-4 py-3 text-right">
-                      <button onClick={() => copyToClipboard(initialDomain.dnsRecords.a)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">نسخ</button>
-                    </td>
-                  </tr>
-                )}
-                {initialDomain.dnsRecords.cname && (
+                {initialDomain.name.split('.').length === 2 ? (
+                  <>
+                    {initialDomain.dnsRecords.a && (
+                      <tr>
+                        <td className="px-4 py-3 font-mono text-sm">A</td>
+                        <td className="px-4 py-3 font-mono text-sm">@</td>
+                        <td className="px-4 py-3 font-mono text-sm">{initialDomain.dnsRecords.a}</td>
+                        <td className="px-4 py-3 text-right">
+                          <button onClick={() => copyToClipboard(initialDomain.dnsRecords.a)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">نسخ</button>
+                        </td>
+                      </tr>
+                    )}
+                    {initialDomain.dnsRecords.cname && (
+                      <tr>
+                        <td className="px-4 py-3 font-mono text-sm">CNAME</td>
+                        <td className="px-4 py-3 font-mono text-sm">www</td>
+                        <td className="px-4 py-3 font-mono text-sm">{initialDomain.dnsRecords.cname}</td>
+                        <td className="px-4 py-3 text-right">
+                          <button onClick={() => copyToClipboard(initialDomain.dnsRecords.cname)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">نسخ</button>
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                ) : (
                   <tr>
                     <td className="px-4 py-3 font-mono text-sm">CNAME</td>
-                    <td className="px-4 py-3 font-mono text-sm">www</td>
+                    <td className="px-4 py-3 font-mono text-sm">{initialDomain.name.split('.')[0]}</td>
                     <td className="px-4 py-3 font-mono text-sm">{initialDomain.dnsRecords.cname}</td>
                     <td className="px-4 py-3 text-right">
                       <button onClick={() => copyToClipboard(initialDomain.dnsRecords.cname)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">نسخ</button>
