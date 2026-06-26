@@ -17,7 +17,7 @@ export async function globalSearch(query: string) {
       OR: [
         { name: { contains: search, mode: "insensitive" } },
         { subdomain: { contains: search, mode: "insensitive" } },
-        { customDomain: { contains: search, mode: "insensitive" } },
+        { domains: { some: { name: { contains: search, mode: "insensitive" } } } },
       ],
     },
     include: {

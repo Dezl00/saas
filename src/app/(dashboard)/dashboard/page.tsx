@@ -71,7 +71,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      {(store?.subdomain || store?.customDomain) && (
+      {(store?.subdomain || store?.domains?.[0]?.name) && (
         <div className="bg-primary-50 border border-primary-100 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h3 className="font-bold text-primary-900">رابط متجرك جاهز!</h3>
