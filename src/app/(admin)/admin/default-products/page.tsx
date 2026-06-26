@@ -61,7 +61,8 @@ export default async function DefaultProductsPage(props: {
       orderBy: [
         { category: { sortOrder: 'asc' } },
         { sortOrder: 'asc' },
-        { createdAt: 'asc' }
+        { createdAt: 'asc' },
+        { id: 'asc' }
       ],
       include: { category: true, sizes: true, addons: true }
     }),

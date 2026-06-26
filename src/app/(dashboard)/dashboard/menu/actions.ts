@@ -90,9 +90,9 @@ export async function createMenuItem(formData: FormData) {
       revalidatePath("/dashboard/menu");
     }
     return { success: "تم إضافة الصنف بنجاح" };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Create Menu Item Error:", error);
-    return { error: "حدث خطأ أثناء إضافة الصنف" };
+    return { error: "حدث خطأ أثناء إضافة الصنف: " + (error.message || "") };
   }
 }
 
@@ -180,9 +180,9 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
       revalidatePath("/dashboard/menu");
     }
     return { success: "تم تحديث الصنف بنجاح" };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Update Menu Item Error:", error);
-    return { error: "حدث خطأ أثناء تحديث الصنف" };
+    return { error: "حدث خطأ أثناء تحديث الصنف: " + (error.message || "") };
   }
 }
 

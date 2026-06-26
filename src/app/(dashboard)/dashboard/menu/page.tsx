@@ -28,7 +28,8 @@ export default async function MenuPage() {
       orderBy: [
         { category: { sortOrder: 'asc' } },
         { sortOrder: 'asc' },
-        { createdAt: 'asc' }
+        { createdAt: 'asc' },
+        { id: 'asc' }
       ],
       include: { category: true, sizes: true, addons: true }
     }),

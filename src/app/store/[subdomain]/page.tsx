@@ -18,7 +18,10 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
       },
       menuItems: {
         where: { isAvailable: true },
-        orderBy: { sortOrder: 'asc' },
+        orderBy: [
+          { sortOrder: 'asc' },
+          { id: 'asc' }
+        ],
         include: {
           sizes: true,
           addons: true,
@@ -44,7 +47,10 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
         },
         menuItems: {
           where: { isAvailable: true },
-          orderBy: { sortOrder: 'asc' },
+          orderBy: [
+            { sortOrder: 'asc' },
+            { id: 'asc' }
+          ],
           include: {
             sizes: true,
             addons: true,

@@ -72,11 +72,11 @@ export async function updateSubdomain(formData: FormData) {
     }
 
     // Clean up domain (remove http, https, trailing slashes)
-    customDomain = customDomain.replace(/^(https?:\/\/)?(www\.)?/, 'www.').replace(/\/$/, '').toLowerCase();
+    customDomain = customDomain.replace(/^(https?:\/\/)?/, '').replace(/\/$/, '').toLowerCase();
 
-    // Validate domain format basic
-    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-    if (!domainRegex.test(customDomain.replace('www.', ''))) {
+    // Validate domain format basic (allows subdomains and apex domains)
+    const domainRegex = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+    if (!domainRegex.test(customDomain)) {
       return { error: "صيغة الدومين غير صحيحة" };
     }
 
