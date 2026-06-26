@@ -62,64 +62,7 @@ export async function updateSubdomain(formData: FormData) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
   }
 
-  const isCustomDomain = formData.get("isCustomDomain") === "true";
-  
-  if (isCustomDomain) {
-    let customDomain = formData.get("customDomain") as string;
-    
-    if (!customDomain || customDomain.trim() === "") {
-      return { error: "يرجى كتابة الدومين أولاً" };
-    }
-
-    // Clean up domain (remove http, https, trailing slashes)
-    customDomain = customDomain.replace(/^(https?:\/\/)?/, '').replace(/\/$/, '').toLowerCase();
-
-    // Validate domain format basic (allows subdomains and apex domains)
-    const domainRegex = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
-    if (!domainRegex.test(customDomain)) {
-      return { error: "صيغة الدومين غير صحيحة" };
-    }
-
-    try {
-      const existing = await prisma.store.findUnique({
-        where: { customDomain }
-      });
-
-      if (existing && existing.id !== session.user.storeId) {
-        return { error: "عذراً، هذا الدومين مربوط بمتجر آخر." };
-      }
-
-      await prisma.store.update({
-        where: { id: session.user.storeId },
-        data: { customDomain },
-      });
-
-      // Call Vercel API if configured
-      const token = process.env.VERCEL_ACCESS_TOKEN;
-      const projectId = process.env.VERCEL_PROJECT_ID;
-      
-      if (token && projectId) {
-        try {
-          await fetch(`https://api.vercel.com/v10/projects/${projectId}/domains`, {
-            method: 'POST',
-            headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ name: customDomain })
-          });
-        } catch (e) {
-          console.error("Vercel domain error", e);
-        }
-      }
-
-      revalidatePath("/dashboard/settings");
-      return { success: "تم حفظ الدومين الخاص بنجاح! قد يستغرق التفعيل بضع دقائق." };
-    } catch (error) {
-      console.error("Update Custom Domain Error:", error);
-      return { error: "حدث خطأ أثناء حفظ الدومين الخاص" };
-    }
-  }
+  // customDomain logic moved to domain-actions.ts
 
   const subdomain = formData.get("subdomain") as string;
 

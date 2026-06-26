@@ -50,7 +50,7 @@ export async function generateMetadata(props: { params: Promise<{ subdomain: str
     where: {
       OR: [
         { subdomain: params.subdomain },
-        { customDomain: params.subdomain }
+        { domains: { some: { name: params.subdomain } } }
       ]
     },
   });
@@ -75,7 +75,7 @@ export default async function StoreLayout({
     where: {
       OR: [
         { subdomain: params.subdomain },
-        { customDomain: params.subdomain }
+        { domains: { some: { name: params.subdomain } } }
       ]
     },
     include: {

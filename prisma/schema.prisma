@@ -33,6 +33,14 @@ enum StoreStatus {
   DELETED
 }
 
+enum DomainStatus {
+  PENDING
+  WAITING_DNS
+  SSL
+  CONNECTED
+  FAILED
+}
+
 enum PaymentType {
   CASH
   INSTAPAY
@@ -96,7 +104,6 @@ model Store {
   logo        String?
   type        StoreType   @default(RESTAURANT)
   subdomain   String?     @unique
-  customDomain String?    @unique
   status      StoreStatus @default(ACTIVE)
   phone       String?
   address     String?
@@ -128,6 +135,7 @@ model Store {
   paymentMethods PaymentMethod[]
   branches       Branch[]
   deliveryAreas  DeliveryArea[]
+  domains        Domain[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -150,6 +158,23 @@ model Branch {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model Domain {
+  id           String       @id @default(cuid())
+  name         String       @unique // e.g., restaurant.com
+  status       DomainStatus @default(PENDING)
+  dnsRecords   Json?        // Vercel DNS instructions
+  
+  storeId      String
+  store        Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  verifiedAt   DateTime?
+  sslIssuedAt  DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   @@index([storeId])
 }

@@ -8,7 +8,7 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
     where: {
       OR: [
         { subdomain: params.subdomain },
-        { customDomain: params.subdomain }
+        { domains: { some: { name: params.subdomain } } }
       ]
     },
     include: {

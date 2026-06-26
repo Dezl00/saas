@@ -19,7 +19,7 @@ export default async function DashboardPage() {
 
   const [store, ordersCount, revenueResult, menuItemsCount, categoriesCount, recentOrders] =
     await Promise.all([
-      prisma.store.findUnique({ where: { id: storeId } }),
+      prisma.store.findUnique({ where: { id: storeId }, include: { domains: true } }),
       prisma.order.count({ where: { storeId } }),
       prisma.order.aggregate({
         where: { storeId, paymentStatus: "CONFIRMED" },
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-primary-700 mt-1">شارك هذا الرابط مع عملائك لاستقبال الطلبات</p>
           </div>
           <Link
-            href={store.customDomain ? `https://${store.customDomain}` : `https://${store.subdomain}.menura.site`}
+            href={store.domains?.[0]?.name ? `https://${store.domains[0].name}` : `https://${store.subdomain}.menura.site`}
             target="_blank"
             className="px-6 py-2 bg-white text-primary-600 font-bold rounded-xl border border-primary-200 hover:bg-primary-50 transition-colors"
           >

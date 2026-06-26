@@ -14,6 +14,7 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
     include: {
       user: { select: { name: true, email: true, phone: true } },
       _count: { select: { orders: true, menuItems: true, categories: true } },
+      domains: { where: { status: 'CONNECTED' }, take: 1 }
     },
     orderBy: { createdAt: "desc" },
   });
@@ -74,9 +75,9 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
                           : "محذوف"}
                     </span>
                   </div>
-                  {(store.customDomain || store.subdomain) && (
+                  {(store.domains[0]?.name || store.subdomain) && (
                     <p className="text-xs text-primary-500 mt-1 font-medium" dir="ltr">
-                      {store.customDomain ? store.customDomain : `${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}
+                      {store.domains[0] ? store.domains[0].name : `${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}
                     </p>
                   )}
                 </div>
@@ -108,9 +109,9 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
 
               {/* Actions */}
               <div className="flex items-center gap-2">
-                {(store.customDomain || store.subdomain) && (
+                {(store.domains[0]?.name || store.subdomain) && (
                   <Link
-                    href={`https://${store.customDomain || `${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}`}
+                    href={`https://${store.domains[0] ? store.domains[0].name : `${store.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN || 'menura.site'}`}`}
                     target="_blank"
                     className="p-2 rounded-xl hover:bg-surface-50 text-surface-800/50 hover:text-primary-500 transition-colors"
                     title="عرض المتجر"
