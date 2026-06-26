@@ -54,11 +54,22 @@ export async function addCustomDomain(formData: FormData) {
       });
       const projectDomainData = await projectDomainRes.json();
 
+      let wwwDomainData = null;
+      if (domainName.split('.').length === 2) {
+        const wwwDomainRes = await fetch(`https://api.vercel.com/v9/projects/${projectId}/domains/www.${domainName}`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        }).catch(() => null);
+        if (wwwDomainRes) wwwDomainData = await wwwDomainRes.json();
+      }
+
       if (configData.misconfigured) {
+        const aRecord = projectDomainData?.verification?.find((v: any) => v.type === 'A')?.value || "76.76.21.21";
+        const cnameRecord = wwwDomainData?.verification?.find((v: any) => v.type === 'CNAME')?.value || projectDomainData?.verification?.find((v: any) => v.type === 'CNAME')?.value || "cname.vercel-dns.com";
+
         dnsRecords = {
           intendedNameservers: projectDomainData.intendedNameservers || ["ns1.vercel-dns.com", "ns2.vercel-dns.com"],
-          cname: "cname.vercel-dns.com",
-          a: "76.76.21.21"
+          cname: cnameRecord,
+          a: aRecord
         };
       }
     }
