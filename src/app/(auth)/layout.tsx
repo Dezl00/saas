@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Store } from "lucide-react";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
 import Image from "next/image";
+import { prisma } from "@/lib/prisma";
 
 export default async function AuthLayout({
   children,
