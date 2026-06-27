@@ -30,18 +30,45 @@ export async function uploadImageToCloudinary(file: File): Promise<string> {
 }
 
 export async function uploadUrlToCloudinary(url: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(
-      url,
-      { folder: 'menura' },
-      (error, result) => {
-        if (error || !result) {
-          console.error("Cloudinary upload error:", error);
-          reject(error || new Error("Failed to upload URL to Cloudinary"));
-        } else {
-          resolve(result.secure_url);
-        }
+  try {
+    // Fetch the image to our server first to avoid Cloudinary IP bans from free AI generators
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'image/jpeg, image/png, image/webp, image/*;q=0.8'
       }
-    );
-  });
+    });
+
+    if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error("يوجد ضغط كبير على سيرفر الذكاء الاصطناعي حالياً. يرجى المحاولة بعد دقيقة.");
+      }
+      throw new Error(`فشل جلب الصورة (${response.status})`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    
+    const base64String = buffer.toString('base64');
+    const dataUri = `data:${contentType};base64,${base64String}`;
+
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(
+        dataUri,
+        { folder: 'menura' },
+        (error, result) => {
+          if (error || !result) {
+            console.error("Cloudinary upload error:", error);
+            reject(new Error("فشل حفظ الصورة في الخادم السحابي"));
+          } else {
+            resolve(result.secure_url);
+          }
+        }
+      );
+    });
+  } catch (error: any) {
+    console.error("uploadUrlToCloudinary error:", error);
+    throw error;
+  }
 }

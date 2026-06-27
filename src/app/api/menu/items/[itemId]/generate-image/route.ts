@@ -68,7 +68,7 @@ Task: Write a concise, highly descriptive English prompt (max 30 words) for an A
     }
     
     // استخدام Pollinations.ai بشكل مجاني وبدون توكنز
-    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptString)}?width=800&height=800&nologo=true&seed=${seed}`;
+    const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptString)}?width=800&height=800&nologo=true&seed=${seed}&model=flux`;
 
     // الرفع المباشر من الرابط إلى Cloudinary لتجنب فقدان الصور مستقبلاً
     const cloudinaryUrl = await uploadUrlToCloudinary(pollinationsUrl);
