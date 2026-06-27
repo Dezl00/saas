@@ -251,6 +251,8 @@ model MenuItem {
 
   @@index([storeId, categoryId])
   @@index([storeId])
+  @@index([storeId, isAvailable])
+  @@index([storeId, sortOrder])
 }
 
 model MenuItemSize {
@@ -335,6 +337,7 @@ model Order {
 
   @@index([storeId])
   @@index([storeId, status])
+  @@index([storeId, createdAt])
 }
 
 model OrderItem {

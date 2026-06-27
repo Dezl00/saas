@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Camera, Upload, X, Loader2, Sparkles, CheckCircle2, ListChecks, CheckSquare, Square } from "lucide-react";
 import toast from "react-hot-toast";
+import Image from "next/image";
 import { importAIMenuItems } from "@/app/(dashboard)/dashboard/menu/ai-actions";
 
 type ParsedCategory = {
@@ -247,7 +248,7 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
               ) : !parsedData ? (
                 <div className="space-y-4">
                   <div className="relative w-full h-48 rounded-2xl overflow-hidden border border-surface-200 shadow-inner">
-                    <img src={image} alt="Menu preview" className="w-full h-full object-cover" />
+                    <Image src={image} alt="Menu preview" fill className="object-cover" unoptimized />
                     {!isScanning && !successResult && (
                       <button 
                         onClick={() => { setImage(null); setFile(null); }}

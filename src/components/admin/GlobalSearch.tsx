@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Search, Store, User, Phone, Mail, CheckCircle, AlertTriangle, Trash2, X } from "lucide-react";
 import { globalSearch } from "@/app/(admin)/admin/searchAction";
 import Link from "next/link";
+import Image from "next/image";
 
 export function GlobalSearch() {
   const [query, setQuery] = useState("");
@@ -93,7 +94,7 @@ export function GlobalSearch() {
                     >
                       <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center flex-shrink-0">
                         {store.logo ? (
-                          <img src={store.logo} alt={store.name} className="w-full h-full rounded-xl object-cover" />
+                          <Image src={store.logo} alt={store.name} width={40} height={40} className="w-full h-full rounded-xl object-cover" />
                         ) : (
                           <Store className="w-5 h-5 text-primary-600" />
                         )}
@@ -155,7 +156,7 @@ export function GlobalSearch() {
             <div className="text-center mb-6">
               <div className="w-16 h-16 bg-primary-100 flex items-center justify-center mx-auto mb-4 rounded-2xl">
                 {selectedStore.logo ? (
-                  <img src={selectedStore.logo} alt={selectedStore.name} className="w-full h-full rounded-2xl object-cover" />
+                  <Image src={selectedStore.logo} alt={selectedStore.name} width={64} height={64} className="w-full h-full rounded-2xl object-cover" />
                 ) : (
                   <Store className="w-8 h-8 text-primary-600" />
                 )}

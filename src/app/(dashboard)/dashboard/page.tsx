@@ -4,6 +4,7 @@ import { StatsCard } from "@/components/dashboard/StatsCard";
 import { ShoppingBag, DollarSign, FolderTree, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
+import { ShareStoreButton } from "@/components/dashboard/ShareStoreButton";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -77,13 +78,19 @@ export default async function DashboardPage() {
             <h3 className="font-bold text-primary-900">رابط متجرك جاهز!</h3>
             <p className="text-sm text-primary-700 mt-1">شارك هذا الرابط مع عملائك لاستقبال الطلبات</p>
           </div>
-          <Link
-            href={store.domains?.[0]?.name ? `https://${store.domains[0].name}` : `https://${store.subdomain}.menura.site`}
-            target="_blank"
-            className="px-6 py-2 bg-white text-primary-600 font-bold rounded-xl border border-primary-200 hover:bg-primary-50 transition-colors"
-          >
-            زيارة المتجر
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <ShareStoreButton 
+              storeUrl={store.domains?.[0]?.name ? `https://${store.domains[0].name}` : `https://${store.subdomain}.menura.site`} 
+              storeName={store.name}
+            />
+            <Link
+              href={store.domains?.[0]?.name ? `https://${store.domains[0].name}` : `https://${store.subdomain}.menura.site`}
+              target="_blank"
+              className="px-6 py-2 bg-white text-primary-600 font-bold rounded-xl border border-primary-200 hover:bg-primary-50 transition-colors w-full sm:w-auto text-center"
+            >
+              زيارة المتجر
+            </Link>
+          </div>
         </div>
       )}
 

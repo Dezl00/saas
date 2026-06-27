@@ -12,6 +12,7 @@ import {
   MessageCircle
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import Image from "next/image";
 
 export default async function HomePage() {
   let platformName = "منصتك";
@@ -34,7 +35,7 @@ export default async function HomePage() {
             <div className="flex items-center gap-3">
               {platformLogo ? (
                 <div className="w-20 h-20 flex items-center justify-center">
-                  <img src={platformLogo} alt="Logo" className="w-full h-full object-contain" />
+                  <Image src={platformLogo} alt="Logo" width={80} height={80} className="w-full h-full object-contain" />
                 </div>
               ) : (
                 <div className="w-16 h-16 flex items-center justify-center">

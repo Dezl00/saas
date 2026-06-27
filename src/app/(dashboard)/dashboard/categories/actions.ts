@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createCategory(formData: FormData) {
   const session = await auth();
@@ -29,6 +29,7 @@ export async function createCategory(formData: FormData) {
     });
 
     revalidatePath("/dashboard/categories");
+    revalidateTag(`store-${session.user.storeId}`);
     return { success: "تم إضافة القسم بنجاح" };
   } catch (error) {
     console.error("Create Category Error:", error);
@@ -58,6 +59,7 @@ export async function toggleCategoryStatus(categoryId: string, currentStatus: bo
     });
 
     revalidatePath("/dashboard/categories");
+    revalidateTag(`store-${session.user.storeId}`);
     return { success: "تم تحديث حالة القسم" };
   } catch (error) {
     console.error("Toggle Category Error:", error);
@@ -93,6 +95,7 @@ export async function deleteCategory(categoryId: string) {
     });
 
     revalidatePath("/dashboard/categories");
+    revalidateTag(`store-${session.user.storeId}`);
     return { success: "تم حذف القسم بنجاح" };
   } catch (error) {
     console.error("Delete Category Error:", error);

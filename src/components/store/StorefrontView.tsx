@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "./CartProvider";
+import Image from "next/image";
 import { LayoutGrid, List, Filter, X, Plus, Minus, Check, ShoppingBag, Loader2 } from "lucide-react";
 
 type Size = { id: string; name: string; price: number };
@@ -168,7 +169,7 @@ export function StorefrontView({
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-surface-100 rounded-2xl overflow-hidden flex items-center justify-center shrink-0 border border-surface-200">
               {toastItem.image ? (
-                <img src={toastItem.image} alt={toastItem.name} className="w-full h-full object-cover" />
+                <Image src={toastItem.image} alt={toastItem.name} width={48} height={48} className="w-full h-full object-cover" />
               ) : (
                 <ShoppingBag className="w-5 h-5 text-surface-400" />
               )}
@@ -300,11 +301,13 @@ export function StorefrontView({
                     className="bg-white border border-surface-200 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:border-surface-400 transition-colors shadow-none"
                   >
                     {item.image ? (
-                      <div className="aspect-video w-full overflow-hidden bg-surface-100 border-b border-surface-200">
-                        <img 
+                      <div className="relative aspect-video w-full overflow-hidden bg-surface-100 border-b border-surface-200">
+                        <Image 
                           src={item.image} 
-                          alt={item.name} 
-                          className="w-full h-full object-cover"
+                          alt={item.name}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover"
                         />
                       </div>
                     ) : (
@@ -345,7 +348,7 @@ export function StorefrontView({
             {/* Modal Header Image */}
             <div className="relative h-48 sm:h-56 bg-surface-100 shrink-0">
               {selectedProduct.image ? (
-                <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                <Image src={selectedProduct.image} alt={selectedProduct.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center"><ShoppingBag className="w-10 h-10 text-surface-300" /></div>
               )}

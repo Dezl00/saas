@@ -4,6 +4,7 @@ import Link from "next/link";
 import { impersonateStore } from "./actions";
 import { StoreActions } from "./StoreActions";
 import { StoreTabs } from "./StoreTabs";
+import Image from "next/image";
 
 export default async function AdminStoresPage(props: { searchParams: Promise<{ status?: string }> }) {
   const searchParams = await props.searchParams;
@@ -49,7 +50,7 @@ export default async function AdminStoresPage(props: { searchParams: Promise<{ s
               <div className="flex items-center gap-4 flex-1">
                 <div className="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center flex-shrink-0 overflow-hidden border border-surface-200">
                   {store.logo ? (
-                    <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
+                    <Image src={store.logo} alt={store.name} width={56} height={56} className="w-full h-full object-cover" />
                   ) : (
                     <Store className="w-7 h-7 text-primary-600" />
                   )}

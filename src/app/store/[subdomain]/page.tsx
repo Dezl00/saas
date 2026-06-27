@@ -1,20 +1,27 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { StorefrontView } from "@/components/store/StorefrontView";
+import { cacheTag } from "next/cache";
 
-export default async function StorePage(props: { params: Promise<{ subdomain: string }> }) {
-  const params = await props.params;
+async function getCachedStorefrontData(subdomain: string) {
+  "use cache";
+  cacheTag(`store-${subdomain}`);
+
   const store = await prisma.store.findFirst({
     where: {
       OR: [
-        { subdomain: params.subdomain },
-        { domains: { some: { name: params.subdomain } } }
+        { subdomain: subdomain },
+        { domains: { some: { name: subdomain } } }
       ]
     },
-    include: {
+    select: {
+      name: true,
+      currency: true,
+      showDefaultProducts: true,
       categories: {
         where: { isActive: true },
-        orderBy: { sortOrder: 'asc' }
+        orderBy: { sortOrder: 'asc' },
+        select: { id: true, name: true }
       },
       menuItems: {
         where: { isAvailable: true },
@@ -22,17 +29,25 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
           { sortOrder: 'asc' },
           { id: 'asc' }
         ],
-        include: {
-          sizes: true,
-          addons: true,
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          image: true,
+          categoryId: true,
+          sizes: { select: { id: true, name: true, price: true } },
+          addons: { select: { id: true, name: true, price: true } }
         }
       }
     }
   });
 
   if (!store) {
-    notFound();
+    return null;
   }
+
+  cacheTag(`store-${store.id}`);
 
   let categoriesToDisplay = store.categories;
   let menuItemsToDisplay = store.menuItems;
@@ -40,10 +55,11 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
   if (store.categories.length === 0 && store.showDefaultProducts) {
     const defaultStore = await prisma.store.findUnique({
       where: { id: 'DEFAULT_STORE' },
-      include: {
+      select: {
         categories: {
           where: { isActive: true },
-          orderBy: { sortOrder: 'asc' }
+          orderBy: { sortOrder: 'asc' },
+          select: { id: true, name: true }
         },
         menuItems: {
           where: { isAvailable: true },
@@ -51,9 +67,15 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
             { sortOrder: 'asc' },
             { id: 'asc' }
           ],
-          include: {
-            sizes: true,
-            addons: true,
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            price: true,
+            image: true,
+            categoryId: true,
+            sizes: { select: { id: true, name: true, price: true } },
+            addons: { select: { id: true, name: true, price: true } }
           }
         }
       }
@@ -64,6 +86,19 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
       menuItemsToDisplay = defaultStore.menuItems;
     }
   }
+
+  return { store, categoriesToDisplay, menuItemsToDisplay };
+}
+
+export default async function StorePage(props: { params: Promise<{ subdomain: string }> }) {
+  const params = await props.params;
+  
+  const data = await getCachedStorefrontData(params.subdomain);
+  if (!data) {
+    notFound();
+  }
+
+  const { store, categoriesToDisplay, menuItemsToDisplay } = data;
 
   // Convert Decimal to numbers for client components
   const serializedMenuItems = menuItemsToDisplay.map(item => ({

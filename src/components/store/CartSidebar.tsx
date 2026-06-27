@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { X, Plus, Minus, ShoppingBag, Truck, Store as StoreIcon, Loader2, Check } from "lucide-react";
 import { useCart } from "./CartProvider";
 import { formatPrice, formatWhatsappNumber } from "@/lib/utils";
+import Image from "next/image";
 import { placeOrderAction } from "@/app/store/[subdomain]/actions";
 import toast from "react-hot-toast";
 
@@ -178,9 +179,11 @@ export function CartSidebar({
               items.map((item) => (
                 <div key={item.id} className="flex gap-4 bg-white border border-surface-100 rounded-3xl p-3 shadow-sm transition-all hover:shadow-md">
                   {item.image ? (
-                    <img
+                    <Image
                       src={item.image}
                       alt={item.name}
+                      width={80}
+                      height={80}
                       className="w-20 h-20 object-cover rounded-2xl border-none shadow-sm"
                     />
                   ) : (

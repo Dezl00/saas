@@ -4,6 +4,7 @@ import { Breadcrumb } from "@/components/dashboard/Breadcrumb";
 import { ShoppingBag, Truck, Store as StoreIcon, Clock } from "lucide-react";
 import { updateOrderStatus } from "./actions";
 import { formatPrice } from "@/lib/utils";
+import { Pagination } from "@/components/ui/Pagination";
 
 export const metadata = {
   title: "الطلبات | لوحة التحكم",
@@ -18,14 +19,23 @@ const statusMap: Record<string, { label: string, color: string }> = {
   CANCELLED: { label: "ملغي", color: "bg-error-100 text-error-800" },
 };
 
-export default async function OrdersPage() {
+export default async function OrdersPage(props: { searchParams: Promise<{ page?: string }> }) {
+  const searchParams = await props.searchParams;
+  const page = Number(searchParams.page) || 1;
+  const pageSize = 10;
+  
   const session = await auth();
   
   if (!session?.user?.storeId) {
     return null;
   }
 
-  const store = await prisma.store.findUnique({ where: { id: session.user.storeId } });
+  const [store, totalItems] = await Promise.all([
+    prisma.store.findUnique({ where: { id: session.user.storeId } }),
+    prisma.order.count({ where: { storeId: session.user.storeId } })
+  ]);
+  
+  const totalPages = Math.ceil(totalItems / pageSize);
   
   const orders = await prisma.order.findMany({
     where: { storeId: session.user.storeId },
@@ -34,7 +44,9 @@ export default async function OrdersPage() {
       items: true,
       branch: true,
       deliveryArea: true,
-    }
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize
   });
 
   return (
@@ -148,6 +160,12 @@ export default async function OrdersPage() {
           ))
         )}
       </div>
+      
+      {totalPages > 1 && (
+        <div className="mt-8">
+          <Pagination totalPages={totalPages} />
+        </div>
+      )}
     </div>
   );
 }

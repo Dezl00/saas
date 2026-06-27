@@ -7,6 +7,7 @@ import { MenuItemEditButton } from "@/components/dashboard/MenuItemEditButton";
 import { DeleteConfirmButton } from "@/components/dashboard/DeleteConfirmButton";
 import { GenerateImageButton } from "@/components/dashboard/GenerateImageButton";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 type MenuItemType = {
   id: string;
@@ -135,7 +136,7 @@ export function MenuItemsTable({
                     </td>
                     <td className="px-2 py-4">
                       {item.image ? (
-                        <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover bg-surface-100" />
+                        <Image src={item.image} alt={item.name} width={48} height={48} className="w-12 h-12 rounded-lg object-cover bg-surface-100" />
                       ) : (
                         <div className="w-12 h-12 rounded-lg bg-surface-100 flex items-center justify-center text-surface-400 border border-surface-200">
                           <ImageIcon className="w-5 h-5" />

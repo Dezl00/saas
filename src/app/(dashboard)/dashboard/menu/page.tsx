@@ -8,6 +8,7 @@ import { DeleteConfirmButton } from "@/components/dashboard/DeleteConfirmButton"
 import { MenuItemEditButton } from "@/components/dashboard/MenuItemEditButton";
 import { AIMenuScanner } from "@/components/dashboard/AIMenuScanner";
 import { MenuItemsTable } from "@/components/dashboard/MenuItemsTable";
+import { Pagination } from "@/components/ui/Pagination";
 
 export const metadata = {
   title: "إدارة المنيو | لوحة التحكم",
@@ -15,29 +16,39 @@ export const metadata = {
 
 export const maxDuration = 60;
 
-export default async function MenuPage() {
+export default async function MenuPage(props: { searchParams: Promise<{ page?: string }> }) {
+  const searchParams = await props.searchParams;
+  const page = Number(searchParams.page) || 1;
+  const pageSize = 10;
+  
   const session = await auth();
   
   if (!session?.user?.storeId) {
     return null;
   }
 
-  const [menuItems, categories] = await Promise.all([
-    prisma.menuItem.findMany({
-      where: { storeId: session.user.storeId },
-      orderBy: [
-        { category: { sortOrder: 'asc' } },
-        { sortOrder: 'asc' },
-        { createdAt: 'asc' },
-        { id: 'asc' }
-      ],
-      include: { category: true, sizes: true, addons: true }
-    }),
+  const [totalItems, categories] = await Promise.all([
+    prisma.menuItem.count({ where: { storeId: session.user.storeId } }),
     prisma.category.findMany({
       where: { storeId: session.user.storeId },
       orderBy: { sortOrder: 'asc' }
     })
   ]);
+
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  const menuItems = await prisma.menuItem.findMany({
+    where: { storeId: session.user.storeId },
+    orderBy: [
+      { category: { sortOrder: 'asc' } },
+      { sortOrder: 'asc' },
+      { createdAt: 'asc' },
+      { id: 'asc' }
+    ],
+    include: { category: true, sizes: true, addons: true },
+    skip: (page - 1) * pageSize,
+    take: pageSize
+  });
 
   return (
     <div className="animate-fade-in pb-10">
@@ -69,6 +80,11 @@ export default async function MenuPage() {
         {/* قائمة الأصناف */}
         <div className="xl:col-span-2">
           <MenuItemsTable menuItems={menuItems} categories={categories.map(c => ({ id: c.id, name: c.name }))} />
+          {totalPages > 1 && (
+            <div className="mt-4">
+              <Pagination totalPages={totalPages} />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { submitStep1, submitStep2, finishOnboarding } from "./actions";
 import { Loader2, ArrowLeft, Check, Store, Phone, ExternalLink, CloudUpload, ArrowRight, Rocket, Sparkles, CheckCircle2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function OnboardingClient({ 
   step, 
@@ -148,7 +149,7 @@ export function OnboardingClient({
                 
                 {logoPreview ? (
                   <div className="relative w-20 h-20 mx-auto rounded-xl overflow-hidden border border-surface-200">
-                    <img src={logoPreview} alt="Preview" className="w-full h-full object-cover" />
+                    <Image src={logoPreview} alt="Preview" fill className="object-cover" unoptimized />
                   </div>
                 ) : (
                   <>

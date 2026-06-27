@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createMenuItem(formData: FormData) {
   const session = await auth();
@@ -89,6 +89,7 @@ export async function createMenuItem(formData: FormData) {
     } else {
       revalidatePath("/dashboard/menu");
     }
+    revalidateTag(`store-${storeIdToUse}`);
     return { success: "تم إضافة الصنف بنجاح" };
   } catch (error: any) {
     console.error("Create Menu Item Error:", error);
@@ -179,6 +180,7 @@ export async function updateMenuItem(menuItemId: string, formData: FormData) {
     } else {
       revalidatePath("/dashboard/menu");
     }
+    revalidateTag(`store-${storeIdToUse}`);
     return { success: "تم تحديث الصنف بنجاح" };
   } catch (error: any) {
     console.error("Update Menu Item Error:", error);
@@ -216,6 +218,7 @@ export async function toggleMenuItemStatus(menuItemId: string, currentStatus: bo
     } else {
       revalidatePath("/dashboard/menu");
     }
+    revalidateTag(`store-${storeIdToUse}`);
     return { success: "تم تحديث حالة الصنف" };
   } catch (error) {
     console.error("Toggle Menu Item Error:", error);
@@ -252,6 +255,7 @@ export async function deleteMenuItem(menuItemId: string, targetStoreId?: string)
     } else {
       revalidatePath("/dashboard/menu");
     }
+    revalidateTag(`store-${storeIdToUse}`);
     return { success: "تم حذف الصنف بنجاح" };
   } catch (error) {
     console.error("Delete Menu Item Error:", error);
@@ -295,6 +299,7 @@ export async function bulkDeleteMenuItems(menuItemIds: string[], targetStoreId?:
     } else {
       revalidatePath("/dashboard/menu");
     }
+    revalidateTag(`store-${storeIdToUse}`);
     return { success: `تم حذف ${items.length} صنف بنجاح` };
   } catch (error: any) {
     console.error("Bulk Delete Menu Items Error:", error);

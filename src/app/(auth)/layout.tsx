@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Store } from "lucide-react";
-import { prisma } from "@/lib/prisma";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
+import Image from "next/image";
 
 export default async function AuthLayout({
   children,
@@ -26,7 +26,7 @@ export default async function AuthLayout({
         <Link href="/" className="flex flex-col items-center justify-center gap-4 mb-10 group">
           {platformLogo ? (
             <div className="w-24 h-24 flex items-center justify-center">
-              <img src={platformLogo} alt="Logo" className="w-full h-full object-contain" />
+              <Image src={platformLogo} alt="Logo" width={96} height={96} className="w-full h-full object-contain" />
             </div>
           ) : (
             <div className="w-16 h-16 rounded-2xl bg-surface-100 flex items-center justify-center border border-surface-200">

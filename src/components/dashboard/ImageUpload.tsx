@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { CloudUpload, X, ImageIcon } from "lucide-react";
+import Image from "next/image";
 
 interface ImageUploadProps {
   name: string;
@@ -116,7 +117,7 @@ export function ImageUpload({ name, defaultValue, className = "", label = "اخ�
 
         {preview ? (
           <div className="relative w-full h-48 group rounded-xl overflow-hidden border border-surface-200 bg-white">
-            <img src={preview} alt="Preview" className="w-full h-full object-contain" />
+            <Image src={preview} alt="Preview" fill className="object-contain" unoptimized />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
               <span className="text-white font-bold text-sm">تغيير الصورة</span>
             </div>

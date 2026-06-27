@@ -6,6 +6,7 @@ import { CartHeaderButton } from "@/components/store/CartHeaderButton";
 import { CartSidebar } from "@/components/store/CartSidebar";
 import { formatWhatsappNumber } from "@/lib/utils";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
+import Image from "next/image";
 
 // SVG Icons for Brands
 const FacebookIcon = ({ className }: { className?: string }) => (
@@ -151,7 +152,7 @@ export default async function StoreLayout({
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
             <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5">
               {store.logo ? (
-                <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
+                <Image src={store.logo} alt={store.name} width={128} height={128} className="w-full h-full object-cover" />
               ) : (
                 <StoreIcon className="w-12 h-12 text-primary-600" />
               )}
@@ -213,7 +214,7 @@ export default async function StoreLayout({
           <div className="max-w-5xl mx-auto px-4 text-center space-y-4">
             <div className="w-32 h-32 mx-auto flex items-center justify-center mb-4">
               {store.logo ? (
-                <img src={store.logo} alt={store.name} className="w-full h-full object-contain drop-shadow-sm" />
+                <Image src={store.logo} alt={store.name} width={128} height={128} className="w-full h-full object-contain drop-shadow-sm" />
               ) : (
                 <StoreIcon className="w-16 h-16 text-surface-400" />
               )}
