@@ -1,9 +1,20 @@
 "use client";
 
-import { useActionState, useState, startTransition } from "react";
-import { registerAction, verifyOtpAction, loginAction } from "../actions";
+import { useActionState, useState, startTransition, useEffect } from "react";
+import { registerAction, verifyFirebaseTokenAction, loginAction } from "../actions";
 import Link from "next/link";
 import { ArrowRight, Loader2, Mail, Lock, User, KeyRound, Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
+
+// Firebase
+import { auth } from "@/lib/firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
+
+declare global {
+  interface Window {
+    recaptchaVerifier: any;
+  }
+}
 
 export default function RegisterPage() {
   const [registerState, registerFormAction, isRegisterPending] = useActionState(registerAction, null);
@@ -16,8 +27,42 @@ export default function RegisterPage() {
   const [isOtpPending, setIsOtpPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Firebase state
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+
   // When register succeeds, it returns requiresOtp
   const requiresOtp = registerState?.requiresOtp;
+
+  useEffect(() => {
+    if (requiresOtp && registerState?.phone && !confirmationResult && !isSendingOtp && !otpError) {
+      sendFirebaseOtp(registerState.phone);
+    }
+  }, [requiresOtp, registerState, confirmationResult, isSendingOtp, otpError]);
+
+  const sendFirebaseOtp = async (phone: string) => {
+    try {
+      setIsSendingOtp(true);
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+          'size': 'invisible',
+        });
+      }
+
+      // Format phone to international if missing + (Assuming Egypt for now)
+      const formattedPhone = phone.startsWith("+") ? phone : `+2${phone}`;
+
+      const confirmation = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
+      setConfirmationResult(confirmation);
+      toast.success("تم إرسال كود التحقق لجوالك بنجاح");
+    } catch (error: any) {
+      console.error("SMS Error:", error);
+      toast.error("فشل إرسال رسالة التحقق.");
+      setOtpError("فشل إرسال كود التحقق. تأكد من إعدادات Firebase وصلاحية الرقم.");
+    } finally {
+      setIsSendingOtp(false);
+    }
+  };
 
   const handleOtpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,12 +72,26 @@ export default function RegisterPage() {
     const formData = new FormData(e.currentTarget);
     const otp = formData.get("otp") as string;
     
+    if (!confirmationResult) {
+      setOtpError("جلسة التحقق غير صالحة. يرجى إعادة تحميل الصفحة.");
+      setIsOtpPending(false);
+      return;
+    }
+
     try {
-      const result = await verifyOtpAction(savedEmail, otp);
-      if (result?.error) {
-        setOtpError(result.error);
+      // 1. Verify OTP with Firebase
+      const result = await confirmationResult.confirm(otp);
+      
+      // 2. Get the authenticated user's ID token
+      const idToken = await result.user.getIdToken();
+      
+      // 3. Send token to our server to verify and activate the account
+      const serverResult = await verifyFirebaseTokenAction(savedEmail, idToken);
+
+      if (serverResult?.error) {
+        setOtpError(serverResult.error);
         setIsOtpPending(false);
-      } else if (result?.success) {
+      } else if (serverResult?.success) {
         // OTP verified successfully! Now auto-login.
         const loginData = new FormData();
         loginData.append("email", savedEmail);
@@ -43,7 +102,8 @@ export default function RegisterPage() {
         });
       }
     } catch (error: any) {
-      setOtpError("حدث خطأ غير متوقع");
+      console.error(error);
+      setOtpError("الكود الذي أدخلته غير صحيح أو انتهت صلاحيته");
       setIsOtpPending(false);
     }
   };
@@ -51,14 +111,15 @@ export default function RegisterPage() {
   if (requiresOtp) {
     return (
       <div className="animate-fade-in">
+        <div id="recaptcha-container"></div>
         <div className="mb-6 text-center">
           <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-surface-200">
             <KeyRound className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold text-surface-950">تأكيد البريد الإلكتروني</h2>
+          <h2 className="text-2xl font-bold text-surface-950">تأكيد رقم الجوال</h2>
           <p className="mt-2 text-sm text-surface-800/60">
-            أرسلنا كود تحقق مكون من 4 أرقام إلى<br/>
-            <strong className="text-surface-950" dir="ltr">{savedEmail}</strong>
+            أرسلنا كود تحقق في رسالة SMS إلى<br/>
+            <strong className="text-surface-950" dir="ltr">{registerState?.phone}</strong>
           </p>
         </div>
 
@@ -78,19 +139,20 @@ export default function RegisterPage() {
               name="otp"
               type="text"
               required
-              maxLength={4}
-              className="block w-full px-3 py-3 text-center text-2xl tracking-[1em] bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-              placeholder="----"
+              maxLength={6}
+              disabled={isSendingOtp || !confirmationResult}
+              className="block w-full px-3 py-3 text-center text-2xl tracking-[1em] bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors disabled:opacity-50"
+              placeholder="------"
               dir="ltr"
             />
           </div>
 
           <button
             type="submit"
-            disabled={isOtpPending}
+            disabled={isOtpPending || isSendingOtp || !confirmationResult}
             className="w-full flex justify-center items-center py-3.5 px-4 mt-6 rounded-xl text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {isOtpPending ? (
+            {isOtpPending || isSendingOtp ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <>تأكيد الدخول</>
