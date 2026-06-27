@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Camera, Upload, X, Loader2, Sparkles, CheckCircle2, ListChecks, CheckSquare, Square } from "lucide-react";
+import { Camera, Upload, X, Loader2, Sparkles, CheckCircle2, ListChecks, CheckSquare, Square, FileText } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { importAIMenuItems } from "@/app/(dashboard)/dashboard/menu/ai-actions";
@@ -23,6 +23,7 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [fileType, setFileType] = useState<"image" | "pdf" | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [successResult, setSuccessResult] = useState<string | null>(null);
@@ -31,6 +32,7 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
   const [parsedData, setParsedData] = useState<{ categories: ParsedCategory[] } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const compressImage = (file: File): Promise<File> => {
     return new Promise((resolve) => {
@@ -73,21 +75,29 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (!selectedFile.type.startsWith("image/")) {
-        toast.error("يرجى اختيار صورة صحيحة");
+      if (!selectedFile.type.startsWith("image/") && selectedFile.type !== "application/pdf") {
+        toast.error("يرجى اختيار صورة أو ملف PDF صحيح");
         return;
       }
       
-      setIsScanning(true); // Show loader while compressing
-      const compressedFile = await compressImage(selectedFile);
-      setFile(compressedFile);
+      setIsScanning(true); // Show loader while processing
       
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
+      if (selectedFile.type === "application/pdf") {
+        setFileType("pdf");
+        setFile(selectedFile);
         setIsScanning(false);
-      };
-      reader.readAsDataURL(compressedFile);
+      } else {
+        setFileType("image");
+        const compressedFile = await compressImage(selectedFile);
+        setFile(compressedFile);
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setImage(event.target?.result as string);
+          setIsScanning(false);
+        };
+        reader.readAsDataURL(compressedFile);
+      }
     }
   };
 
@@ -184,6 +194,7 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
     setIsOpen(false);
     setImage(null);
     setFile(null);
+    setFileType(null);
     setIsScanning(false);
     setIsImporting(false);
     setSuccessResult(null);
@@ -232,26 +243,38 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
             </div>
 
             <div className="p-6 overflow-y-auto flex-1">
-              {!image ? (
-                <div 
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full h-48 border-2 border-dashed border-purple-200 rounded-2xl flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors group"
-                >
-                  <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Camera className="w-6 h-6 text-purple-600" />
-                  </div>
-                  <div className="text-center">
-                    <p className="font-bold text-purple-900">اضغط لالتقاط أو رفع صورة المنيو</p>
-                    <p className="text-xs text-purple-600/70 mt-1">يُفضل أن تكون الصورة واضحة وبإضاءة جيدة</p>
-                  </div>
+              {!file ? (
+                <div className="flex flex-col sm:flex-row gap-4 mt-2">
+                  <button 
+                    onClick={() => cameraInputRef.current?.click()}
+                    className="flex-1 h-32 border-2 border-dashed border-purple-200 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors"
+                  >
+                    <Camera className="w-8 h-8 text-purple-600" />
+                    <span className="font-bold text-purple-900">تصوير المنيو</span>
+                  </button>
+                  <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex-1 h-32 border-2 border-dashed border-indigo-200 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-indigo-500 hover:bg-indigo-50 transition-colors"
+                  >
+                    <Upload className="w-8 h-8 text-indigo-600" />
+                    <span className="font-bold text-indigo-900">اختيار صورة أو ملف PDF</span>
+                  </button>
                 </div>
               ) : !parsedData ? (
                 <div className="space-y-4">
-                  <div className="relative w-full h-48 rounded-2xl overflow-hidden border border-surface-200 shadow-inner">
-                    <Image src={image} alt="Menu preview" fill className="object-cover" unoptimized />
+                  <div className="relative w-full h-48 rounded-2xl overflow-hidden border border-surface-200 shadow-inner bg-surface-50 flex flex-col items-center justify-center">
+                    {fileType === "image" && image ? (
+                      <Image src={image} alt="Menu preview" fill className="object-cover" unoptimized />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center gap-2 text-indigo-600">
+                        <FileText className="w-12 h-12" />
+                        <span className="font-bold">تم إرفاق ملف PDF</span>
+                      </div>
+                    )}
+                    
                     {!isScanning && !successResult && (
                       <button 
-                        onClick={() => { setImage(null); setFile(null); }}
+                        onClick={() => { setImage(null); setFile(null); setFileType(null); }}
                         className="absolute top-2 end-2 w-8 h-8 bg-black/50 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-black/70 transition-colors"
                       >
                         <X className="w-4 h-4" />
@@ -363,10 +386,17 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
 
               <input
                 type="file"
-                ref={fileInputRef}
+                ref={cameraInputRef}
                 onChange={handleFileChange}
                 accept="image/*"
                 capture="environment"
+                className="hidden"
+              />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*,application/pdf"
                 className="hidden"
               />
             </div>
