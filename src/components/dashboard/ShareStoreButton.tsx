@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Share2, Download, X, Copy, Check } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
 
-export function ShareStoreButton({ storeUrl, storeName }: { storeUrl: string, storeName?: string }) {
+export function ShareStoreButton({ storeUrl, storeName, qrUrl }: { storeUrl: string, storeName?: string, qrUrl?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
@@ -70,7 +70,7 @@ export function ShareStoreButton({ storeUrl, storeName }: { storeUrl: string, st
                 <div className="p-4 bg-white rounded-2xl shadow-sm border border-surface-100">
                   <QRCodeCanvas
                     id="store-qr-code"
-                    value={storeUrl}
+                    value={qrUrl || storeUrl}
                     size={200}
                     level="H"
                     includeMargin={true}

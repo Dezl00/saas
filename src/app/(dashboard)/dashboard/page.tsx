@@ -82,6 +82,7 @@ export default async function DashboardPage() {
             <ShareStoreButton 
               storeUrl={store.domains?.[0]?.name ? `https://${store.domains[0].name}` : `https://${store.subdomain}.menura.site`} 
               storeName={store.name}
+              qrUrl={`https://menura.site/qr/${store.id}`}
             />
             <Link
               href={store.domains?.[0]?.name ? `https://${store.domains[0].name}` : `https://${store.subdomain}.menura.site`}
