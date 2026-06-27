@@ -364,6 +364,8 @@ model PlatformSetting {
   name            String   @default("منصتك")
   logo            String?
   supportWhatsapp String?
+  enableEmailOtp  Boolean  @default(false)
+  enablePhoneOtp  Boolean  @default(true)
   updatedAt       DateTime @updatedAt
 }
 

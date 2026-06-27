@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState, startTransition, useEffect } from "react";
-import { registerAction, verifyFirebaseTokenAction, loginAction } from "../actions";
+import { registerAction, verifyFirebaseTokenAction, verifyOtpAction, loginAction } from "../actions";
 import Link from "next/link";
 import { ArrowRight, Loader2, Mail, Lock, User, KeyRound, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
@@ -35,10 +35,22 @@ export default function RegisterPage() {
   const requiresOtp = registerState?.requiresOtp;
 
   useEffect(() => {
-    if (requiresOtp && registerState?.phone && !confirmationResult && !isSendingOtp && !otpError) {
+    if (requiresOtp === 'PHONE' && registerState?.phone && !confirmationResult && !isSendingOtp && !otpError) {
       sendFirebaseOtp(registerState.phone);
     }
   }, [requiresOtp, registerState, confirmationResult, isSendingOtp, otpError]);
+
+  useEffect(() => {
+    if (requiresOtp === false && registerState?.email) {
+      // No OTP required, auto login
+      const loginData = new FormData();
+      loginData.append("email", savedEmail || registerState.email);
+      loginData.append("password", savedPassword || registerState.values?.password);
+      startTransition(() => {
+        loginAction(null, loginData);
+      });
+    }
+  }, [requiresOtp, registerState, savedEmail, savedPassword]);
 
   const sendFirebaseOtp = async (phone: string) => {
     try {
@@ -72,21 +84,22 @@ export default function RegisterPage() {
     const formData = new FormData(e.currentTarget);
     const otp = formData.get("otp") as string;
     
-    if (!confirmationResult) {
+    if (requiresOtp === 'PHONE' && !confirmationResult) {
       setOtpError("جلسة التحقق غير صالحة. يرجى إعادة تحميل الصفحة.");
       setIsOtpPending(false);
       return;
     }
 
     try {
-      // 1. Verify OTP with Firebase
-      const result = await confirmationResult.confirm(otp);
+      let serverResult;
       
-      // 2. Get the authenticated user's ID token
-      const idToken = await result.user.getIdToken();
-      
-      // 3. Send token to our server to verify and activate the account
-      const serverResult = await verifyFirebaseTokenAction(savedEmail, idToken);
+      if (requiresOtp === 'PHONE') {
+        const result = await confirmationResult!.confirm(otp);
+        const idToken = await result.user.getIdToken();
+        serverResult = await verifyFirebaseTokenAction(savedEmail, idToken);
+      } else if (requiresOtp === 'EMAIL') {
+        serverResult = await verifyOtpAction(savedEmail, otp);
+      }
 
       if (serverResult?.error) {
         setOtpError(serverResult.error);
@@ -139,8 +152,8 @@ export default function RegisterPage() {
               name="otp"
               type="text"
               required
-              maxLength={6}
-              disabled={isSendingOtp || !confirmationResult}
+              maxLength={requiresOtp === 'PHONE' ? 6 : 4}
+              disabled={(requiresOtp === 'PHONE' && (isSendingOtp || !confirmationResult))}
               className="block w-full px-3 py-3 text-center text-2xl tracking-[1em] bg-surface-50 border border-surface-200 rounded-xl text-surface-950 placeholder-surface-800/40 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors disabled:opacity-50"
               placeholder="------"
               dir="ltr"
@@ -149,7 +162,7 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            disabled={isOtpPending || isSendingOtp || !confirmationResult}
+            disabled={isOtpPending || (requiresOtp === 'PHONE' && (isSendingOtp || !confirmationResult))}
             className="w-full flex justify-center items-center py-3.5 px-4 mt-6 rounded-xl text-sm font-bold text-white bg-primary-600 hover:bg-primary-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isOtpPending || isSendingOtp ? (
@@ -159,6 +172,15 @@ export default function RegisterPage() {
             )}
           </button>
         </form>
+      </div>
+    );
+  }
+
+  if (requiresOtp === false && registerState?.email) {
+    return (
+      <div className="animate-fade-in flex flex-col items-center justify-center py-12">
+        <Loader2 className="w-12 h-12 text-primary-600 animate-spin mb-4" />
+        <h2 className="text-xl font-bold text-surface-950">جاري تسجيل الدخول...</h2>
       </div>
     );
   }

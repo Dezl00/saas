@@ -74,6 +74,48 @@ export default async function AdminSettingsPage() {
               <ImageUpload name="logo" label="الشعار (Logo)" defaultValue={settings?.logo} />
             </div>
 
+            <div className="pt-4 border-t border-surface-100">
+              <h4 className="text-sm font-semibold text-surface-950 mb-3">خيارات التحقق (OTP)</h4>
+              
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 p-3 bg-surface-50 border border-surface-200 rounded-xl cursor-pointer hover:bg-surface-100 transition-colors">
+                  <div className="relative flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="enableEmailOtp" 
+                      value="true"
+                      defaultChecked={settings?.enableEmailOtp} 
+                      className="w-5 h-5 text-primary-600 bg-white border-surface-300 rounded focus:ring-primary-500 focus:ring-2"
+                    />
+                  </div>
+                  <div>
+                    <span className="block text-sm font-medium text-surface-950">تفعيل التحقق بالبريد الإلكتروني</span>
+                    <span className="block text-xs text-surface-500">إرسال كود من 4 أرقام عبر الإيميل</span>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 p-3 bg-surface-50 border border-surface-200 rounded-xl cursor-pointer hover:bg-surface-100 transition-colors">
+                  <div className="relative flex items-center">
+                    <input 
+                      type="checkbox" 
+                      name="enablePhoneOtp" 
+                      value="true"
+                      defaultChecked={settings?.enablePhoneOtp ?? true} 
+                      className="w-5 h-5 text-primary-600 bg-white border-surface-300 rounded focus:ring-primary-500 focus:ring-2"
+                    />
+                  </div>
+                  <div>
+                    <span className="block text-sm font-medium text-surface-950">تفعيل التحقق برقم الهاتف (SMS)</span>
+                    <span className="block text-xs text-surface-500">إرسال كود من 6 أرقام عبر Firebase</span>
+                  </div>
+                </label>
+                
+                <p className="text-xs text-surface-500 bg-surface-50 p-2 rounded-lg mt-2">
+                  * إذا قمت بإيقاف الخيارين معاً، سيتمكن المستخدم من تسجيل الدخول مباشرة بدون الحاجة لأي رمز تحقق.
+                </p>
+              </div>
+            </div>
+
             <SubmitButton
               className="mt-6 w-full py-3 px-8 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
             >

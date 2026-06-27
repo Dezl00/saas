@@ -84,15 +84,36 @@ export async function registerAction(prevState: any, formData: FormData) {
       where: { email: validatedData.email },
     });
 
-    // Remove Email OTP logic for Firebase SMS implementation
-    // const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
-    // const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+    const settings = await prisma.platformSetting.findUnique({ where: { id: "1" } });
+    const enablePhoneOtp = settings?.enablePhoneOtp ?? true;
+    const enableEmailOtp = settings?.enableEmailOtp ?? false;
+
+    let isVerified = false;
+    let requiresOtp: false | 'PHONE' | 'EMAIL' = false;
+
+    if (!enablePhoneOtp && !enableEmailOtp) {
+      isVerified = true;
+    } else if (enablePhoneOtp && rawData.phone) {
+      requiresOtp = 'PHONE';
+    } else if (enableEmailOtp) {
+      requiresOtp = 'EMAIL';
+    } else {
+      isVerified = true;
+    }
+
+    const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
+    const otpExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
 
     if (existingUser) {
       if (existingUser.isVerified) {
         return { error: "البريد الإلكتروني مستخدم بالفعل", values: rawData };
       }
-      // If not verified, just continue to OTP step without changing anything
+      if (requiresOtp === 'EMAIL') {
+        await prisma.user.update({
+          where: { email: validatedData.email },
+          data: { otpCode, otpExpiry }
+        });
+      }
     } else {
       const hashedPassword = await bcrypt.hash(validatedData.password, 10);
 
@@ -103,7 +124,9 @@ export async function registerAction(prevState: any, formData: FormData) {
           password: hashedPassword,
           phone: rawData.phone as string,
           role: "OWNER",
-          isVerified: false,
+          isVerified,
+          otpCode: requiresOtp === 'EMAIL' ? otpCode : null,
+          otpExpiry: requiresOtp === 'EMAIL' ? otpExpiry : null,
         },
       });
 
@@ -115,9 +138,32 @@ export async function registerAction(prevState: any, formData: FormData) {
           userId: user.id,
         },
       });
+      
+      // If automatically verified (both OTPs disabled), notify admin immediately
+      if (isVerified) {
+        try {
+          await prisma.adminNotification.create({
+            data: {
+              title: "مستخدم جديد",
+              message: `سجل ${user.name} حساباً جديداً بالمنصة (بدون تحقق).`,
+              type: "NEW_USER",
+              link: `/admin/users`
+            }
+          });
+        } catch (e) {
+          console.error("Failed to notify admin", e);
+        }
+      }
     }
 
-    return { requiresOtp: true, email: validatedData.email, phone: rawData.phone as string, values: rawData };
+    if (requiresOtp === 'EMAIL') {
+      const sent = await sendOTP(validatedData.email, otpCode);
+      if (!sent) {
+        return { error: "حدث خطأ أثناء إرسال كود التحقق. يرجى المحاولة لاحقاً.", values: rawData };
+      }
+    }
+
+    return { requiresOtp, email: validatedData.email, phone: rawData.phone as string, values: rawData };
   } catch (error) {
     console.error("REGISTER ERROR:", error);
     const rawData = Object.fromEntries(formData);
@@ -128,6 +174,40 @@ export async function registerAction(prevState: any, formData: FormData) {
       }
     }
     return { error: "خطأ داخلي: " + (error instanceof Error ? error.message : String(error)), values: rawData };
+  }
+}
+
+export async function verifyOtpAction(email: string, otp: string) {
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return { error: "المستخدم غير موجود" };
+    if (user.isVerified) return { error: "الحساب مفعل مسبقاً" };
+    
+    if (user.otpCode !== otp) return { error: "الكود غير صحيح" };
+    if (user.otpExpiry && user.otpExpiry < new Date()) return { error: "الكود منتهي الصلاحية" };
+
+    await prisma.user.update({
+      where: { email },
+      data: { isVerified: true, otpCode: null, otpExpiry: null }
+    });
+
+    // Notify Admins
+    try {
+      await prisma.adminNotification.create({
+        data: {
+          title: "مستخدم جديد",
+          message: `سجل ${user.name} حساباً جديداً بالمنصة (مفعل بالبريد).`,
+          type: "NEW_USER",
+          link: `/admin/users`
+        }
+      });
+    } catch (e) {
+      console.error("Failed to notify admin", e);
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { error: "حدث خطأ أثناء التحقق من الكود" };
   }
 }
 

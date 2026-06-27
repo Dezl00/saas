@@ -10,6 +10,9 @@ export async function updatePlatformSettings(formData: FormData) {
 
   const name = formData.get("name") as string;
   const supportWhatsapp = formData.get("supportWhatsapp") as string;
+  const enableEmailOtp = formData.get("enableEmailOtp") === "true";
+  const enablePhoneOtp = formData.get("enablePhoneOtp") === "true";
+  
   let logoStr: string | File | null | undefined = formData.get("logo") as string | File | null;
   if (logoStr && typeof logoStr !== "string" && logoStr.size > 0) {
     const { uploadImageToCloudinary } = await import("@/lib/upload");
@@ -30,12 +33,16 @@ export async function updatePlatformSettings(formData: FormData) {
     update: { 
       name, 
       supportWhatsapp,
+      enableEmailOtp,
+      enablePhoneOtp,
       ...(logoStr !== undefined ? { logo: logoStr as string } : {}) 
     },
     create: { 
       id: "1", 
       name, 
       supportWhatsapp,
+      enableEmailOtp,
+      enablePhoneOtp,
       logo: (logoStr as string) || "" 
     },
   });
