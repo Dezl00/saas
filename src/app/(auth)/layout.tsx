@@ -22,7 +22,6 @@ export default async function AuthLayout({
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center px-4 py-12 sm:px-6 lg:px-8 relative">
-      <PageTransitionLoader colorClass="text-primary-600" />
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 animate-fade-in">
         <Link href="/" className="flex flex-col items-center justify-center gap-4 mb-10 group">
           {platformLogo ? (
