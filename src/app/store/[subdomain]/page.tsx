@@ -15,6 +15,7 @@ async function getCachedStorefrontData(subdomain: string) {
       ]
     },
     select: {
+      id: true,
       name: true,
       currency: true,
       showDefaultProducts: true,

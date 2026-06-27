@@ -36,7 +36,7 @@ export function AIMenuScanner({ storeId }: { storeId?: string }) {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const img = new Image();
+        const img = new window.Image();
         img.onload = () => {
           const canvas = document.createElement("canvas");
           let width = img.width;
