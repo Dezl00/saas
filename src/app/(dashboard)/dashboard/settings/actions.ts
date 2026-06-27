@@ -64,11 +64,14 @@ export async function updateSubdomain(formData: FormData) {
 
   // customDomain logic moved to domain-actions.ts
 
-  const subdomain = formData.get("subdomain") as string;
+  let subdomain = formData.get("subdomain") as string;
 
   if (!subdomain || subdomain.trim() === "") {
     return { error: "يرجى كتابة الرابط أولاً" };
   }
+
+  // Format the subdomain: trim, lowercase, replace spaces with hyphens
+  subdomain = subdomain.trim().toLowerCase().replace(/\s+/g, '-');
 
   // التأكد من صيغة الرابط (أحرف إنجليزية وأرقام وشرطة فقط)
   const regex = /^[a-z0-9-]+$/;

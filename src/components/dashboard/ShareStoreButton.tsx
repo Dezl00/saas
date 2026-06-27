@@ -51,8 +51,8 @@ export function ShareStoreButton({ storeUrl, storeName }: { storeUrl: string, st
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-950/40 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-xl animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-950/40 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-4 border-b border-surface-100">
               <h3 className="font-bold text-surface-950 text-lg">مشاركة المتجر</h3>
@@ -95,7 +95,7 @@ export function ShareStoreButton({ storeUrl, storeName }: { storeUrl: string, st
             <div className="p-4 border-t border-surface-100 space-y-3">
               <button
                 onClick={handleShare}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors"
               >
                 <Share2 className="w-5 h-5" />
                 مشاركة مع الأصدقاء
@@ -107,7 +107,7 @@ export function ShareStoreButton({ storeUrl, storeName }: { storeUrl: string, st
                   setIsCopied(true);
                   setTimeout(() => setIsCopied(false), 2000);
                 }}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-surface-100 hover:bg-surface-200 text-surface-700 font-bold rounded-xl transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 bg-surface-100 hover:bg-surface-200 text-surface-700 font-medium rounded-xl transition-colors"
               >
                 {isCopied ? (
                   <>
