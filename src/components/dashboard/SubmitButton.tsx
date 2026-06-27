@@ -8,21 +8,11 @@ import { Loader2 } from "lucide-react";
 export function SubmitButton({ 
   children, 
   className, 
-  successMessage = "تم الحفظ بنجاح" 
 }: { 
   children: React.ReactNode; 
   className?: string;
-  successMessage?: string;
 }) {
   const { pending } = useFormStatus();
-  const wasPending = useRef(false);
-
-  useEffect(() => {
-    if (wasPending.current && !pending) {
-      toast.success(successMessage);
-    }
-    wasPending.current = pending;
-  }, [pending, successMessage]);
 
   return (
     <button type="submit" disabled={pending} className={className}>

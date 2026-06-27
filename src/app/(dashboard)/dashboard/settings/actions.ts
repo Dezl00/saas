@@ -48,7 +48,7 @@ export async function updateStoreSettings(formData: FormData) {
       },
     });
 
-    revalidatePath("/dashboard/settings");
+    revalidatePath("/", "layout");
     return { success: "تم حفظ الإعدادات الأساسية بنجاح" };
   } catch (error) {
     console.error("Update Store Error:", error);
@@ -94,7 +94,7 @@ export async function updateSubdomain(formData: FormData) {
       data: { subdomain },
     });
 
-    revalidatePath("/dashboard/settings");
+    revalidatePath("/", "layout");
     return { success: "تم حجز الرابط بنجاح! متجرك الآن متاح عبر هذا الرابط." };
   } catch (error) {
     console.error("Update Subdomain Error:", error);
@@ -140,7 +140,7 @@ export async function updateContactSettings(formData: FormData) {
       },
     });
 
-    revalidatePath("/dashboard/settings");
+    revalidatePath("/", "layout");
     return { success: "تم حفظ إعدادات التواصل بنجاح" };
   } catch (error) {
     console.error("Update Contact Error:", error);

@@ -6,6 +6,7 @@ import { Globe, Store, Save, Share2, MessageCircle } from "lucide-react";
 import { updateStoreSettings, updateSubdomain, updateContactSettings } from "./actions";
 import { SubmitButton } from "@/components/dashboard/SubmitButton";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
+import { ClientForm } from "@/components/dashboard/ClientForm";
 
 export const metadata = {
   title: "إعدادات المتجر | لوحة التحكم",
@@ -43,7 +44,7 @@ export default async function SettingsPage() {
             اختر الرابط الخاص بمتجرك والذي ستقوم بمشاركته مع عملائك.
           </p>
 
-          <form action={updateSubdomain as any} className="max-w-xl">
+          <ClientForm action={updateSubdomain as any} className="max-w-xl">
             <div className="flex flex-col sm:flex-row gap-4 items-end">
               <div className="flex-1 w-full">
                 <label htmlFor="subdomain" className="block text-sm font-medium text-surface-950 mb-1">
@@ -83,7 +84,7 @@ export default async function SettingsPage() {
                 </a>
               </div>
             )}
-          </form>
+          </ClientForm>
         </div>
 
         {/* إعدادات الدومين الخاص (Custom Domain) */}
@@ -108,7 +109,7 @@ export default async function SettingsPage() {
             البيانات الأساسية
           </h3>
           
-          <form action={updateStoreSettings as any} className="space-y-4">
+          <ClientForm action={updateStoreSettings as any} className="space-y-4">
             <div>
               <label htmlFor="store_name" className="block text-sm font-medium text-surface-950 mb-1">
                 اسم المتجر *
@@ -207,7 +208,7 @@ export default async function SettingsPage() {
               <Save className="w-5 h-5" />
               حفظ التغييرات الأساسية
             </SubmitButton>
-          </form>
+          </ClientForm>
         </div>
 
         {/* بيانات التواصل والسوشيال ميديا */}
@@ -217,7 +218,7 @@ export default async function SettingsPage() {
             بيانات التواصل والسوشيال ميديا
           </h3>
 
-          <form action={updateContactSettings as any} className="space-y-6">
+          <ClientForm action={updateContactSettings as any} className="space-y-6">
             
             <div className="bg-success-50/50 p-6 rounded-2xl border border-success-100">
               <h4 className="font-bold text-surface-950 mb-4 flex items-center gap-2">
@@ -400,7 +401,7 @@ export default async function SettingsPage() {
               <Save className="w-5 h-5" />
               حفظ بيانات التواصل
             </SubmitButton>
-          </form>
+          </ClientForm>
         </div>
 
       </div>
