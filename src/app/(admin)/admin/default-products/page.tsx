@@ -15,6 +15,7 @@ export const metadata = {
 };
 
 export const maxDuration = 60;
+export const dynamic = "force-dynamic";
 
 export default async function DefaultProductsPage(props: {
   searchParams: Promise<{ tab?: string }>;
