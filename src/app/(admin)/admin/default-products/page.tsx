@@ -15,11 +15,13 @@ export const metadata = {
 };
 
 export const maxDuration = 60;
-export const dynamic = "force-dynamic";
+
+import { connection } from "next/server";
 
 export default async function DefaultProductsPage(props: {
   searchParams: Promise<{ tab?: string }>;
 }) {
+  await connection();
   const searchParams = await props.searchParams;
   const session = await auth();
   

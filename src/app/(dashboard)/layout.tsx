@@ -4,12 +4,14 @@ import { cookies } from "next/headers";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Toaster } from "react-hot-toast";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
+import { connection } from "next/server";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
   const session = await auth();
 
   if (!session || (session.user.role !== "OWNER" && session.user.role !== "ADMIN")) {

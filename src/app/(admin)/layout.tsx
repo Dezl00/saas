@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
@@ -16,12 +14,14 @@ import {
 import { GlobalSearch } from "@/components/admin/GlobalSearch";
 import { AdminHeaderNotifications } from "@/components/admin/AdminHeaderNotifications";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
+import { connection } from "next/server";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
   const session = await auth();
 
   if (!session || session.user.role !== "ADMIN") {
