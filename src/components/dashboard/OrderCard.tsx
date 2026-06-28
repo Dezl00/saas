@@ -4,7 +4,7 @@ import { useOptimistic, useTransition } from "react";
 import { Clock, Truck, Store as StoreIcon } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { updateOrderStatus } from "@/app/(dashboard)/dashboard/orders/actions";
-import { Order, OrderItem, Branch, DeliveryArea } from "@prisma/client";
+import { Order, OrderItem, Branch, DeliveryArea, OrderStatus } from "@prisma/client";
 
 const statusMap: Record<string, { label: string, color: string }> = {
   PENDING: { label: "قيد الانتظار", color: "bg-yellow-100 text-yellow-800" },
@@ -23,9 +23,9 @@ type OrderWithRelations = Order & {
 
 export function OrderCard({ order, currency }: { order: OrderWithRelations, currency?: string }) {
   const [isPending, startTransition] = useTransition();
-  const [optimisticStatus, addOptimisticStatus] = useOptimistic(
+  const [optimisticStatus, addOptimisticStatus] = useOptimistic<OrderStatus, string>(
     order.status,
-    (state, newStatus: string) => newStatus
+    (state: OrderStatus, newStatus: string) => newStatus as OrderStatus
   );
 
   async function handleStatusUpdate(formData: FormData) {

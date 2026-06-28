@@ -35,15 +35,9 @@ export async function getStoreInfo(subdomain: string) {
       snapchatUrl: true,
       showSnapchat: true,
       showDefaultProducts: true,
-      // @ts-ignore - Some properties may be dynamic
-      cover: true, 
-      // @ts-ignore
-      coverOverlayColor: true, 
-      // @ts-ignore
-      coverOverlayOpacity: true,
       branches: { 
         where: { isActive: true },
-        select: { id: true, name: true }
+        select: { id: true, name: true, address: true }
       },
       deliveryAreas: { 
         where: { isActive: true },
