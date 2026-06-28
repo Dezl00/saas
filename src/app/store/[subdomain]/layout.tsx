@@ -3,11 +3,7 @@ import { notFound } from "next/navigation";
 import { Store as StoreIcon, ShoppingBag, MapPin, Phone, MessageCircle, Link as LinkIcon } from "lucide-react";
 import { CartProvider } from "@/components/store/CartProvider";
 import { CartHeaderButton } from "@/components/store/CartHeaderButton";
-import dynamic from "next/dynamic";
-
-const CartSidebar = dynamic(() => import("@/components/store/CartSidebar").then(mod => mod.CartSidebar), { 
-  ssr: false 
-});
+import { DynamicCartSidebar as CartSidebar } from "@/components/store/DynamicCartSidebar";
 import { formatWhatsappNumber } from "@/lib/utils";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
 import Image from "next/image";
