@@ -134,7 +134,7 @@ export default async function StoreLayout({
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
             <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5 relative">
               {store.logo ? (
-                <Image src={store.logo} alt={store.name} fill className="object-cover" sizes="(max-width: 640px) 128px, 160px" />
+                <Image src={store.logo} alt={store.name} fill className="object-cover" sizes="(max-width: 640px) 128px, 160px" priority fetchPriority="high" />
               ) : (
                 <StoreIcon className="w-12 h-12 text-primary-600" />
               )}
