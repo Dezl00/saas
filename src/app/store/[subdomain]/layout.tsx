@@ -3,10 +3,15 @@ import { notFound } from "next/navigation";
 import { Store as StoreIcon, ShoppingBag, MapPin, Phone, MessageCircle, Link as LinkIcon } from "lucide-react";
 import { CartProvider } from "@/components/store/CartProvider";
 import { CartHeaderButton } from "@/components/store/CartHeaderButton";
-import { CartSidebar } from "@/components/store/CartSidebar";
+import dynamic from "next/dynamic";
+
+const CartSidebar = dynamic(() => import("@/components/store/CartSidebar").then(mod => mod.CartSidebar), { 
+  ssr: false 
+});
 import { formatWhatsappNumber } from "@/lib/utils";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
 import Image from "next/image";
+import { getStoreInfo } from "./data";
 
 // SVG Icons for Brands
 const FacebookIcon = ({ className }: { className?: string }) => (
@@ -47,14 +52,7 @@ const SnapchatIcon = ({ className }: { className?: string }) => (
 
 export async function generateMetadata(props: { params: Promise<{ subdomain: string }> }) {
   const params = await props.params;
-  const store = await prisma.store.findFirst({
-    where: {
-      OR: [
-        { subdomain: params.subdomain },
-        { domains: { some: { name: params.subdomain } } }
-      ]
-    },
-  });
+  const store = await getStoreInfo(params.subdomain);
 
   if (!store) return { title: "المتجر غير موجود" };
 
@@ -72,18 +70,7 @@ export default async function StoreLayout({
   params: Promise<{ subdomain: string }>;
 }) {
   const params = await paramsPromise;
-  const storePromise = prisma.store.findFirst({
-    where: {
-      OR: [
-        { subdomain: params.subdomain },
-        { domains: { some: { name: params.subdomain } } }
-      ]
-    },
-    include: {
-      branches: { where: { isActive: true } },
-      deliveryAreas: { where: { isActive: true } }
-    }
-  });
+  const storePromise = getStoreInfo(params.subdomain);
 
   const settingsPromise = prisma.platformSetting.findUnique({ where: { id: "1" } });
 
@@ -149,9 +136,9 @@ export default async function StoreLayout({
             </>
           )}
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center relative z-10">
-            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-full border border-surface-200 flex items-center justify-center overflow-hidden mb-5 relative">
               {store.logo ? (
-                <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
+                <Image src={store.logo} alt={store.name} fill className="object-cover" sizes="(max-width: 640px) 128px, 160px" />
               ) : (
                 <StoreIcon className="w-12 h-12 text-primary-600" />
               )}
@@ -211,9 +198,9 @@ export default async function StoreLayout({
         {/* Footer */}
         <footer className="bg-surface-50 border-t border-surface-200 mt-12 py-10">
           <div className="max-w-5xl mx-auto px-4 text-center space-y-4">
-            <div className="w-32 h-32 mx-auto flex items-center justify-center mb-4">
+            <div className="w-32 h-32 mx-auto flex items-center justify-center mb-4 relative">
               {store.logo ? (
-                <img src={store.logo} alt={store.name} className="w-full h-full object-contain drop-shadow-sm" />
+                <Image src={store.logo} alt={store.name} fill className="object-contain drop-shadow-sm" sizes="128px" />
               ) : (
                 <StoreIcon className="w-16 h-16 text-surface-400" />
               )}

@@ -57,6 +57,7 @@ export default async function AdminLayout({
             <Link
               key={item.href}
               href={item.href}
+              prefetch={true}
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-surface-800/70 hover:bg-surface-50 hover:text-surface-950 transition-all group"
             >
               <item.icon className="w-5 h-5 group-hover:text-primary-500 transition-colors" />

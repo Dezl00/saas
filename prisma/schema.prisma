@@ -338,6 +338,7 @@ model Order {
   @@index([storeId])
   @@index([storeId, status])
   @@index([storeId, createdAt])
+  @@index([storeId, paymentStatus])
 }
 
 model OrderItem {

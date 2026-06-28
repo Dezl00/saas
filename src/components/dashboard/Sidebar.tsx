@@ -62,10 +62,13 @@ export function Sidebar() {
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+          const shouldPrefetch = ["/dashboard", "/dashboard/orders", "/dashboard/menu"].includes(item.href);
+          
           return (
             <Link
               key={item.href}
               href={item.href}
+              prefetch={shouldPrefetch ? true : null}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 transition-colors",
                 isActive
@@ -112,10 +115,12 @@ export function Sidebar() {
         return order.indexOf(a.href) - order.indexOf(b.href);
       }).map((item) => {
         const isActive = pathname === item.href;
+        const shouldPrefetch = ["/dashboard", "/dashboard/orders", "/dashboard/menu"].includes(item.href);
         return (
           <Link
             key={item.href}
             href={item.href}
+            prefetch={shouldPrefetch ? true : null}
             className={cn(
               "flex flex-col items-center gap-1 p-2 transition-colors",
               isActive ? "text-primary-600" : "text-surface-500 hover:text-primary-600"
