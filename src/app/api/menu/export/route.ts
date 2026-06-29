@@ -1,0 +1,89 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import * as xlsx from "xlsx";
+
+export async function GET() {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
+    }
+
+    const store = await prisma.store.findUnique({
+      where: { userId: session.user.id },
+      include: {
+        categories: {
+          orderBy: { sortOrder: 'asc' },
+          include: {
+            items: {
+              orderBy: { sortOrder: 'asc' },
+              include: {
+                sizes: true,
+                addons: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!store) {
+      return NextResponse.json({ error: "المتجر غير موجود" }, { status: 404 });
+    }
+
+    // Prepare Categories Sheet
+    const categoriesData = store.categories.map((c: any) => ({
+      ID: c.id,
+      Name: c.name,
+      Description: c.description || "",
+      SortOrder: c.sortOrder,
+      IsActive: c.isActive ? "Yes" : "No"
+    }));
+
+    // Prepare Products Sheet
+    const productsData: any[] = [];
+    (store as any).categories.forEach((category: any) => {
+      category.items.forEach((item: any) => {
+        productsData.push({
+          ID: item.id,
+          CategoryID: category.id,
+          CategoryName: category.name,
+          Name: item.name,
+          Description: item.description || "",
+          Price: item.price.toString(),
+          IsAvailable: item.isAvailable ? "Yes" : "No",
+          Image: item.image || "",
+          SortOrder: item.sortOrder
+        });
+      });
+    });
+
+    // Create a new workbook
+    const wb = xlsx.utils.book_new();
+    
+    // Add Categories Sheet
+    const wsCategories = xlsx.utils.json_to_sheet(categoriesData);
+    xlsx.utils.book_append_sheet(wb, wsCategories, "Categories");
+
+    // Add Products Sheet
+    const wsProducts = xlsx.utils.json_to_sheet(productsData);
+    xlsx.utils.book_append_sheet(wb, wsProducts, "Products");
+
+    // Write to buffer
+    const buf = xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+    // Return as downloadable file
+    return new Response(buf, {
+      status: 200,
+      headers: {
+        "Content-Disposition": `attachment; filename="menu_${store.subdomain}.xlsx"`,
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }
+    });
+
+  } catch (error) {
+    console.error("Export Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
