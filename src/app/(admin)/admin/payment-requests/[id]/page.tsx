@@ -5,9 +5,10 @@ import Link from "next/link";
 import { ChevronRight, CheckCircle, XCircle } from "lucide-react";
 import { ProcessButtons } from "./ProcessButtons";
 
-export default async function PaymentRequestDetailsPage({ params }: { params: { id: string } }) {
+export default async function PaymentRequestDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const req = await prisma.paymentRequest.findUnique({
-    where: { id: params.id },
+    where: { id: id },
     include: {
       store: true,
       plan: true,

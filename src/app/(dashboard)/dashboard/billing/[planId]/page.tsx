@@ -5,7 +5,8 @@ import Link from "next/link";
 import { ChevronRight, UploadCloud } from "lucide-react";
 import { CheckoutForm } from "./CheckoutForm";
 
-export default async function CheckoutPage({ params }: { params: { planId: string } }) {
+export default async function CheckoutPage({ params }: { params: Promise<{ planId: string }> }) {
+  const { planId } = await params;
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -15,7 +16,7 @@ export default async function CheckoutPage({ params }: { params: { planId: strin
   if (!store) redirect("/onboarding");
 
   const plan = await prisma.plan.findUnique({
-    where: { id: params.planId, isActive: true }
+    where: { id: planId, isActive: true }
   });
   if (!plan) notFound();
 

@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { OnboardingClient } from "./client";
 import { PageTransitionLoader } from "@/components/ui/PageTransitionLoader";
 
-export default async function OnboardingPage({ searchParams }: { searchParams: { step?: string } }) {
+export default async function OnboardingPage({ searchParams }: { searchParams: Promise<{ step?: string }> }) {
+  const { step } = await searchParams;
   const session = await auth();
   if (!session || session.user.role !== "OWNER") {
     redirect("/login");
@@ -19,11 +20,11 @@ export default async function OnboardingPage({ searchParams }: { searchParams: {
     redirect("/login");
   }
 
-  if (user.onboardingStep >= 4 && searchParams.step !== "4") {
+  if (user.onboardingStep >= 4 && step !== "4") {
     redirect("/dashboard");
   }
 
-  const currentStep = searchParams.step ? parseInt(searchParams.step) : user.onboardingStep || 1;
+  const currentStep = step ? parseInt(step) : (user.store ? user.onboardingStep : 1);
 
   // We should force the step to be at max the user's allowed step to prevent skipping via URL
   const actualStep = Math.min(currentStep, user.onboardingStep || 1);
