@@ -129,10 +129,14 @@ export default function RegisterPage() {
           <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-surface-200">
             <KeyRound className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold text-surface-950">تأكيد رقم الجوال</h2>
+          <h2 className="text-2xl font-bold text-surface-950">
+            {requiresOtp === 'PHONE' ? 'تأكيد رقم الجوال' : 'تأكيد البريد الإلكتروني'}
+          </h2>
           <p className="mt-2 text-sm text-surface-800/60">
-            أرسلنا كود تحقق في رسالة SMS إلى<br/>
-            <strong className="text-surface-950" dir="ltr">{registerState?.phone}</strong>
+            {requiresOtp === 'PHONE' ? 'أرسلنا كود تحقق في رسالة SMS إلى' : 'أرسلنا كود تحقق عبر الإيميل إلى'}<br/>
+            <strong className="text-surface-950" dir="ltr">
+              {requiresOtp === 'PHONE' ? registerState?.phone : registerState?.email}
+            </strong>
           </p>
         </div>
 
