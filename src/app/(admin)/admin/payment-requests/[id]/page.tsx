@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, CheckCircle, XCircle } from "lucide-react";
-import { processPaymentRequestAction } from "./actions";
 import { ProcessButtons } from "./ProcessButtons";
 
 export default async function PaymentRequestDetailsPage({ params }: { params: { id: string } }) {

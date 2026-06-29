@@ -52,7 +52,7 @@ export default async function PaymentRequestsPage() {
                     <td className="px-6 py-4 font-bold text-surface-900">
                       {req.store.name}
                       <span className="block text-xs font-normal text-surface-500 mt-0.5">
-                        {req.store.domain || 'No Domain'}
+                        {req.store.subdomain || 'No Subdomain'}
                       </span>
                     </td>
                     <td className="px-6 py-4">{req.plan.name}</td>
