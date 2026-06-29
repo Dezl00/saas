@@ -15,6 +15,7 @@ import {
   MapPin,
   Map,
   MoreHorizontal,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,7 @@ export function Sidebar() {
     { href: "/dashboard/delivery-areas", icon: Map, label: "مناطق التوصيل" },
     { href: "/dashboard/orders", icon: ShoppingBag, label: "الطلبات" },
     { href: "/dashboard/coupons", icon: Ticket, label: "الكوبونات" },
+    { href: "/dashboard/billing", icon: CreditCard, label: "الاشتراك والفوترة" },
     { href: "/dashboard/settings", icon: Settings, label: "الإعدادات" },
   ];
 
