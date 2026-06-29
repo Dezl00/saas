@@ -63,6 +63,22 @@ enum PaymentStatus {
   FAILED
 }
 
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PENDING_PAYMENT
+  GRACE_PERIOD
+  SUSPENDED
+  CANCELLED
+  ARCHIVED
+}
+
+enum PaymentRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum CouponType {
   PERCENTAGE
   FIXED
@@ -136,6 +152,10 @@ model Store {
   branches       Branch[]
   deliveryAreas  DeliveryArea[]
   domains        Domain[]
+  subscription   Subscription?
+  paymentRequests PaymentRequest[]
+  subscriptionHistory SubscriptionHistory[]
+  notifications  Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -367,6 +387,12 @@ model PlatformSetting {
   supportWhatsapp String?
   enableEmailOtp  Boolean  @default(false)
   enablePhoneOtp  Boolean  @default(true)
+  
+  // Subscription Settings
+  trialDays       Int      @default(7)
+  graceDays       Int      @default(3)
+  archiveDays     Int      @default(30)
+  
   updatedAt       DateTime @updatedAt
 }
 
@@ -379,4 +405,112 @@ model AdminNotification {
   isRead    Boolean  @default(false)
   
   createdAt DateTime @default(now())
+}
+
+model Plan {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  price           Decimal  @db.Decimal(10, 2)
+  durationDays    Int      @default(30)
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  
+  // JSON field for all feature flags & limits
+  // e.g., { "products": 300, "branches": 3, "staff": 5, "reports": true, "qr": true, "ai": false }
+  features        Json     @default("{}")
+
+  subscriptions   Subscription[]
+  paymentRequests PaymentRequest[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  storeId         String   @unique
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  planId          String?
+  plan            Plan?    @relation(fields: [planId], references: [id])
+  
+  status          SubscriptionStatus @default(TRIAL)
+  startDate       DateTime @default(now())
+  endDate         DateTime
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model PlatformPaymentMethod {
+  id           String  @id @default(cuid())
+  name         String
+  logo         String?
+  accountInfo  String
+  instructions String?
+  qrCode       String?
+  isActive     Boolean @default(true)
+  sortOrder    Int     @default(0)
+
+  paymentRequests PaymentRequest[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model PaymentRequest {
+  id              String   @id @default(cuid())
+  storeId         String
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  planId          String
+  plan            Plan     @relation(fields: [planId], references: [id])
+  
+  methodId        String
+  method          PlatformPaymentMethod @relation(fields: [methodId], references: [id])
+  
+  amount          Decimal  @db.Decimal(10, 2)
+  receiptImage    String
+  transactionId   String?
+  status          PaymentRequestStatus @default(PENDING)
+  notes           String?
+  
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model SubscriptionHistory {
+  id              String   @id @default(cuid())
+  storeId         String
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  action          String   // e.g., "CREATED", "RENEWED", "PLAN_CHANGED", "PAYMENT_REJECTED"
+  details         String?
+  
+  createdAt       DateTime @default(now())
+
+  @@index([storeId])
+}
+
+model Notification {
+  id              String   @id @default(cuid())
+  storeId         String
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  title           String
+  message         String
+  type            String   @default("SYSTEM") // e.g., "BILLING", "SYSTEM", "ALERT"
+  isRead          Boolean  @default(false)
+  
+  createdAt       DateTime @default(now())
+
+  @@index([storeId])
 }
