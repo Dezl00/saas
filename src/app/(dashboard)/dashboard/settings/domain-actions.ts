@@ -15,6 +15,13 @@ export async function addCustomDomain(formData: FormData) {
   const domainRegex = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
   if (!domainRegex.test(domainName)) return { error: "صيغة الدومين غير صحيحة" };
 
+  // Check if custom domain feature is enabled in the plan
+  const { checkFeatureEnabled } = await import("@/lib/limits");
+  const canUseDomain = await checkFeatureEnabled(session.user.storeId, "customDomain");
+  if (!canUseDomain) {
+    return { error: "ميزة الدومين الخاص غير متاحة في باقتك الحالية. قم بالترقية لتفعيلها." };
+  }
+
   try {
     const existing = await prisma.domain.findUnique({ where: { name: domainName } });
     if (existing) return { error: "عذراً، هذا الدومين مربوط بمتجر آخر." };

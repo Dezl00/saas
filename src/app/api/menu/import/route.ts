@@ -68,11 +68,22 @@ export async function POST(req: Request) {
 
     // Process Products Sheet
     if (wb.SheetNames.includes("Products")) {
+      const { checkProductLimit } = await import("@/lib/limits");
+      
       const wsProducts = wb.Sheets["Products"];
       const productsData = xlsx.utils.sheet_to_json<any>(wsProducts);
 
       for (const row of productsData) {
         if (!row.Name || !row.CategoryID) continue;
+
+        // Check limits before creating a new product
+        if (!row.ID) { // If it's a new product (doesn't have an ID)
+          const { allowed } = await checkProductLimit(store.id);
+          if (!allowed) {
+            console.warn(`Reached product limit for store ${store.id}, stopping import`);
+            break; // Stop importing more products
+          }
+        }
 
         // Verify category exists
         const category = await prisma.category.findFirst({

@@ -12,19 +12,32 @@ export async function addBranch(formData: FormData) {
   const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
 
-  if (!name) return { error: "الاسم مطلوب" };
+  if (!name) {
+    return { error: "الاسم مطلوب" };
+  }
 
-  await prisma.branch.create({
-    data: {
-      name,
-      phone,
-      address,
-      storeId: session.user.storeId
-    }
-  });
+  const { checkBranchLimit } = await import("@/lib/limits");
+  const { allowed, limit } = await checkBranchLimit(session.user.storeId);
+  
+  if (!allowed) {
+    return { error: `لقد وصلت للحد الأقصى للفروع (${limit} فرع) المسموح به في باقتك.` };
+  }
 
-  revalidatePath("/dashboard/branches");
-  return { success: true };
+  try {
+    await prisma.branch.create({
+      data: {
+        name,
+        phone,
+        address,
+        storeId: session.user.storeId
+      }
+    });
+
+    revalidatePath("/dashboard/branches");
+    return { success: true };
+  } catch (error: any) {
+    return { error: "حدث خطأ أثناء إضافة الفرع: " + (error.message || "") };
+  }
 }
 
 export async function toggleBranch(formData: FormData) {

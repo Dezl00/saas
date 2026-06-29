@@ -17,6 +17,19 @@ export async function importAIMenuItems(parsedData: any, targetStoreId?: string)
   } else if (!storeId) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
   }
+
+  // Enforce AI Feature Limit
+  const { checkFeatureEnabled, checkProductLimit } = await import("@/lib/limits");
+  const isAiEnabled = await checkFeatureEnabled(storeId, "ai");
+  if (!isAiEnabled) {
+    return { error: "ميزة الذكاء الاصطناعي غير متوفرة في باقتك الحالية." };
+  }
+
+  // Check product limits (rough estimate: we generate ~5 items per AI call usually)
+  const { allowed: canAddProducts } = await checkProductLimit(storeId, 5);
+  if (!canAddProducts) {
+    return { error: "لا يمكنك توليد المزيد من الأصناف لأنك اقتربت من الحد الأقصى للباقة." };
+  }
   
   let addedItemsCount = 0;
 

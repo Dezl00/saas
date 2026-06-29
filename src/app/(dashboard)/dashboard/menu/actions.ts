@@ -16,6 +16,14 @@ export async function createMenuItem(formData: FormData) {
     return { error: "غير مصرح لك" };
   }
 
+  if (storeIdToUse !== "DEFAULT_STORE") {
+    const { checkProductLimit } = await import("@/lib/limits");
+    const { allowed, limit } = await checkProductLimit(storeIdToUse);
+    if (!allowed) {
+      return { error: `لقد وصلت للحد الأقصى للأصناف (${limit} صنف) المسموح به في باقتك الحالية.` };
+    }
+  }
+
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);

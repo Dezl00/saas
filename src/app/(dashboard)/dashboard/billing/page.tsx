@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Check, CalendarDays, AlertTriangle, ArrowLeft } from "lucide-react";
+import { Check, X, CalendarDays, AlertTriangle, ArrowLeft, Crown } from "lucide-react";
+import { AlreadySubscribedToast } from "./AlreadySubscribedToast";
 
 export default async function TenantBillingPage() {
   const session = await auth();
@@ -26,14 +27,33 @@ export default async function TenantBillingPage() {
   });
 
   const sub = store.subscription;
+  const currentPlanId = sub?.planId;
   const isExpired = sub && (sub.status === "SUSPENDED" || sub.status === "ARCHIVED" || sub.status === "CANCELLED");
   const isGrace = sub && sub.status === "GRACE_PERIOD";
 
+  // Feature labels map
+  const featureLabels: Record<string, { label: string; type: "number" | "boolean"; suffix?: string }> = {
+    products: { label: "المنتجات", type: "number", suffix: "منتج" },
+    branches: { label: "الفروع", type: "number", suffix: "فرع" },
+    staff: { label: "الموظفين", type: "number", suffix: "موظف" },
+    qr: { label: "صانع QR للطاولات", type: "boolean" },
+    reports: { label: "تقارير مبيعات متقدمة", type: "boolean" },
+    inventory: { label: "إدارة المخزون", type: "boolean" },
+    customDomain: { label: "دومين خاص", type: "boolean" },
+    ai: { label: "الذكاء الاصطناعي", type: "boolean" },
+  };
+
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
+      <AlreadySubscribedToast />
       <div>
-        <h1 className="text-2xl font-bold text-surface-900">الاشتراك والفوترة</h1>
-        <p className="text-sm text-surface-500 mt-1">
+        <h1 className="text-2xl font-bold text-surface-900 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center">
+            <Crown className="w-5 h-5 text-primary-600" />
+          </div>
+          الاشتراك والفوترة
+        </h1>
+        <p className="text-sm text-surface-500 mt-2">
           إدارة باقتك الحالية وتجديد أو ترقية الاشتراك.
         </p>
       </div>
@@ -97,8 +117,18 @@ export default async function TenantBillingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {plans.map(plan => {
             const features = plan.features as any;
+            const isCurrentPlan = currentPlanId === plan.id && sub?.status === "ACTIVE";
             return (
-              <div key={plan.id} className="bg-white border border-surface-200 rounded-2xl p-6 flex flex-col shadow-sm hover:border-primary-200 hover:shadow-md transition-all">
+              <div key={plan.id} className={`bg-white border rounded-2xl p-6 flex flex-col shadow-sm transition-all ${
+                isCurrentPlan 
+                  ? "border-primary-400 ring-2 ring-primary-100 shadow-md" 
+                  : "border-surface-200 hover:border-primary-200 hover:shadow-md"
+              }`}>
+                {isCurrentPlan && (
+                  <div className="bg-primary-600 text-white text-xs font-bold px-3 py-1 rounded-full self-start mb-3">
+                    ✓ باقتك الحالية
+                  </div>
+                )}
                 <div className="mb-4">
                   <h4 className="text-xl font-bold text-surface-900">{plan.name}</h4>
                   <p className="text-sm text-surface-500 mt-1 h-10 line-clamp-2">{plan.description}</p>
@@ -109,40 +139,47 @@ export default async function TenantBillingPage() {
                   <span className="text-surface-500 font-medium">ج.م / {plan.durationDays} يوم</span>
                 </div>
 
-                <div className="flex-1 space-y-3 mb-8 text-sm">
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-success-500 shrink-0" />
-                    <span>{features.products === -1 ? 'عدد غير محدود من المنتجات' : `حتى ${features.products} منتج`}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-success-500 shrink-0" />
-                    <span>{features.branches} فرع</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-success-500 shrink-0" />
-                    <span>{features.staff} موظفين</span>
-                  </div>
-                  {features.qr && (
-                    <div className="flex items-center gap-3">
-                      <Check className="w-4 h-4 text-success-500 shrink-0" />
-                      <span>صانع QR للطاولات</span>
-                    </div>
-                  )}
-                  {features.reports && (
-                    <div className="flex items-center gap-3">
-                      <Check className="w-4 h-4 text-success-500 shrink-0" />
-                      <span>تقارير مبيعات متقدمة</span>
-                    </div>
-                  )}
+                <div className="flex-1 space-y-2.5 mb-8 text-sm">
+                  {Object.entries(featureLabels).map(([key, meta]) => {
+                    const val = features?.[key];
+                    if (val === undefined || val === null) return null;
+
+                    if (meta.type === "number") {
+                      return (
+                        <div key={key} className="flex items-center gap-3">
+                          <Check className="w-4 h-4 text-success-500 shrink-0" />
+                          <span>{val === -1 ? `عدد غير محدود من ${meta.label}` : `حتى ${val} ${meta.suffix}`}</span>
+                        </div>
+                      );
+                    }
+
+                    // Boolean feature
+                    return (
+                      <div key={key} className="flex items-center gap-3">
+                        {val ? (
+                          <Check className="w-4 h-4 text-success-500 shrink-0" />
+                        ) : (
+                          <X className="w-4 h-4 text-surface-300 shrink-0" />
+                        )}
+                        <span className={val ? "" : "text-surface-400 line-through"}>{meta.label}</span>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                <Link
-                  href={`/dashboard/billing/${plan.id}`}
-                  className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl font-bold text-white bg-primary-600 hover:bg-primary-700 transition-colors"
-                >
-                  اشتراك الآن
-                  <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
-                </Link>
+                {isCurrentPlan ? (
+                  <div className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl font-bold text-primary-600 bg-primary-50 border-2 border-primary-200 cursor-default">
+                    أنت مشترك بالفعل
+                  </div>
+                ) : (
+                  <Link
+                    href={`/dashboard/billing/${plan.id}`}
+                    className="mt-auto flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl font-bold text-white bg-primary-600 hover:bg-primary-700 transition-colors"
+                  >
+                    اشتراك الآن
+                    <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
+                  </Link>
+                )}
               </div>
             )
           })}
