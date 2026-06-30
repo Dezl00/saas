@@ -105,6 +105,7 @@ export function StoreBannersCarousel({ banners }: Props) {
       >
         <div
           className="flex h-full w-full"
+          dir="ltr"
           style={{
             transform: `translateX(calc(${current * -100}% + ${isDragging ? translateX : 0}px))`,
             transition: isTransitioning ? "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)" : "none",

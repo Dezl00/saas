@@ -190,7 +190,7 @@ export default async function StoreLayout({
 
           {/* Store info below cover */}
           <div className="bg-white pt-16 pb-5 text-center">
-            <h1 className="text-2xl sm:text-3xl font-black text-surface-950 mb-1">{store.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-surface-950 mb-1">{store.name}</h1>
             {store.description && (
               <p className="text-surface-500 text-sm max-w-md mx-auto px-4">{store.description}</p>
             )}
@@ -236,7 +236,7 @@ export default async function StoreLayout({
         {/* Promo Banner */}
         <div className="max-w-5xl mx-auto px-4 mt-16">
           <div className="bg-[#2563eb] rounded-3xl p-8 text-center text-white flex flex-col items-center">
-            <h3 className="text-2xl font-black mb-2 text-white">هل تمتلك مطعماً أو متجراً؟</h3>
+            <h3 className="text-2xl font-bold mb-2 text-white">هل تمتلك مطعماً أو متجراً؟</h3>
             <p className="text-blue-100 mb-6 max-w-lg">
               أنشئ متجرك الإلكتروني الخاص في دقائق وابدأ في استقبال الطلبات عبر الواتساب مباشرة وبدون عمولات!
             </p>

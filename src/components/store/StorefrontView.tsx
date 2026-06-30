@@ -102,6 +102,17 @@ export function StorefrontView({
     return () => window.removeEventListener("popstate", handlePopState);
   }, [selectedProduct]);
 
+  useEffect(() => {
+    if (selectedProduct) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedProduct]);
+
   const handleToggleAddon = (addon: Addon) => {
     if (selectedAddons.find(a => a.id === addon.id)) {
       setSelectedAddons(selectedAddons.filter(a => a.id !== addon.id));
@@ -221,7 +232,7 @@ export function StorefrontView({
               }}
               className={`whitespace-nowrap px-4 py-2 font-semibold text-sm transition-all rounded-full ${
                 activeTab === cat.id
-                  ? "text-white shadow-md"
+                  ? "text-white"
                   : "bg-surface-50 text-surface-600 hover:bg-surface-100"
               }`}
               style={activeTab === cat.id ? { 
