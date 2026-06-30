@@ -93,3 +93,21 @@ export async function getStoreCatalog(storeId: string, showDefaultProducts: bool
 
   return { categories, menuItems };
 }
+
+export async function getStoreBanners(storeId: string) {
+  "use cache";
+  cacheTag(`store-banners-${storeId}`);
+
+  const banners = await prisma.storeBanner.findMany({
+    where: { storeId, isActive: true },
+    orderBy: { sortOrder: "asc" },
+    select: {
+      id: true,
+      image: true,
+      title: true,
+      link: true,
+    },
+  });
+
+  return banners;
+}

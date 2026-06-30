@@ -146,6 +146,7 @@ model Store {
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories     Category[]
   menuItems      MenuItem[]
+  banners        StoreBanner[]
   orders         Order[]
   coupons        Coupon[]
   paymentMethods PaymentMethod[]
@@ -511,6 +512,23 @@ model Notification {
   isRead          Boolean  @default(false)
   
   createdAt       DateTime @default(now())
+
+  @@index([storeId])
+}
+
+model StoreBanner {
+  id        String  @id @default(cuid())
+  image     String
+  title     String?
+  link      String?
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([storeId])
 }

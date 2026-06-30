@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { StorefrontView } from "@/components/store/StorefrontView";
-import { getStoreInfo, getStoreCatalog } from "./data";
+import { StoreBannersCarousel } from "@/components/store/StoreBannersCarousel";
+import { getStoreInfo, getStoreCatalog, getStoreBanners } from "./data";
 
 export default async function StorePage(props: { params: Promise<{ subdomain: string }> }) {
   const params = await props.params;
@@ -10,7 +11,10 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
     notFound();
   }
 
-  const { categories: categoriesToDisplay, menuItems: menuItemsToDisplay } = await getStoreCatalog(store.id, store.showDefaultProducts);
+  const [{ categories: categoriesToDisplay, menuItems: menuItemsToDisplay }, banners] = await Promise.all([
+    getStoreCatalog(store.id, store.showDefaultProducts),
+    getStoreBanners(store.id),
+  ]);
 
   // Convert Decimal to numbers for client components
   const serializedMenuItems = menuItemsToDisplay.map(item => ({
@@ -26,8 +30,13 @@ export default async function StorePage(props: { params: Promise<{ subdomain: st
 
   return (
     <div className="animate-fade-in">
+      {/* Banners Carousel */}
+      {banners.length > 0 && (
+        <StoreBannersCarousel banners={banners} />
+      )}
+
       <StorefrontView 
-        store={{ name: store.name, currency: store.currency }}
+        store={{ name: store.name, currency: store.currency, primaryColor: store.primaryColor }}
         categories={categoriesToDisplay.map(c => ({ id: c.id, name: c.name }))}
         menuItems={serializedMenuItems}
       />

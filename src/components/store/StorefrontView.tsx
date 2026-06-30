@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "./CartProvider";
 import Image from "next/image";
-import { LayoutGrid, List, Filter, X, Plus, Minus, Check, ShoppingBag, Loader2 } from "lucide-react";
+import { Filter, X, Plus, Minus, Check, ShoppingBag, Loader2 } from "lucide-react";
 
 type Size = { id: string; name: string; price: number };
 type Addon = { id: string; name: string; price: number };
@@ -58,7 +58,7 @@ export function StorefrontView({
 
     return () => observer.disconnect();
   }, [categories]);
-  const [gridCols, setGridCols] = useState<1 | 2>(2);
+
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortBy, setSortBy] = useState<"default" | "price_desc" | "price_asc" | "popular">("default");
@@ -154,32 +154,32 @@ export function StorefrontView({
 
   if (categories.length === 0) {
     return (
-      <div className="text-center py-20 bg-white border border-surface-200">
+      <div className="text-center py-20 bg-white">
         <h2 className="text-2xl font-bold text-surface-950">المنيو قيد التجهيز</h2>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       
       {/* Toast Notification */}
       {toastItem && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border border-surface-200 rounded-3xl p-4 shadow-2xl flex flex-col gap-3 animate-slide-in-top">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border border-surface-100 rounded-2xl p-3.5 shadow-2xl flex flex-col gap-3 animate-slide-in-top">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-surface-100 rounded-2xl overflow-hidden flex items-center justify-center shrink-0 border border-surface-200">
+            <div className="w-10 h-10 bg-surface-50 rounded-xl overflow-hidden flex items-center justify-center shrink-0">
               {toastItem.image ? (
-                <Image src={toastItem.image} alt={toastItem.name} width={48} height={48} className="w-full h-full object-cover" />
+                <Image src={toastItem.image} alt={toastItem.name} width={40} height={40} className="w-full h-full object-cover" />
               ) : (
-                <ShoppingBag className="w-5 h-5 text-surface-400" />
+                <ShoppingBag className="w-4 h-4 text-surface-400" />
               )}
             </div>
             <div className="flex-1">
-              <p className="font-bold text-success-600 text-sm flex items-center gap-1"><Check className="w-4 h-4"/> تمت الإضافة</p>
-              <p className="text-xs text-surface-600 line-clamp-1 mt-0.5">{toastItem.name}</p>
+              <p className="font-bold text-success-600 text-sm flex items-center gap-1"><Check className="w-3.5 h-3.5"/> تمت الإضافة</p>
+              <p className="text-xs text-surface-500 line-clamp-1 mt-0.5">{toastItem.name}</p>
             </div>
-            <button onClick={() => setToastItem(null)} className="text-surface-400 hover:text-surface-950 bg-surface-100 p-1.5 rounded-full transition-colors">
-              <X className="w-4 h-4" />
+            <button onClick={() => setToastItem(null)} className="text-surface-400 hover:text-surface-950 bg-surface-50 p-1.5 rounded-full transition-colors">
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
           <div className="flex items-center gap-2">
@@ -192,7 +192,7 @@ export function StorefrontView({
             </button>
             <button 
               onClick={() => setToastItem(null)}
-              className="flex-1 py-2 bg-surface-100 text-surface-950 font-bold text-sm border border-surface-200 rounded-xl transition-colors hover:bg-surface-200"
+              className="flex-1 py-2 bg-surface-50 text-surface-700 font-bold text-sm rounded-xl transition-colors hover:bg-surface-100"
             >
               متابعة التسوق
             </button>
@@ -200,11 +200,10 @@ export function StorefrontView({
         </div>
       )}
 
-      {/* Toolbar: Tabs, Grid Toggle, Filter */}
-      <div className="sticky top-16 z-20 bg-surface-50 py-2 flex items-center gap-2 border-b border-surface-200">
+      {/* Toolbar: Tabs + Filter (no grid toggle) */}
+      <div className="sticky top-14 z-20 bg-white py-2.5 flex items-center gap-2 border-b border-surface-100">
         {/* Categories Tabs - Scrollable */}
-        <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2 pb-1">
-
+        <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2 pb-0.5">
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -220,31 +219,34 @@ export function StorefrontView({
                   isManualScrolling.current = false;
                 }, 1000);
               }}
-              className={`whitespace-nowrap px-4 py-2 font-bold text-sm transition-colors border rounded-2xl ${
+              className={`whitespace-nowrap px-4 py-2 font-semibold text-sm transition-all rounded-full ${
                 activeTab === cat.id
-                  ? "bg-primary-500 text-white border-primary-500"
-                  : "bg-white text-surface-600 border-surface-200 hover:bg-surface-100"
+                  ? "text-white shadow-md"
+                  : "bg-surface-50 text-surface-600 hover:bg-surface-100"
               }`}
+              style={activeTab === cat.id ? { 
+                backgroundColor: store.primaryColor || 'var(--color-primary-500)',
+              } : undefined}
             >
               {cat.name}
             </button>
           ))}
         </div>
 
-        {/* Tools */}
-        <div className="flex items-center gap-1 border-s border-surface-200 ps-2 relative">
+        {/* Filter only */}
+        <div className="flex items-center border-s border-surface-100 ps-2 relative">
           <button 
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`w-10 h-10 border flex items-center justify-center transition-colors rounded-xl ${isFilterOpen ? 'bg-surface-950 text-white border-surface-950' : 'bg-white border-surface-200 text-surface-600 hover:bg-surface-100'}`}
+            className={`w-9 h-9 border flex items-center justify-center transition-all rounded-full ${isFilterOpen ? 'bg-surface-900 text-white border-surface-900' : 'bg-surface-50 border-surface-100 text-surface-500 hover:bg-surface-100'}`}
           >
-            <Filter className="w-4 h-4" />
+            <Filter className="w-3.5 h-3.5" />
           </button>
           
           {isFilterOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
-              <div className="absolute top-12 end-0 w-40 bg-white border border-surface-200 rounded-xl shadow-xl z-50 py-1 animate-zoom-in">
-                <h4 className="px-3 py-1.5 text-[10px] font-bold text-surface-400 border-b border-surface-100 mb-1">ترتيب حسب</h4>
+              <div className="absolute top-11 end-0 w-40 bg-white border border-surface-100 rounded-2xl shadow-xl z-50 py-1.5 animate-zoom-in overflow-hidden">
+                <h4 className="px-3.5 py-1.5 text-[10px] font-bold text-surface-400 border-b border-surface-50 mb-1">ترتيب حسب</h4>
                 <div className="flex flex-col">
                   {[
                     { id: 'default', label: 'الافتراضي' },
@@ -258,7 +260,7 @@ export function StorefrontView({
                         setSortBy(option.id as any);
                         setIsFilterOpen(false);
                       }}
-                      className={`w-full text-start px-3 py-2 text-xs transition-colors ${sortBy === option.id ? 'bg-primary-50 text-primary-700 font-bold' : 'text-surface-700 hover:bg-surface-50'}`}
+                      className={`w-full text-start px-3.5 py-2.5 text-xs transition-colors ${sortBy === option.id ? 'bg-primary-50 text-primary-700 font-bold' : 'text-surface-600 hover:bg-surface-50'}`}
                     >
                       {option.label}
                     </button>
@@ -267,18 +269,11 @@ export function StorefrontView({
               </div>
             </>
           )}
-
-          <button 
-            onClick={() => setGridCols(gridCols === 1 ? 2 : 1)}
-            className="w-10 h-10 bg-white border border-surface-200 flex items-center justify-center text-surface-600 hover:bg-surface-100 sm:hidden rounded-xl"
-          >
-            {gridCols === 1 ? <LayoutGrid className="w-4 h-4" /> : <List className="w-4 h-4" />}
-          </button>
         </div>
       </div>
 
-      {/* Menu Items */}
-      <div className="space-y-12">
+      {/* Menu Items — Matching Menuo card style */}
+      <div className="space-y-8">
         {categories.map((category) => {
           let items = menuItems.filter((item) => item.categoryId === category.id);
           if (items.length === 0) return null;
@@ -290,45 +285,63 @@ export function StorefrontView({
           }
 
           return (
-            <div key={category.id} id={`category-${category.id}`} className="scroll-mt-32">
-              <h2 className="text-xl font-black text-surface-950 mb-4">{category.name}</h2>
+            <div key={category.id} id={`category-${category.id}`} className="scroll-mt-28">
+              <h2 className="text-lg font-black text-surface-900 mb-3">{category.name}</h2>
               
-              <div className={`grid gap-4 ${gridCols === 1 ? "grid-cols-1" : "grid-cols-2"} sm:grid-cols-2 lg:grid-cols-3`}>
+              {/* Cards — horizontal layout for mobile-first like Menuo */}
+              <div className="flex flex-col gap-3">
                 {items.map((item) => (
                   <div 
                     key={item.id} 
                     onClick={() => handleOpenProduct(item)}
-                    className="bg-white border border-surface-200 rounded-3xl overflow-hidden flex flex-col cursor-pointer hover:border-surface-400 transition-colors shadow-none"
+                    className="bg-white border border-surface-100 rounded-2xl overflow-hidden flex flex-row cursor-pointer hover:shadow-md transition-all group"
                   >
+                    {/* Text content */}
+                    <div className="p-3.5 flex flex-col flex-1 justify-between min-w-0">
+                      <div>
+                        <h3 className="font-bold text-surface-900 text-sm leading-tight mb-1">{item.name}</h3>
+                        {item.description && (
+                          <p className="text-xs text-surface-400 line-clamp-2 leading-relaxed">
+                            {item.description}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center justify-between mt-2.5">
+                        <span 
+                          className="font-black text-sm"
+                          style={{ color: store.primaryColor || 'var(--color-primary-600)' }}
+                        >
+                          {item.sizes.length > 0 
+                            ? `${formatPrice(Math.min(...item.sizes.map(s => s.price)), store.currency)}`
+                            : formatPrice(item.price, store.currency)
+                          }
+                        </span>
+                        <span 
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-all group-hover:scale-110 shadow-sm"
+                          style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Image */}
                     {item.image ? (
-                      <div className="relative aspect-video w-full overflow-hidden bg-surface-100 border-b border-surface-200">
+                      <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0 overflow-hidden">
                         <Image 
                           src={item.image} 
                           alt={item.name}
                           fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          className="object-cover"
+                          sizes="128px"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
                         />
                       </div>
                     ) : (
-                      <div className="aspect-video w-full bg-surface-100 border-b border-surface-200 flex items-center justify-center">
-                        <ShoppingBag className="w-8 h-8 text-surface-300" />
+                      <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 bg-surface-50 flex items-center justify-center">
+                        <ShoppingBag className="w-6 h-6 text-surface-200" />
                       </div>
                     )}
-                    <div className="p-4 flex flex-col flex-1">
-                      <div className="flex justify-between items-start gap-2 mb-2">
-                        <h3 className="font-bold text-surface-950 leading-tight">{item.name}</h3>
-                        <span className="font-black text-primary-600 text-sm whitespace-nowrap">
-                          {formatPrice(item.price, store.currency)}
-                        </span>
-                      </div>
-                      {item.description && (
-                        <p className="text-xs text-surface-500 line-clamp-2 mt-auto">
-                          {item.description}
-                        </p>
-                      )}
-                    </div>
                   </div>
                 ))}
               </div>
@@ -337,59 +350,62 @@ export function StorefrontView({
         })}
       </div>
 
-      {/* Product Modal */}
+      {/* Product Modal — Bottom Sheet Style matching Menuo */}
       {selectedProduct && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-none p-4 animate-fade-in"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 animate-fade-in"
           onClick={(e) => {
             if (e.target === e.currentTarget) closeProductModal();
           }}
         >
-          <div className="bg-white w-full max-w-md max-h-[85vh] flex flex-col animate-zoom-in overflow-hidden border border-surface-200 rounded-[2rem] shadow-none">
+          <div className="bg-white w-full sm:max-w-md sm:max-h-[85vh] max-h-[90vh] flex flex-col animate-slide-in-up sm:animate-zoom-in overflow-hidden sm:rounded-2xl rounded-t-3xl">
             {/* Modal Header Image */}
-            <div className="relative h-48 sm:h-56 bg-surface-100 shrink-0">
+            <div className="relative h-48 sm:h-52 bg-surface-50 shrink-0">
               {selectedProduct.image ? (
                 <Image src={selectedProduct.image} alt={selectedProduct.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center"><ShoppingBag className="w-10 h-10 text-surface-300" /></div>
+                <div className="w-full h-full flex items-center justify-center"><ShoppingBag className="w-10 h-10 text-surface-200" /></div>
               )}
               <button 
                 onClick={closeProductModal}
-                className="absolute top-4 end-4 w-8 h-8 bg-black/50 backdrop-blur-md rounded-full text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                className="absolute top-3 end-3 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full text-white flex items-center justify-center hover:bg-black/60 transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
+              {/* Drag handle for mobile */}
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-white/40 rounded-full sm:hidden" />
             </div>
 
             {/* Modal Content */}
-            <div className="p-5 flex-1 overflow-y-auto space-y-6">
+            <div className="p-5 flex-1 overflow-y-auto space-y-5">
               <div>
-                <h2 className="text-xl font-medium text-surface-950">{selectedProduct.name}</h2>
+                <h2 className="text-lg font-bold text-surface-900">{selectedProduct.name}</h2>
                 {selectedProduct.description && (
-                  <p className="text-surface-500 text-sm mt-2">{selectedProduct.description}</p>
+                  <p className="text-surface-400 text-sm mt-1.5 leading-relaxed">{selectedProduct.description}</p>
                 )}
-                <div className="mt-3 font-medium text-primary-600 text-lg">
+                <div 
+                  className="mt-2 font-bold text-lg"
+                  style={{ color: store.primaryColor || 'var(--color-primary-600)' }}
+                >
                   {formatPrice(selectedProduct.price, store.currency)}
                 </div>
               </div>
 
               {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
                 <div>
-                  <h3 className="font-medium text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">اختر الحجم (إجباري)</h3>
+                  <h3 className="font-semibold text-surface-900 mb-2.5 text-sm bg-surface-50 rounded-xl p-2.5">اختر الحجم (إجباري)</h3>
                   <div className="space-y-2">
                     {selectedProduct.sizes.map(size => (
-                      <label key={size.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${selectedSize?.id === size.id ? 'border-primary-500 bg-primary-50' : 'border-surface-200 hover:bg-surface-50'}`}>
+                      <label key={size.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-all ${selectedSize?.id === size.id ? 'border-primary-500 bg-primary-50 shadow-sm' : 'border-surface-100 hover:bg-surface-50'}`}>
                         <div className="flex items-center gap-3">
-                          <input 
-                            type="radio" 
-                            name="size" 
-                            checked={selectedSize?.id === size.id}
-                            onChange={() => setSelectedSize(size)}
-                            className="w-4 h-4 text-primary-600"
-                          />
-                          <span className="font-normal text-surface-950">{size.name}</span>
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedSize?.id === size.id ? 'border-primary-500' : 'border-surface-300'}`}>
+                            {selectedSize?.id === size.id && (
+                              <div className="w-2 h-2 rounded-full bg-primary-500" />
+                            )}
+                          </div>
+                          <span className="text-sm text-surface-800">{size.name}</span>
                         </div>
-                        <span className="font-medium text-surface-950">{formatPrice(size.price, store.currency)}</span>
+                        <span className="font-semibold text-sm text-surface-900">{formatPrice(size.price, store.currency)}</span>
                       </label>
                     ))}
                   </div>
@@ -399,22 +415,19 @@ export function StorefrontView({
               {/* Addons */}
               {selectedProduct.addons && selectedProduct.addons.length > 0 && (
                 <div>
-                  <h3 className="font-medium text-surface-950 mb-3 bg-surface-50 rounded-xl p-2.5 border border-surface-200">إضافات (اختياري)</h3>
+                  <h3 className="font-semibold text-surface-900 mb-2.5 text-sm bg-surface-50 rounded-xl p-2.5">إضافات (اختياري)</h3>
                   <div className="space-y-2">
                     {selectedProduct.addons.map(addon => {
                       const isSelected = selectedAddons.some(a => a.id === addon.id);
                       return (
-                        <label key={addon.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-colors ${isSelected ? 'border-primary-500 bg-primary-50' : 'border-surface-200 hover:bg-surface-50'}`}>
+                        <label key={addon.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-all ${isSelected ? 'border-primary-500 bg-primary-50 shadow-sm' : 'border-surface-100 hover:bg-surface-50'}`}>
                           <div className="flex items-center gap-3">
-                            <input 
-                              type="checkbox" 
-                              checked={isSelected}
-                              onChange={() => handleToggleAddon(addon)}
-                              className="w-4 h-4 text-primary-600 rounded"
-                            />
-                            <span className="font-normal text-surface-950">{addon.name}</span>
+                            <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-primary-500 bg-primary-500' : 'border-surface-300'}`}>
+                              {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
+                            </div>
+                            <span className="text-sm text-surface-800">{addon.name}</span>
                           </div>
-                          <span className="font-medium text-surface-500">+{formatPrice(addon.price, store.currency)}</span>
+                          <span className="font-semibold text-sm text-surface-400">+{formatPrice(addon.price, store.currency)}</span>
                         </label>
                       );
                     })}
@@ -424,34 +437,38 @@ export function StorefrontView({
             </div>
 
             {/* Modal Footer (Quantity + Add to Cart) */}
-            <div className="p-4 border-t border-surface-200 bg-white flex items-center gap-3">
-              <div className="flex items-center bg-primary-50 rounded-xl p-1 border border-primary-100/50 h-12">
+            <div className="p-4 border-t border-surface-100 bg-white flex items-center gap-3">
+              <div className="flex items-center bg-surface-50 rounded-xl p-1 h-11">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95"
+                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors active:scale-95 shadow-sm"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3.5 h-3.5" />
                 </button>
-                <span className="font-medium text-lg w-8 text-center text-primary-900">{quantity}</span>
+                <span className="font-bold text-base w-8 text-center text-surface-900">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95"
+                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors active:scale-95 shadow-sm"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
 
               <button 
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="flex-[2] h-12 text-white font-medium rounded-2xl transition-all flex items-center justify-center gap-2 px-4 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] disabled:opacity-80"
+                className="flex-[2] h-11 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 px-4 active:scale-[0.98] disabled:opacity-80 text-sm shadow-md"
+                style={{ 
+                  backgroundColor: store.primaryColor || 'var(--color-primary-600)',
+                  boxShadow: `0 4px 14px ${store.primaryColor ? store.primaryColor + '44' : 'rgba(0,0,0,0.15)'}`,
+                }}
               >
                 {isAddingToCart ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
                     <span>إضافة</span>
-                    <span className="text-white/50 font-normal">|</span>
+                    <span className="text-white/50">|</span>
                     <span>{formatPrice(calculateModalTotal(), store.currency)}</span>
                   </>
                 )}
