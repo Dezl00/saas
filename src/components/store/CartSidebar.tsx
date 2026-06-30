@@ -209,19 +209,19 @@ export function CartSidebar({
                       </div>
                       
                       {/* Quantity Controls */}
-                      <div className="flex items-center bg-primary-50 rounded-xl p-1 border border-primary-100/50 h-10">
+                      <div className="flex items-center gap-1 border border-surface-200 rounded-lg p-1">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-8 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95 shadow-sm"
+                          className="w-8 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors shadow-sm"
                         >
-                          <Minus className="w-3 h-3" />
+                          <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="font-medium text-base w-8 text-center text-primary-900">{item.quantity}</span>
+                        <span className="font-bold text-sm w-6 text-center text-surface-900">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-8 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors active:scale-95 shadow-sm"
+                          className="w-8 h-full flex items-center justify-center bg-white rounded-lg text-primary-600 hover:bg-primary-100 transition-colors shadow-sm"
                         >
-                          <Plus className="w-3 h-3" />
+                          <Plus className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>

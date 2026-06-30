@@ -296,6 +296,24 @@ export function StorefrontView({
                     onClick={() => handleOpenProduct(item)}
                     className="bg-white border border-surface-100 rounded-2xl overflow-hidden flex flex-row cursor-pointer hover:shadow-md transition-all group"
                   >
+                    {/* Image */}
+                    {item.image ? (
+                      <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0 overflow-hidden">
+                        <Image 
+                          src={item.image} 
+                          alt={item.name}
+                          fill
+                          sizes="128px"
+                          className="object-cover transition-opacity duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 bg-surface-50 flex items-center justify-center">
+                        <ShoppingBag className="w-6 h-6 text-surface-200" />
+                      </div>
+                    )}
+
                     {/* Text content */}
                     <div className="p-3.5 flex flex-col flex-1 justify-between min-w-0">
                       <div>
@@ -317,31 +335,13 @@ export function StorefrontView({
                           }
                         </span>
                         <span 
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-all group-hover:scale-110 shadow-sm"
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors shadow-sm"
                           style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}
                         >
                           <Plus className="w-4 h-4" />
                         </span>
                       </div>
                     </div>
-
-                    {/* Image */}
-                    {item.image ? (
-                      <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0 overflow-hidden">
-                        <Image 
-                          src={item.image} 
-                          alt={item.name}
-                          fill
-                          sizes="128px"
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 bg-surface-50 flex items-center justify-center">
-                        <ShoppingBag className="w-6 h-6 text-surface-200" />
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
@@ -441,14 +441,14 @@ export function StorefrontView({
               <div className="flex items-center bg-surface-50 rounded-xl p-1 h-11">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors active:scale-95 shadow-sm"
+                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors shadow-sm"
                 >
                   <Minus className="w-3.5 h-3.5" />
                 </button>
                 <span className="font-bold text-base w-8 text-center text-surface-900">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors active:scale-95 shadow-sm"
+                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors shadow-sm"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
@@ -457,7 +457,7 @@ export function StorefrontView({
               <button 
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="flex-[2] h-11 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 px-4 active:scale-[0.98] disabled:opacity-80 text-sm shadow-md"
+                className="flex-[2] h-11 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 px-4 disabled:opacity-80 text-sm shadow-md"
                 style={{ 
                   backgroundColor: store.primaryColor || 'var(--color-primary-600)',
                   boxShadow: `0 4px 14px ${store.primaryColor ? store.primaryColor + '44' : 'rgba(0,0,0,0.15)'}`,

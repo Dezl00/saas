@@ -11,7 +11,7 @@ export function CartHeaderButton() {
   return (
     <button
       onClick={() => setIsCartOpen(true)}
-      className="relative p-2 hover:opacity-80 transition-opacity active:scale-95 flex items-center justify-center"
+      className="relative p-2 hover:opacity-80 transition-opacity flex items-center justify-center"
     >
       <ShoppingBag className="w-6 h-6 text-surface-700" />
       {totalQuantity > 0 && (

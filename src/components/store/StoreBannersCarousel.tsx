@@ -68,46 +68,46 @@ export function StoreBannersCarousel({ banners }: Props) {
   if (banners.length === 0) return null;
 
   return (
-    <div className="mb-6">
+    <div className="w-full h-full relative">
       {/* Carousel Container */}
       <div
         ref={containerRef}
-        className="relative overflow-hidden rounded-2xl"
+        className="relative overflow-hidden w-full h-full touch-pan-y"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         <div
-          className="flex transition-transform duration-500 ease-out"
+          className="flex h-full w-full"
           style={{
             transform: `translateX(calc(${current * -100}% + ${isDragging ? translateX : 0}px))`,
-            transition: isDragging ? "none" : "transform 0.5s ease-out",
+            transition: isDragging ? "none" : "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
           }}
         >
           {banners.map((banner) => (
-            <div key={banner.id} className="w-full shrink-0">
+            <div key={banner.id} className="w-full h-full shrink-0">
               {banner.link ? (
-                <a href={banner.link} target="_blank" rel="noreferrer">
-                  <div className="relative aspect-[2.2/1] w-full">
+                <a href={banner.link} target="_blank" rel="noreferrer" className="block w-full h-full">
+                  <div className="relative w-full h-full">
                     <Image
                       src={banner.image}
                       alt={banner.title || "عرض"}
                       fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes="(max-width: 768px) 100vw, 100vw"
                       className="object-cover"
-                      loading="lazy"
+                      priority
                     />
                   </div>
                 </a>
               ) : (
-                <div className="relative aspect-[2.2/1] w-full">
+                <div className="relative w-full h-full">
                   <Image
                     src={banner.image}
                     alt={banner.title || "عرض"}
                     fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes="(max-width: 768px) 100vw, 100vw"
                     className="object-cover"
-                    loading="lazy"
+                    priority
                   />
                 </div>
               )}
@@ -115,26 +115,6 @@ export function StoreBannersCarousel({ banners }: Props) {
           ))}
         </div>
       </div>
-
-      {/* Dots indicator */}
-      {total > 1 && (
-        <div className="flex items-center justify-center gap-1.5 mt-3">
-          {banners.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                setCurrent(idx);
-                resetAutoplay();
-              }}
-              className={`rounded-full transition-all duration-300 ${
-                idx === current
-                  ? "w-6 h-2 bg-primary-500"
-                  : "w-2 h-2 bg-surface-300 hover:bg-surface-400"
-              }`}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }

@@ -6,9 +6,10 @@ import { CartHeaderButton } from "@/components/store/CartHeaderButton";
 import { DynamicCartSidebar as CartSidebar } from "@/components/store/DynamicCartSidebar";
 import { StoreSplashScreen } from "@/components/store/StoreSplashScreen";
 import { FloatingCartButton } from "@/components/store/FloatingCartButton";
+import { StoreBannersCarousel } from "@/components/store/StoreBannersCarousel";
 import { formatWhatsappNumber } from "@/lib/utils";
 import Image from "next/image";
-import { getStoreInfo } from "./data";
+import { getStoreInfo, getStoreBanners } from "./data";
 
 // SVG Icons for Brands
 const FacebookIcon = ({ className }: { className?: string }) => (
@@ -79,7 +80,6 @@ export default async function StoreLayout({
 }) {
   const params = await paramsPromise;
   const storePromise = getStoreInfo(params.subdomain);
-
   const settingsPromise = prisma.platformSetting.findUnique({ where: { id: "1" } });
 
   const [store, settings] = await Promise.all([storePromise, settingsPromise]);
@@ -88,6 +88,8 @@ export default async function StoreLayout({
   if (!store || store.status === "DELETED") {
     notFound();
   }
+
+  const banners = await getStoreBanners(store.id);
 
   if (store.status === "SUSPENDED") {
     return (
@@ -141,33 +143,36 @@ export default async function StoreLayout({
           </div>
         </header>
 
-        {/* Hero Section — Cover Image + Logo + Info */}
+        {/* Hero Section — Banners or Cover */}
         <section className="relative bg-surface-950">
-          {/* Cover Image */}
-          {(store as any).cover ? (
-            <>
+          <div className="h-44 sm:h-52 w-full relative bg-surface-100 overflow-hidden">
+            {banners && banners.length > 0 ? (
+              <StoreBannersCarousel banners={banners} />
+            ) : (store as any).cover ? (
+              <>
+                <div 
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url(${(store as any).cover})` }}
+                />
+                <div 
+                  className="absolute inset-0"
+                  style={{ 
+                    backgroundColor: (store as any).coverOverlayColor || '#000000',
+                    opacity: ((store as any).coverOverlayOpacity ?? 50) / 100 
+                  }}
+                />
+              </>
+            ) : (
               <div 
-                className="relative h-44 sm:h-52 w-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${(store as any).cover})` }}
+                className="w-full h-full"
+                style={{ backgroundColor: store.primaryColor || '#1a1a2e' }}
               />
-              <div 
-                className="absolute top-0 left-0 right-0 h-44 sm:h-52"
-                style={{ 
-                  backgroundColor: (store as any).coverOverlayColor || '#000000',
-                  opacity: ((store as any).coverOverlayOpacity ?? 50) / 100 
-                }}
-              />
-            </>
-          ) : (
-            <div 
-              className="h-44 sm:h-52 w-full"
-              style={{ backgroundColor: store.primaryColor || '#1a1a2e' }}
-            />
-          )}
+            )}
+          </div>
 
           {/* Logo circle overlapping cover */}
           <div className="relative max-w-5xl mx-auto px-4">
-            <div className="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full bg-white border-4 border-white shadow-lg overflow-hidden flex items-center justify-center">
+            <div className="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full bg-white border-4 border-white overflow-hidden flex items-center justify-center">
               {store.logo ? (
                 <Image src={store.logo} alt={store.name} fill className="object-cover" sizes="112px" priority fetchPriority="high" />
               ) : (
@@ -223,12 +228,12 @@ export default async function StoreLayout({
 
         {/* Promo Banner */}
         <div className="max-w-5xl mx-auto px-4 mt-16">
-          <div className="bg-gradient-to-r from-[#2563eb] to-[#1e40af] rounded-3xl p-8 text-center text-white shadow-xl flex flex-col items-center" style={{ '--color-primary-600': '#2563eb', '--color-primary-800': '#1e40af' } as any}>
+          <div className="bg-[#2563eb] rounded-3xl p-8 text-center text-white flex flex-col items-center">
             <h3 className="text-2xl font-black mb-2 text-white">هل تمتلك مطعماً أو متجراً؟</h3>
             <p className="text-blue-100 mb-6 max-w-lg">
               أنشئ متجرك الإلكتروني الخاص في دقائق وابدأ في استقبال الطلبات عبر الواتساب مباشرة وبدون عمولات!
             </p>
-            <a href="https://menura.site" target="_blank" className="bg-white text-blue-700 font-bold py-3 px-8 rounded-2xl hover:bg-surface-50 transition-colors shadow-lg hover:shadow-xl">
+            <a href="https://menura.site" target="_blank" className="bg-white text-[#2563eb] font-bold py-3 px-8 rounded-2xl hover:bg-surface-50 transition-colors">
               أنشئ متجرك مجاناً
             </a>
           </div>
