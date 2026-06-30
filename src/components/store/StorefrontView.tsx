@@ -19,7 +19,7 @@ type MenuItem = {
   addons: Addon[];
 };
 type Category = { id: string; name: string };
-type Store = { name: string; currency: string; primaryColor?: string | null; secondaryColor?: string | null };
+type Store = { name: string; currency: string; primaryColor?: string | null; secondaryColor?: string | null; logo?: string | null; };
 
 export function StorefrontView({
   store,

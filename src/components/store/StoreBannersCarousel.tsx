@@ -15,16 +15,15 @@ type Props = {
 };
 
 export function StoreBannersCarousel({ banners }: Props) {
-  const [current, setCurrent] = useState(0);
+  const total = banners.length;
+  const [current, setCurrent] = useState(total > 1 ? 1 : 0);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [translateX, setTranslateX] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
-  const total = banners.length;
   const displayBanners = total > 1 ? [banners[total - 1], ...banners, banners[0]] : banners;
-  const [current, setCurrent] = useState(total > 1 ? 1 : 0);
   const [isTransitioning, setIsTransitioning] = useState(true);
 
   const resetAutoplay = useCallback(() => {
