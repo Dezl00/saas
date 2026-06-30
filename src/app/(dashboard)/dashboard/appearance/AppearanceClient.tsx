@@ -34,8 +34,11 @@ export function AppearanceClient({ currentFont }: { currentFont: string }) {
     }
   };
 
+  const fontsUrl = "https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;700&family=Changa:wght@400;700&family=El+Messiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;700&family=Lalezar&family=Readex+Pro:wght@400;700&family=Tajawal:wght@400;700&display=swap";
+
   return (
     <div className="space-y-6">
+      <link href={fontsUrl} rel="stylesheet" />
       <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-surface-100">
         <h2 className="text-xl font-bold text-surface-900 mb-6">اختر خط المتجر</h2>
         
