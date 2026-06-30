@@ -23,13 +23,17 @@ export function StoreBannersCarousel({ banners }: Props) {
   const autoplayRef = useRef<NodeJS.Timeout | null>(null);
 
   const total = banners.length;
+  const displayBanners = total > 1 ? [banners[total - 1], ...banners, banners[0]] : banners;
+  const [current, setCurrent] = useState(total > 1 ? 1 : 0);
+  const [isTransitioning, setIsTransitioning] = useState(true);
 
   const resetAutoplay = useCallback(() => {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
     autoplayRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % total);
+      setIsTransitioning(true);
+      setCurrent((prev) => prev + 1);
     }, 4000);
-  }, [total]);
+  }, []);
 
   useEffect(() => {
     if (total <= 1) return;
@@ -39,8 +43,30 @@ export function StoreBannersCarousel({ banners }: Props) {
     };
   }, [total, resetAutoplay]);
 
+  // Handle infinite scroll jump
+  useEffect(() => {
+    if (total <= 1) return;
+    
+    let timeout: NodeJS.Timeout;
+    if (current === 0) {
+      // Jump to the real last item
+      timeout = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrent(total);
+      }, 400); // match transition duration
+    } else if (current === total + 1) {
+      // Jump to the real first item
+      timeout = setTimeout(() => {
+        setIsTransitioning(false);
+        setCurrent(1);
+      }, 400);
+    }
+    return () => clearTimeout(timeout);
+  }, [current, total]);
+
   const handleTouchStart = (e: React.TouchEvent) => {
     setIsDragging(true);
+    setIsTransitioning(false);
     setStartX(e.touches[0].clientX);
     setTranslateX(0);
     if (autoplayRef.current) clearInterval(autoplayRef.current);
@@ -54,11 +80,12 @@ export function StoreBannersCarousel({ banners }: Props) {
 
   const handleTouchEnd = () => {
     setIsDragging(false);
+    setIsTransitioning(true);
     if (Math.abs(translateX) > 50) {
       if (translateX > 0) {
-        setCurrent((prev) => (prev - 1 + total) % total);
+        setCurrent((prev) => prev - 1); // Swipe right (in RTL this means go to previous)
       } else {
-        setCurrent((prev) => (prev + 1) % total);
+        setCurrent((prev) => prev + 1); // Swipe left (go to next)
       }
     }
     setTranslateX(0);
@@ -81,11 +108,11 @@ export function StoreBannersCarousel({ banners }: Props) {
           className="flex h-full w-full"
           style={{
             transform: `translateX(calc(${current * -100}% + ${isDragging ? translateX : 0}px))`,
-            transition: isDragging ? "none" : "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)",
+            transition: isTransitioning ? "transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)" : "none",
           }}
         >
-          {banners.map((banner) => (
-            <div key={banner.id} className="w-full h-full shrink-0">
+          {displayBanners.map((banner, index) => (
+            <div key={`${banner.id}-${index}`} className="w-full h-full shrink-0">
               {banner.link ? (
                 <a href={banner.link} target="_blank" rel="noreferrer" className="block w-full h-full">
                   <div className="relative w-full h-full">

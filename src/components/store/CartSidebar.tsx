@@ -238,7 +238,7 @@ export function CartSidebar({
                     type="button"
                     onClick={() => { setDeliveryType("DELIVERY"); setValidationErrors({}); }}
                     className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-all rounded-xl ${
-                      deliveryType === "DELIVERY" ? "bg-primary-500 text-white shadow-md shadow-primary-500/20" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
+                      deliveryType === "DELIVERY" ? "bg-primary-500 text-white" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
                     }`}
                   >
                     <Truck className={`w-4 h-4 ${deliveryType === "DELIVERY" ? "text-white" : ""}`} />
@@ -248,7 +248,7 @@ export function CartSidebar({
                     type="button"
                     onClick={() => { setDeliveryType("PICKUP"); setValidationErrors({}); }}
                     className={`flex-1 flex justify-center items-center gap-2 py-3 text-sm font-bold transition-all rounded-xl ${
-                      deliveryType === "PICKUP" ? "bg-primary-500 text-white shadow-md shadow-primary-500/20" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
+                      deliveryType === "PICKUP" ? "bg-primary-500 text-white" : "text-surface-500 hover:text-surface-950 hover:bg-surface-200/50"
                     }`}
                   >
                     <StoreIcon className={`w-4 h-4 ${deliveryType === "PICKUP" ? "text-white" : ""}`} />

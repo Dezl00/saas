@@ -203,8 +203,8 @@ export function StorefrontView({
       {/* Toolbar: Tabs + Filter (no grid toggle) */}
       <div className="sticky top-14 z-20 bg-white py-2.5 flex items-center gap-2 border-b border-surface-100">
         {/* Categories Tabs - Scrollable */}
-        <div className="flex-1 overflow-x-auto no-scrollbar flex items-center gap-2 pb-0.5">
-          {categories.map((cat) => (
+        <div className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] flex items-center gap-2 pb-0.5">
+          {categories.filter(cat => menuItems.some(item => item.categoryId === cat.id)).map((cat) => (
             <button
               key={cat.id}
               id={`tab-${cat.id}`}
@@ -286,7 +286,15 @@ export function StorefrontView({
 
           return (
             <div key={category.id} id={`category-${category.id}`} className="scroll-mt-28">
-              <h2 className="text-lg font-black text-surface-900 mb-3">{category.name}</h2>
+              <h2 
+                className="text-lg rounded-xl p-2 text-center font-semibold mb-4"
+                style={{ 
+                  backgroundColor: store.primaryColor ? `${store.primaryColor}1a` : 'var(--color-primary-50)',
+                  color: store.primaryColor || 'var(--color-primary-600)' 
+                }}
+              >
+                {category.name}
+              </h2>
               
               {/* Cards — horizontal layout for mobile-first like Menuo */}
               <div className="flex flex-col gap-3">
@@ -297,14 +305,14 @@ export function StorefrontView({
                     className="bg-white border border-surface-100 rounded-2xl overflow-hidden flex flex-row cursor-pointer hover:shadow-md transition-all group"
                   >
                     {/* Image */}
-                    {item.image ? (
-                      <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0 overflow-hidden">
+                    {item.image || store.logo ? (
+                      <div className="relative w-28 h-28 sm:w-32 sm:h-32 shrink-0 overflow-hidden bg-surface-50">
                         <Image 
-                          src={item.image} 
+                          src={item.image || store.logo!} 
                           alt={item.name}
                           fill
                           sizes="128px"
-                          className="object-cover transition-opacity duration-300"
+                          className={`object-cover transition-opacity duration-300 ${!item.image ? 'opacity-50 p-2' : ''}`}
                           loading="lazy"
                         />
                       </div>
@@ -358,7 +366,39 @@ export function StorefrontView({
             if (e.target === e.currentTarget) closeProductModal();
           }}
         >
-          <div className="bg-white w-full sm:max-w-md sm:max-h-[85vh] max-h-[90vh] flex flex-col animate-slide-in-up sm:animate-zoom-in overflow-hidden sm:rounded-2xl rounded-t-3xl">
+          <div 
+            className="bg-white w-full sm:max-w-md sm:max-h-[85vh] max-h-[90vh] flex flex-col animate-slide-in-up sm:animate-zoom-in overflow-hidden sm:rounded-2xl rounded-t-3xl"
+            onTouchStart={(e) => {
+              const touch = e.touches[0];
+              const el = e.currentTarget;
+              el.dataset.startY = touch.clientY.toString();
+              el.style.transition = 'none';
+            }}
+            onTouchMove={(e) => {
+              const touch = e.touches[0];
+              const el = e.currentTarget;
+              const startY = parseFloat(el.dataset.startY || '0');
+              const deltaY = touch.clientY - startY;
+              // Only allow dragging downwards
+              if (deltaY > 0) {
+                el.style.transform = `translateY(${deltaY}px)`;
+              }
+            }}
+            onTouchEnd={(e) => {
+              const el = e.currentTarget;
+              const touch = e.changedTouches[0];
+              const startY = parseFloat(el.dataset.startY || '0');
+              const deltaY = touch.clientY - startY;
+              el.style.transition = 'transform 0.3s ease-out';
+              if (deltaY > 100) {
+                closeProductModal();
+                // Reset after close animation completes
+                setTimeout(() => { el.style.transform = ''; }, 300);
+              } else {
+                el.style.transform = '';
+              }
+            }}
+          >
             {/* Modal Header Image */}
             <div className="relative h-48 sm:h-52 bg-surface-50 shrink-0">
               {selectedProduct.image ? (
@@ -396,7 +436,7 @@ export function StorefrontView({
                   <h3 className="font-semibold text-surface-900 mb-2.5 text-sm bg-surface-50 rounded-xl p-2.5">اختر الحجم (إجباري)</h3>
                   <div className="space-y-2">
                     {selectedProduct.sizes.map(size => (
-                      <label key={size.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-all ${selectedSize?.id === size.id ? 'border-primary-500 bg-primary-50 shadow-sm' : 'border-surface-100 hover:bg-surface-50'}`}>
+                      <label key={size.id} onClick={() => setSelectedSize(size)} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-all ${selectedSize?.id === size.id ? 'border-primary-500 bg-primary-50' : 'border-surface-100 hover:bg-surface-50'}`}>
                         <div className="flex items-center gap-3">
                           <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${selectedSize?.id === size.id ? 'border-primary-500' : 'border-surface-300'}`}>
                             {selectedSize?.id === size.id && (
@@ -420,7 +460,13 @@ export function StorefrontView({
                     {selectedProduct.addons.map(addon => {
                       const isSelected = selectedAddons.some(a => a.id === addon.id);
                       return (
-                        <label key={addon.id} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-all ${isSelected ? 'border-primary-500 bg-primary-50 shadow-sm' : 'border-surface-100 hover:bg-surface-50'}`}>
+                        <label key={addon.id} onClick={() => {
+                          if (isSelected) {
+                            setSelectedAddons(prev => prev.filter(a => a.id !== addon.id));
+                          } else {
+                            setSelectedAddons(prev => [...prev, addon]);
+                          }
+                        }} className={`flex items-center justify-between p-3 border rounded-xl cursor-pointer transition-all ${isSelected ? 'border-primary-500 bg-primary-50' : 'border-surface-100 hover:bg-surface-50'}`}>
                           <div className="flex items-center gap-3">
                             <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-primary-500 bg-primary-500' : 'border-surface-300'}`}>
                               {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
@@ -438,17 +484,17 @@ export function StorefrontView({
 
             {/* Modal Footer (Quantity + Add to Cart) */}
             <div className="p-4 border-t border-surface-100 bg-white flex items-center gap-3">
-              <div className="flex items-center bg-surface-50 rounded-xl p-1 h-11">
+              <div className="flex items-center bg-surface-50 rounded-xl p-1 h-11 border border-surface-100">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors shadow-sm"
+                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors"
                 >
                   <Minus className="w-3.5 h-3.5" />
                 </button>
                 <span className="font-bold text-base w-8 text-center text-surface-900">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors shadow-sm"
+                  className="w-9 h-full flex items-center justify-center bg-white rounded-lg text-surface-600 hover:bg-surface-100 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
@@ -457,10 +503,9 @@ export function StorefrontView({
               <button 
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="flex-[2] h-11 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 px-4 disabled:opacity-80 text-sm shadow-md"
+                className="flex-[2] h-11 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 px-4 disabled:opacity-80 text-sm"
                 style={{ 
-                  backgroundColor: store.primaryColor || 'var(--color-primary-600)',
-                  boxShadow: `0 4px 14px ${store.primaryColor ? store.primaryColor + '44' : 'rgba(0,0,0,0.15)'}`,
+                  backgroundColor: store.primaryColor || 'var(--color-primary-600)'
                 }}
               >
                 {isAddingToCart ? (

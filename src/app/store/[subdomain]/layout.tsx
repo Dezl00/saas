@@ -171,12 +171,12 @@ export default async function StoreLayout({
           </div>
 
           {/* Logo circle overlapping cover */}
-          <div className="relative max-w-5xl mx-auto px-4">
+          <div className="relative max-w-5xl mx-auto px-4 z-10">
             <div className="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full bg-white border-4 border-white overflow-hidden flex items-center justify-center">
               {store.logo ? (
                 <Image src={store.logo} alt={store.name} fill className="object-cover" sizes="112px" priority fetchPriority="high" />
               ) : (
-                <StoreIcon className="w-10 h-10 text-primary-600" />
+                <StoreIcon className="w-10 h-10" style={{ color: store.primaryColor || 'var(--color-primary-600)' }} />
               )}
             </div>
           </div>
@@ -192,27 +192,27 @@ export default async function StoreLayout({
             {hasSocialLinks(store) && (
               <div className="flex items-center justify-center gap-2 mt-4">
                 {store.showFacebook && store.facebookUrl && (
-                  <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 bg-surface-100 text-surface-500 hover:text-primary-600">
+                  <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                     <FacebookIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showInstagram && store.instagramUrl && (
-                  <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 bg-surface-100 text-surface-500 hover:text-primary-600">
+                  <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                     <InstagramIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showTwitter && store.twitterUrl && (
-                  <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 bg-surface-100 text-surface-500 hover:text-primary-600">
+                  <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                     <XIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showTiktok && store.tiktokUrl && (
-                  <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 bg-surface-100 text-surface-500 hover:text-primary-600">
+                  <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                     <TiktokIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showSnapchat && store.snapchatUrl && (
-                  <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:scale-110 bg-surface-100 text-surface-500 hover:text-primary-600">
+                  <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                     <SnapchatIcon className="w-4 h-4" />
                   </a>
                 )}
@@ -271,27 +271,27 @@ export default async function StoreLayout({
 
             <div className="flex justify-center items-center gap-3 mt-8">
               {store.showFacebook && store.facebookUrl && (
-                <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-surface-200 text-surface-500 hover:text-primary-600">
+                <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                   <FacebookIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showInstagram && store.instagramUrl && (
-                <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-surface-200 text-surface-500 hover:text-primary-600">
+                <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                   <InstagramIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showTwitter && store.twitterUrl && (
-                <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-surface-200 text-surface-500 hover:text-primary-600">
+                <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                   <XIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showTiktok && store.tiktokUrl && (
-                <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-surface-200 text-surface-500 hover:text-primary-600">
+                <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                   <TiktokIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showSnapchat && store.snapchatUrl && (
-                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-full flex items-center justify-center hover:scale-110 transition-transform bg-surface-200 text-surface-500 hover:text-primary-600">
+                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors border border-surface-200 hover:bg-surface-50" style={{ color: store.primaryColor || 'var(--color-primary-600)' }}>
                   <SnapchatIcon className="w-4 h-4" />
                 </a>
               )}
