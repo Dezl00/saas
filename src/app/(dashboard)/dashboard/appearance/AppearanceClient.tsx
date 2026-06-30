@@ -58,10 +58,10 @@ export function AppearanceClient({ currentFont }: { currentFont: string }) {
                   </div>
                 )}
               </div>
-              <p className={`text-surface-600 text-xl mt-2 ${font.cssClass}`} style={{ fontFamily: \`"\${font.id}", sans-serif\` }}>
+              <p className={`text-surface-600 text-xl mt-2 ${font.cssClass}`} style={{ fontFamily: `"${font.id}", sans-serif` }}>
                 أهلاً بك في متجرنا
               </p>
-              <p className={`text-surface-400 text-sm mt-1 ${font.cssClass}`} style={{ fontFamily: \`"\${font.id}", sans-serif\` }}>
+              <p className={`text-surface-400 text-sm mt-1 ${font.cssClass}`} style={{ fontFamily: `"${font.id}", sans-serif` }}>
                 وجبات لذيذة وتوصيل سريع!
               </p>
             </div>

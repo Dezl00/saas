@@ -28,12 +28,7 @@ export default async function AppearancePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-surface-900 mb-1">المظهر</h1>
-          <Breadcrumb 
-            items={[
-              { label: "لوحة التحكم", href: "/dashboard" },
-              { label: "المظهر" }
-            ]} 
-          />
+          <Breadcrumb title="المظهر" />
         </div>
       </div>
 

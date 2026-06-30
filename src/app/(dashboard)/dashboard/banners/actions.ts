@@ -33,7 +33,7 @@ export async function createBanner(formData: FormData) {
       },
     });
 
-    revalidateTag(`store-banners-${session.user.storeId}`);
+    (revalidateTag as any)(`store-banners-${session.user.storeId}`, "default");
     revalidatePath("/dashboard/banners");
     return { success: "تم إضافة البانر بنجاح" };
   } catch (error) {
@@ -80,7 +80,7 @@ export async function updateBanner(formData: FormData) {
       },
     });
 
-    revalidateTag(`store-banners-${session.user.storeId}`);
+    (revalidateTag as any)(`store-banners-${session.user.storeId}`, "default");
     revalidatePath("/dashboard/banners");
     return { success: "تم تحديث البانر بنجاح" };
   } catch (error) {
@@ -106,7 +106,7 @@ export async function toggleBannerStatus(id: string, isActive: boolean) {
       data: { isActive },
     });
 
-    revalidateTag(`store-banners-${session.user.storeId}`);
+    (revalidateTag as any)(`store-banners-${session.user.storeId}`, "default");
     revalidatePath("/dashboard/banners");
     return { success: isActive ? "تم تنشيط البانر" : "تم إيقاف البانر" };
   } catch (error) {
@@ -134,7 +134,7 @@ export async function deleteBanner(id: string) {
       where: { id },
     });
 
-    revalidateTag(`store-banners-${session.user.storeId}`);
+    (revalidateTag as any)(`store-banners-${session.user.storeId}`, "default");
     revalidatePath("/dashboard/banners");
     return { success: "تم حذف البانر بنجاح" };
   } catch (error) {
@@ -143,31 +143,3 @@ export async function deleteBanner(id: string) {
   }
 }
 
-export async function toggleBannerStatus(id: string, isActive: boolean) {
-  const session = await auth();
-  if (!session?.user?.storeId) {
-    return { error: "غير مصرح لك بالقيام بهذه العملية" };
-  }
-
-  try {
-    const banner = await prisma.storeBanner.findUnique({
-      where: { id },
-    });
-
-    if (!banner || banner.storeId !== session.user.storeId) {
-      return { error: "البانر غير موجود أو لا تملك صلاحية تعديله" };
-    }
-
-    await prisma.storeBanner.update({
-      where: { id },
-      data: { isActive },
-    });
-
-    revalidateTag(`store-banners-${session.user.storeId}`, "default" as any);
-    revalidatePath("/dashboard/banners");
-    return { success: isActive ? "تم تفعيل البانر" : "تم إيقاف البانر" };
-  } catch (error) {
-    console.error("Toggle Banner Error:", error);
-    return { error: "حدث خطأ أثناء تعديل حالة البانر" };
-  }
-}
