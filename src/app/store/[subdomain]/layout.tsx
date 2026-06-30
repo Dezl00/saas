@@ -103,17 +103,24 @@ export default async function StoreLayout({
     );
   }
 
+  const fontName = store.fontFamily || "Tajawal";
+  const googleFontUrl = `https://fonts.googleapis.com/css2?family=${fontName.replace(/ /g, "+")}:wght@400;500;600;700;800;900&display=swap`;
+
   return (
     <CartProvider>
+      <link href={googleFontUrl} rel="stylesheet" />
       <div 
         className="min-h-screen bg-white pb-0 flex flex-col"
-        style={store.primaryColor ? {
-          '--color-primary-50': `${store.primaryColor}1a`,
-          '--color-primary-100': `${store.primaryColor}33`,
-          '--color-primary-500': store.primaryColor,
-          '--color-primary-600': store.primaryColor,
-          '--color-primary-700': store.primaryColor,
-        } as React.CSSProperties : undefined}
+        style={{
+          fontFamily: `"${fontName}", sans-serif`,
+          ...(store.primaryColor ? {
+            '--color-primary-50': `${store.primaryColor}1a`,
+            '--color-primary-100': `${store.primaryColor}33`,
+            '--color-primary-500': store.primaryColor,
+            '--color-primary-600': store.primaryColor,
+            '--color-primary-700': store.primaryColor,
+          } : {})
+        } as React.CSSProperties}
       >
         {/* Splash Screen */}
         <StoreSplashScreen

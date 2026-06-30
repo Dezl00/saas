@@ -33,7 +33,7 @@ export async function createBanner(formData: FormData) {
       },
     });
 
-    revalidateTag(`store-banners-${session.user.storeId}`, "default" as any);
+    revalidateTag(`store-banners-${session.user.storeId}`);
     revalidatePath("/dashboard/banners");
     return { success: "تم إضافة البانر بنجاح" };
   } catch (error) {
@@ -53,6 +53,7 @@ export async function updateBanner(formData: FormData) {
   const link = formData.get("link") as string;
   const imageFile = formData.get("image") as File;
   const sortOrder = parseInt((formData.get("sortOrder") as string) || "0");
+  const isActive = formData.get("isActive") === "true";
 
   try {
     const banner = await prisma.storeBanner.findUnique({
@@ -60,7 +61,7 @@ export async function updateBanner(formData: FormData) {
     });
 
     if (!banner || banner.storeId !== session.user.storeId) {
-      return { error: "البانر غير موجود أو لا تملك صلاحية تعديله" };
+      return { error: "البانر غير موجود" };
     }
 
     let imageUrl = banner.image;
@@ -75,15 +76,42 @@ export async function updateBanner(formData: FormData) {
         title: title || null,
         link: link || null,
         sortOrder,
+        isActive,
       },
     });
 
-    revalidateTag(`store-banners-${session.user.storeId}`, "default" as any);
+    revalidateTag(`store-banners-${session.user.storeId}`);
     revalidatePath("/dashboard/banners");
     return { success: "تم تحديث البانر بنجاح" };
   } catch (error) {
     console.error("Update Banner Error:", error);
     return { error: "حدث خطأ أثناء تحديث البانر" };
+  }
+}
+
+export async function toggleBannerStatus(id: string, isActive: boolean) {
+  const session = await auth();
+  if (!session?.user?.storeId) {
+    return { error: "غير مصرح لك بالقيام بهذه العملية" };
+  }
+
+  try {
+    const banner = await prisma.storeBanner.findUnique({ where: { id } });
+    if (!banner || banner.storeId !== session.user.storeId) {
+      return { error: "البانر غير موجود" };
+    }
+
+    await prisma.storeBanner.update({
+      where: { id },
+      data: { isActive },
+    });
+
+    revalidateTag(`store-banners-${session.user.storeId}`);
+    revalidatePath("/dashboard/banners");
+    return { success: isActive ? "تم تنشيط البانر" : "تم إيقاف البانر" };
+  } catch (error) {
+    console.error("Toggle Banner Error:", error);
+    return { error: "حدث خطأ أثناء تحديث حالة البانر" };
   }
 }
 
@@ -99,14 +127,14 @@ export async function deleteBanner(id: string) {
     });
 
     if (!banner || banner.storeId !== session.user.storeId) {
-      return { error: "البانر غير موجود أو لا تملك صلاحية حذفه" };
+      return { error: "البانر غير موجود" };
     }
 
     await prisma.storeBanner.delete({
       where: { id },
     });
 
-    revalidateTag(`store-banners-${session.user.storeId}`, "default" as any);
+    revalidateTag(`store-banners-${session.user.storeId}`);
     revalidatePath("/dashboard/banners");
     return { success: "تم حذف البانر بنجاح" };
   } catch (error) {

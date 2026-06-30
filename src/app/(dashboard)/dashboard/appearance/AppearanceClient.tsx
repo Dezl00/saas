@@ -1,0 +1,84 @@
+"use client";
+
+import { useState } from "react";
+import { updateStoreFont } from "./actions";
+import { Loader2, Check } from "lucide-react";
+import toast from "react-hot-toast";
+
+const FONTS = [
+  { id: "Tajawal", name: "تجوال", cssClass: "font-tajawal" },
+  { id: "Almarai", name: "المراعي", cssClass: "font-almarai" },
+  { id: "Cairo", name: "القاهرة", cssClass: "font-cairo" },
+  { id: "Readex Pro", name: "ريدكس برو", cssClass: "font-readex" },
+  { id: "IBM Plex Sans Arabic", name: "آي بي إم بلكس", cssClass: "font-ibm" },
+  { id: "Changa", name: "تشانجا", cssClass: "font-changa" },
+  { id: "Amiri", name: "أميري", cssClass: "font-amiri" },
+  { id: "El Messiri", name: "المسيري", cssClass: "font-messiri" },
+  { id: "Aref Ruqaa", name: "عارف رقعة", cssClass: "font-ruqaa" },
+  { id: "Lalezar", name: "لالزار", cssClass: "font-lalezar" },
+];
+
+export function AppearanceClient({ currentFont }: { currentFont: string }) {
+  const [selectedFont, setSelectedFont] = useState(currentFont || "Tajawal");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await updateStoreFont(selectedFont);
+      toast.success("تم تحديث المظهر بنجاح");
+    } catch (error) {
+      toast.error("حدث خطأ أثناء التحديث");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-surface-100">
+        <h2 className="text-xl font-bold text-surface-900 mb-6">اختر خط المتجر</h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {FONTS.map((font) => (
+            <div
+              key={font.id}
+              onClick={() => setSelectedFont(font.id)}
+              className={`relative cursor-pointer rounded-2xl p-4 transition-all border-2 ${
+                selectedFont === font.id 
+                  ? "border-primary-500 bg-primary-50 shadow-md" 
+                  : "border-surface-100 hover:border-primary-200 bg-surface-50 hover:bg-white"
+              }`}
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-bold text-surface-900 text-lg">{font.name}</h3>
+                {selectedFont === font.id && (
+                  <div className="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                )}
+              </div>
+              <p className={`text-surface-600 text-xl mt-2 ${font.cssClass}`} style={{ fontFamily: \`"\${font.id}", sans-serif\` }}>
+                أهلاً بك في متجرنا
+              </p>
+              <p className={`text-surface-400 text-sm mt-1 ${font.cssClass}`} style={{ fontFamily: \`"\${font.id}", sans-serif\` }}>
+                وجبات لذيذة وتوصيل سريع!
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-surface-100 flex justify-end">
+          <button
+            onClick={handleSave}
+            disabled={isSaving || selectedFont === currentFont}
+            className="bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Check className="w-5 h-5" />}
+            حفظ التغييرات
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
