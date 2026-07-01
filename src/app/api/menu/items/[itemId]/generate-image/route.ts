@@ -39,7 +39,7 @@ export async function POST(
     const itemDescription = item.description ? `Description: ${item.description}` : "";
     
     // We will use Gemini to translate and enhance the prompt
-    let promptString = `Professional food photography, ${item.name}, ${categoryName}${itemDescription}restaurant menu item, delicious, fresh ingredients, white background, high quality, soft lighting, ultra realistic, 4k`;
+    let promptString = `Professional studio food photography, front view angle, ${item.name}, ${categoryName}${itemDescription}isolated on pure white background, delicious, fresh ingredients, ultra realistic, 4k`;
     
     try {
       const { GoogleGenerativeAI } = await import("@google/generative-ai");
@@ -55,12 +55,12 @@ Item Name: ${item.name}
 ${categoryName}
 ${itemDescription}
 
-Task: Write a concise, highly descriptive English prompt (max 30 words) for an AI image generator to create a mouth-watering, ultra-realistic, professional food photograph of this exact dish on a clean background. Do not include any text, labels, or extra instructions, just the prompt itself.`;
+Task: Write a concise, highly descriptive English prompt (max 30 words) for an AI image generator to create a mouth-watering, ultra-realistic, professional studio food photograph of this exact dish. The photo MUST be taken from a straight front-facing angle and isolated on a pure white background. Do not include any text, labels, or extra instructions, just the prompt itself.`;
         
         const result = await model.generateContent(aiPrompt);
         const responseText = result.response.text().trim();
         if (responseText) {
-          promptString = responseText + ", professional food photography, restaurant menu item, delicious, ultra realistic, 4k";
+          promptString = responseText + ", professional studio food photography, front view angle, isolated on pure white background, ultra realistic, 4k";
         }
       }
     } catch (e) {
