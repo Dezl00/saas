@@ -165,7 +165,7 @@ export function StoreHeader({ logo, storeName, primaryColor, socialLinks, workin
 
   return (
     <>
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-surface-100">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-surface-100">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* Right side: Hamburger + Logo */}
           <div className="flex items-center gap-2" ref={menuRef}>
@@ -237,28 +237,28 @@ export function StoreHeader({ logo, storeName, primaryColor, socialLinks, workin
                     {hasSocial && (
                       <div className="flex items-center justify-center gap-3 px-5 py-4">
                         {socialLinks.showFacebook && socialLinks.facebookUrl && (
-                          <a href={socialLinks.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
-                            <FacebookIcon className="w-5 h-5" />
+                          <a href={socialLinks.facebookUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
+                            <FacebookIcon className="w-4 h-4" />
                           </a>
                         )}
                         {socialLinks.showInstagram && socialLinks.instagramUrl && (
-                          <a href={socialLinks.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
-                            <InstagramIcon className="w-5 h-5" />
+                          <a href={socialLinks.instagramUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
+                            <InstagramIcon className="w-4 h-4" />
                           </a>
                         )}
                         {socialLinks.showTwitter && socialLinks.twitterUrl && (
-                          <a href={socialLinks.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
-                            <XIcon className="w-5 h-5" />
+                          <a href={socialLinks.twitterUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
+                            <XIcon className="w-4 h-4" />
                           </a>
                         )}
                         {socialLinks.showTiktok && socialLinks.tiktokUrl && (
-                          <a href={socialLinks.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
-                            <TiktokIcon className="w-5 h-5" />
+                          <a href={socialLinks.tiktokUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
+                            <TiktokIcon className="w-4 h-4" />
                           </a>
                         )}
                         {socialLinks.showSnapchat && socialLinks.snapchatUrl && (
-                          <a href={socialLinks.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
-                            <SnapchatIcon className="w-5 h-5" />
+                          <a href={socialLinks.snapchatUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: color }}>
+                            <SnapchatIcon className="w-4 h-4" />
                           </a>
                         )}
                       </div>
@@ -340,7 +340,7 @@ export function StoreHeader({ logo, storeName, primaryColor, socialLinks, workin
       {/* Overlay for menu */}
       {isMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-20"
+          className="fixed inset-0 bg-black/20 z-40"
           onClick={() => setIsMenuOpen(false)}
         />
       )}

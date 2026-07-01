@@ -7,6 +7,7 @@ import { StoreSplashScreen } from "@/components/store/StoreSplashScreen";
 import { FloatingCartButton } from "@/components/store/FloatingCartButton";
 import { StoreBannersCarousel } from "@/components/store/StoreBannersCarousel";
 import { StoreHeader } from "@/components/store/StoreHeader";
+import { StoreWorkingHoursBadge } from "@/components/store/StoreWorkingHoursBadge";
 import { formatWhatsappNumber } from "@/lib/utils";
 import Image from "next/image";
 import { getStoreInfo, getStoreBanners } from "./data";
@@ -180,11 +181,16 @@ export default async function StoreLayout({
 
           {/* Logo circle overlapping cover */}
           <div className="relative max-w-5xl mx-auto px-4 z-10">
-            <div className="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full bg-white border-4 border-white overflow-hidden flex items-center justify-center">
-              {store.logo ? (
-                <Image src={store.logo} alt={store.name} fill className="object-cover" sizes="112px" priority fetchPriority="high" />
-              ) : (
-                <StoreIcon className="w-10 h-10" style={{ color: store.primaryColor || 'var(--color-primary-600)' }} />
+            <div className="absolute -top-14 left-1/2 -translate-x-1/2 w-28 h-28 flex items-center justify-center">
+              <div className="w-28 h-28 rounded-full bg-white border-4 border-white overflow-hidden flex items-center justify-center relative z-10">
+                {store.logo ? (
+                  <Image src={store.logo} alt={store.name} fill className="object-cover" sizes="112px" priority fetchPriority="high" />
+                ) : (
+                  <StoreIcon className="w-10 h-10" style={{ color: store.primaryColor || 'var(--color-primary-600)' }} />
+                )}
+              </div>
+              {store.workingHours && (
+                <StoreWorkingHoursBadge workingHours={store.workingHours as any} primaryColor={store.primaryColor} />
               )}
             </div>
           </div>
@@ -200,28 +206,28 @@ export default async function StoreLayout({
             {hasSocialLinks(store) && (
               <div className="flex items-center justify-center gap-2 mt-4">
                 {store.showFacebook && store.facebookUrl && (
-                  <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                    <FacebookIcon className="w-5 h-5" />
+                  <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                    <FacebookIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showInstagram && store.instagramUrl && (
-                  <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                    <InstagramIcon className="w-5 h-5" />
+                  <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                    <InstagramIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showTwitter && store.twitterUrl && (
-                  <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                    <XIcon className="w-5 h-5" />
+                  <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                    <XIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showTiktok && store.tiktokUrl && (
-                  <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                    <TiktokIcon className="w-5 h-5" />
+                  <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                    <TiktokIcon className="w-4 h-4" />
                   </a>
                 )}
                 {store.showSnapchat && store.snapchatUrl && (
-                  <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                    <SnapchatIcon className="w-5 h-5" />
+                  <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                    <SnapchatIcon className="w-4 h-4" />
                   </a>
                 )}
               </div>
@@ -280,28 +286,28 @@ export default async function StoreLayout({
             {/* Social icons — Filled with brand color, white icons */}
             <div className="flex justify-center items-center gap-3 mt-8">
               {store.showFacebook && store.facebookUrl && (
-                <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                  <FacebookIcon className="w-5 h-5" />
+                <a href={store.facebookUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                  <FacebookIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showInstagram && store.instagramUrl && (
-                <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                  <InstagramIcon className="w-5 h-5" />
+                <a href={store.instagramUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                  <InstagramIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showTwitter && store.twitterUrl && (
-                <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                  <XIcon className="w-5 h-5" />
+                <a href={store.twitterUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                  <XIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showTiktok && store.tiktokUrl && (
-                <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                  <TiktokIcon className="w-5 h-5" />
+                <a href={store.tiktokUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                  <TiktokIcon className="w-4 h-4" />
                 </a>
               )}
               {store.showSnapchat && store.snapchatUrl && (
-                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
-                  <SnapchatIcon className="w-5 h-5" />
+                <a href={store.snapchatUrl} target="_blank" rel="noreferrer" className="w-8 h-8 rounded-xl flex items-center justify-center transition-colors text-white" style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}>
+                  <SnapchatIcon className="w-4 h-4" />
                 </a>
               )}
             </div>

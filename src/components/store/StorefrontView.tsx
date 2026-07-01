@@ -177,7 +177,7 @@ export function StorefrontView({
       
       {/* Toast Notification */}
       {toastItem && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border border-surface-100 rounded-2xl p-3.5 flex flex-col gap-3 animate-slide-in-top">
+        <div className="fixed top-4 inset-x-0 mx-auto z-50 w-[90%] max-w-md bg-white border border-surface-100 rounded-2xl p-3.5 flex flex-col gap-3 animate-slide-in-top">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-surface-50 rounded-xl overflow-hidden flex items-center justify-center shrink-0">
               {toastItem.image ? (
@@ -218,7 +218,7 @@ export function StorefrontView({
         {isSearchOpen ? (
           <div className="flex-1 flex items-center gap-2 animate-search-expand">
             <div className="flex-1 flex items-center gap-2 bg-surface-50 rounded-full px-4 py-2 border border-surface-100">
-              <Search className="w-4 h-4 text-surface-400 shrink-0" />
+              <Search className="w-5 h-5 text-surface-400 shrink-0" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -277,9 +277,9 @@ export function StorefrontView({
             <div className="flex items-center border-s border-surface-100 ps-2">
               <button 
                 onClick={() => { setIsSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 100); }}
-                className="w-9 h-9 border flex items-center justify-center transition-all rounded-full bg-surface-50 border-surface-100 text-surface-500 hover:bg-surface-100"
+                className="w-11 h-11 border flex items-center justify-center transition-all rounded-full bg-surface-50 border-surface-100 text-surface-500 hover:bg-surface-100"
               >
-                <Search className="w-3.5 h-3.5" />
+                <Search className="w-5 h-5" />
               </button>
             </div>
           </>
