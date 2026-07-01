@@ -39,7 +39,7 @@ export async function POST(
     const itemDescription = item.description ? `Description: ${item.description}` : "";
     
     // We will use Gemini to translate and enhance the prompt
-    let promptString = `Professional studio food photography, front view angle, ${item.name}, ${categoryName}${itemDescription}isolated on pure white background, delicious, fresh ingredients, ultra realistic, 4k`;
+    let promptString = `A mouth-watering ${item.name} (${item.category?.name || 'food'}), ${item.description || ''}, professional studio food photography, straight front view angle, isolated on a solid pure white background, ultra realistic, 4k`;
     
     try {
       const { GoogleGenerativeAI } = await import("@google/generative-ai");
@@ -52,15 +52,17 @@ export async function POST(
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const aiPrompt = `You are an expert food photography prompt engineer. I have a menu item from an Arabic or English menu.
 Item Name: ${item.name}
-${categoryName}
-${itemDescription}
+Category: ${item.category?.name || 'Food/Drink'}
+Description: ${item.description || 'N/A'}
 
-Task: Write a concise, highly descriptive English prompt (max 30 words) for an AI image generator to create a mouth-watering, ultra-realistic, professional studio food photograph of this exact dish. The photo MUST be taken from a straight front-facing angle and isolated on a pure white background. Do not include any text, labels, or extra instructions, just the prompt itself.`;
+Task: Write a concise English description (max 20 words) of WHAT this food/drink item actually is. Focus entirely on describing the physical dish, its main ingredients, and how it looks. Translate Arabic to English accurately.
+Do NOT include photography style keywords in your response. Just describe the food itself.
+Example output: A juicy double cheeseburger with fresh lettuce, tomatoes, and melted cheddar cheese on a toasted sesame bun.`;
         
         const result = await model.generateContent(aiPrompt);
         const responseText = result.response.text().trim();
         if (responseText) {
-          promptString = responseText + ", professional studio food photography, front view angle, isolated on pure white background, ultra realistic, 4k";
+          promptString = `${responseText}, professional studio food photography, straight front view angle, isolated on a solid pure white background, delicious, highly detailed, ultra realistic, 4k`;
         }
       }
     } catch (e) {
