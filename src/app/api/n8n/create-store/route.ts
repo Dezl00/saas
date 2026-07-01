@@ -59,7 +59,8 @@ export async function POST(request: Request) {
                     password: passwordHash,
                     phone: phone_number,
                     role: 'OWNER',
-                }
+                },
+                include: { store: true }
             });
         }
 
