@@ -47,7 +47,12 @@
   --color-success-600: oklch(0.55 0.16 145);
   --color-success-700: oklch(0.45 0.14 145);
   --color-warning-500: oklch(0.75 0.15 70);
+  --color-error-50: oklch(0.97 0.04 25);
+  --color-error-100: oklch(0.93 0.08 25);
+  --color-error-200: oklch(0.88 0.12 25);
   --color-error-500: oklch(0.6 0.2 25);
+  --color-error-600: oklch(0.55 0.18 25);
+  --color-error-700: oklch(0.45 0.15 25);
 
   /* Font */
   --font-cairo: "Cairo", sans-serif;

@@ -30,7 +30,7 @@ export async function POST(
       }
     });
 
-    if (!item || (session.user.role === "ADMIN" && item.storeId !== "DEFAULT_STORE")) {
+    if (!item) {
       return NextResponse.json({ error: "الصنف غير موجود أو غير مصرح" }, { status: 404 });
     }
 
