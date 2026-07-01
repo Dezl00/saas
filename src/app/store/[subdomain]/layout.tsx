@@ -189,10 +189,14 @@ export default async function StoreLayout({
                   <StoreIcon className="w-10 h-10" style={{ color: store.primaryColor || 'var(--color-primary-600)' }} />
                 )}
               </div>
-              {store.workingHours && (
-                <StoreWorkingHoursBadge workingHours={store.workingHours as any} primaryColor={store.primaryColor} />
-              )}
             </div>
+            {store.workingHours && (
+              <StoreWorkingHoursBadge 
+                workingHours={store.workingHours as any} 
+                primaryColor={store.primaryColor} 
+                className="absolute top-2 right-1/2 mr-[70px] sm:mr-[80px]"
+              />
+            )}
           </div>
 
           {/* Store info below cover */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 type WorkingHoursDay = {
@@ -23,6 +24,7 @@ type WorkingHoursData = {
 type Props = {
   workingHours?: WorkingHoursData | null;
   primaryColor?: string | null;
+  className?: string;
 };
 
 const DAY_NAMES: Record<string, string> = {
@@ -70,7 +72,7 @@ function checkIsOpen(workingHours?: WorkingHoursData | null): boolean {
   return false;
 }
 
-export function StoreWorkingHoursBadge({ workingHours, primaryColor }: Props) {
+export function StoreWorkingHoursBadge({ workingHours, primaryColor, className }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -91,16 +93,16 @@ export function StoreWorkingHoursBadge({ workingHours, primaryColor }: Props) {
     <>
       <button
         onClick={() => setIsModalOpen(true)}
-        className={`absolute top-1/2 -translate-y-1/2 right-full me-3 sm:me-6 whitespace-nowrap px-3 sm:px-4 py-1 sm:py-1.5 rounded-full font-bold text-sm sm:text-base border transition-transform hover:scale-105 z-20 ${
+        className={`whitespace-nowrap px-3 sm:px-4 py-1 sm:py-1.5 rounded-full font-bold text-sm sm:text-base border transition-transform hover:scale-105 z-20 ${
           isOpen 
             ? "bg-success-50/90 text-success-600 border-success-200 backdrop-blur-sm" 
             : "bg-error-50/90 text-error-600 border-error-200 backdrop-blur-sm"
-        }`}
+        } ${className || ""}`}
       >
         {isOpen ? "مفتوح" : "مغلق"}
       </button>
 
-      {isModalOpen && (
+      {isModalOpen && typeof document !== "undefined" && createPortal(
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 animate-fade-in"
           onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}
@@ -146,7 +148,8 @@ export function StoreWorkingHoursBadge({ workingHours, primaryColor }: Props) {
               })}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
