@@ -194,7 +194,7 @@ export default async function StoreLayout({
               <StoreWorkingHoursBadge 
                 workingHours={store.workingHours as any} 
                 primaryColor={store.primaryColor} 
-                className="absolute top-2 right-1/2 mr-[70px] sm:mr-[80px]"
+                className="absolute top-6 left-4 sm:left-6"
               />
             )}
           </div>
