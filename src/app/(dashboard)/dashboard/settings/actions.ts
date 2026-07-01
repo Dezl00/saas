@@ -10,6 +10,37 @@ export async function updateStoreSettings(formData: FormData) {
     return { error: "غير مصرح لك بالقيام بهذه العملية" };
   }
 
+  // Check if this is a working hours only update
+  const isWorkingHoursOnly = formData.get("isWorkingHoursOnly") === "true";
+
+  if (isWorkingHoursOnly) {
+    // Build working hours JSON from form data
+    const days = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"];
+    const workingHours: Record<string, any> = {};
+    
+    for (const day of days) {
+      workingHours[day] = {
+        enabled: formData.get(`wh_${day}_enabled`) === "on",
+        allDay: formData.get(`wh_${day}_allDay`) === "on",
+        from: formData.get(`wh_${day}_from`) as string || "09:00",
+        to: formData.get(`wh_${day}_to`) as string || "23:00",
+      };
+    }
+
+    try {
+      await prisma.store.update({
+        where: { id: session.user.storeId },
+        data: { workingHours },
+      });
+
+      revalidatePath("/", "layout");
+      return { success: "تم حفظ مواعيد العمل بنجاح" };
+    } catch (error) {
+      console.error("Update Working Hours Error:", error);
+      return { error: "حدث خطأ أثناء حفظ مواعيد العمل" };
+    }
+  }
+
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   let logoStr: string | File | null | undefined = formData.get("logo") as string | File | null;
@@ -29,6 +60,8 @@ export async function updateStoreSettings(formData: FormData) {
   const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
   const currency = formData.get("currency") as string || "EGP";
+  const mapLatitude = formData.get("mapLatitude") as string;
+  const mapLongitude = formData.get("mapLongitude") as string;
 
   if (!name) {
     return { error: "اسم المتجر مطلوب" };
@@ -45,6 +78,8 @@ export async function updateStoreSettings(formData: FormData) {
         phone,
         address,
         currency,
+        mapLatitude: mapLatitude || null,
+        mapLongitude: mapLongitude || null,
       },
     });
 

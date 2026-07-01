@@ -36,6 +36,9 @@ export async function getStoreInfo(subdomain: string) {
       showSnapchat: true,
       showDefaultProducts: true,
       fontFamily: true,
+      workingHours: true,
+      mapLatitude: true,
+      mapLongitude: true,
       branches: { 
         where: { isActive: true },
         select: { id: true, name: true, address: true }

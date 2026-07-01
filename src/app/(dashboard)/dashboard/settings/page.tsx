@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Breadcrumb } from "@/components/dashboard/Breadcrumb";
 import { CustomDomainWizard } from "@/components/dashboard/CustomDomainWizard";
-import { Globe, Store, Save, Share2, MessageCircle } from "lucide-react";
+import { Globe, Store, Save, Share2, MessageCircle, Clock, MapPin } from "lucide-react";
 import { updateStoreSettings, updateSubdomain, updateContactSettings } from "./actions";
 import { SubmitButton } from "@/components/dashboard/SubmitButton";
 import { ImageUpload } from "@/components/dashboard/ImageUpload";
@@ -202,11 +202,123 @@ export default async function SettingsPage() {
               />
             </div>
 
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="mapLatitude" className="block text-sm font-medium text-surface-950 mb-1">
+                  خط العرض (Latitude)
+                </label>
+                <input
+                  type="text"
+                  id="mapLatitude"
+                  name="mapLatitude"
+                  defaultValue={(store as any).mapLatitude || ""}
+                  dir="ltr"
+                  placeholder="مثال: 24.7136"
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+              <div>
+                <label htmlFor="mapLongitude" className="block text-sm font-medium text-surface-950 mb-1">
+                  خط الطول (Longitude)
+                </label>
+                <input
+                  type="text"
+                  id="mapLongitude"
+                  name="mapLongitude"
+                  defaultValue={(store as any).mapLongitude || ""}
+                  dir="ltr"
+                  placeholder="مثال: 46.6753"
+                  className="w-full px-3 py-2 bg-surface-50 border border-surface-200 rounded-xl text-surface-950 text-end focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
+                />
+              </div>
+            </div>
+
             <SubmitButton
               className="w-full sm:w-auto mt-6 py-3 px-8 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" />
               حفظ التغييرات الأساسية
+            </SubmitButton>
+          </ClientForm>
+        </div>
+
+        {/* مواعيد العمل */}
+        <div className="bg-white rounded-2xl border border-surface-200 p-6 lg:col-span-2 relative overflow-hidden">
+          <div className="absolute top-0 start-0 w-1 h-full bg-amber-500"></div>
+          
+          <h3 className="text-xl font-bold text-surface-950 mb-2 flex items-center gap-2">
+            <Clock className="w-6 h-6 text-amber-500" />
+            مواعيد العمل
+          </h3>
+          <p className="text-surface-500 text-sm mb-6">
+            حدد مواعيد عمل متجرك لكل يوم من أيام الأسبوع. ستظهر هذه المواعيد للعملاء في صفحة المتجر.
+          </p>
+
+          <ClientForm action={updateStoreSettings as any} className="space-y-3">
+            <input type="hidden" name="name" value={store.name} />
+            <input type="hidden" name="primaryColor" value={store.primaryColor || ""} />
+            <input type="hidden" name="currency" value={store.currency} />
+            <input type="hidden" name="isWorkingHoursOnly" value="true" />
+            {(() => {
+              const workingHours = (store as any).workingHours || {};
+              const days = [
+                { key: "saturday", label: "السبت" },
+                { key: "sunday", label: "الأحد" },
+                { key: "monday", label: "الإثنين" },
+                { key: "tuesday", label: "الثلاثاء" },
+                { key: "wednesday", label: "الأربعاء" },
+                { key: "thursday", label: "الخميس" },
+                { key: "friday", label: "الجمعة" },
+              ];
+              return days.map((day) => {
+                const dayData = workingHours[day.key] || { enabled: true, allDay: true };
+                return (
+                  <div key={day.key} className="flex flex-wrap items-center gap-3 p-3 bg-surface-50 rounded-xl border border-surface-100">
+                    <label className="flex items-center gap-2 min-w-[100px]">
+                      <input
+                        type="checkbox"
+                        name={`wh_${day.key}_enabled`}
+                        value="on"
+                        defaultChecked={dayData.enabled !== false}
+                        className="w-4 h-4 rounded border-surface-300 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span className="text-sm font-bold text-surface-800">{day.label}</span>
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        name={`wh_${day.key}_allDay`}
+                        value="on"
+                        defaultChecked={dayData.allDay !== false}
+                        className="w-4 h-4 rounded border-surface-300 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span className="text-xs text-surface-600">مفتوح طول اليوم</span>
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="time"
+                        name={`wh_${day.key}_from`}
+                        defaultValue={dayData.from || "09:00"}
+                        className="px-2 py-1 text-xs border border-surface-200 rounded-lg bg-white text-surface-700"
+                      />
+                      <span className="text-xs text-surface-400">إلى</span>
+                      <input
+                        type="time"
+                        name={`wh_${day.key}_to`}
+                        defaultValue={dayData.to || "23:00"}
+                        className="px-2 py-1 text-xs border border-surface-200 rounded-lg bg-white text-surface-700"
+                      />
+                    </div>
+                  </div>
+                );
+              });
+            })()}
+
+            <SubmitButton
+              className="w-full sm:w-auto mt-4 py-3 px-8 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2"
+            >
+              <Save className="w-5 h-5" />
+              حفظ مواعيد العمل
             </SubmitButton>
           </ClientForm>
         </div>

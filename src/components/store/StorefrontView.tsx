@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "./CartProvider";
 import Image from "next/image";
-import { Filter, X, Plus, Minus, Check, ShoppingBag, Loader2 } from "lucide-react";
+import { Search, X, Plus, Minus, Check, ShoppingBag, Loader2 } from "lucide-react";
 
 type Size = { id: string; name: string; price: number };
 type Addon = { id: string; name: string; price: number };
@@ -60,8 +60,9 @@ export function StorefrontView({
   }, [categories]);
 
   const [selectedProduct, setSelectedProduct] = useState<MenuItem | null>(null);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<"default" | "price_desc" | "price_asc" | "popular">("default");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Modal State
@@ -176,7 +177,7 @@ export function StorefrontView({
       
       {/* Toast Notification */}
       {toastItem && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border border-surface-100 rounded-2xl p-3.5 shadow-2xl flex flex-col gap-3 animate-slide-in-top">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-white border border-surface-100 rounded-2xl p-3.5 flex flex-col gap-3 animate-slide-in-top">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-surface-50 rounded-xl overflow-hidden flex items-center justify-center shrink-0">
               {toastItem.image ? (
@@ -211,89 +212,95 @@ export function StorefrontView({
         </div>
       )}
 
-      {/* Toolbar: Tabs + Filter (no grid toggle) */}
+      {/* Toolbar: Tabs + Search */}
       <div className="sticky top-14 z-20 bg-white py-2.5 flex items-center gap-2 border-b border-surface-100">
-        {/* Categories Tabs - Scrollable */}
-        <div className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] flex items-center gap-2 pb-0.5">
-          {categories.filter(cat => menuItems.some(item => item.categoryId === cat.id)).map((cat) => (
+        {/* Search mode: show search input */}
+        {isSearchOpen ? (
+          <div className="flex-1 flex items-center gap-2 animate-search-expand">
+            <div className="flex-1 flex items-center gap-2 bg-surface-50 rounded-full px-4 py-2 border border-surface-100">
+              <Search className="w-4 h-4 text-surface-400 shrink-0" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="ابحث عن صنف..."
+                className="flex-1 bg-transparent text-sm text-surface-900 outline-none placeholder:text-surface-400"
+                autoFocus
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="text-surface-400 hover:text-surface-600">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
             <button
-              key={cat.id}
-              id={`tab-${cat.id}`}
-              onClick={() => {
-                isManualScrolling.current = true;
-                setActiveTab(cat.id);
-                document.getElementById(`category-${cat.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                
-                // Reset manual scrolling flag after scroll animation
-                if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-                scrollTimeout.current = setTimeout(() => {
-                  isManualScrolling.current = false;
-                }, 1000);
-              }}
-              className={`whitespace-nowrap px-4 py-2 font-semibold text-sm transition-all rounded-full ${
-                activeTab === cat.id
-                  ? "text-white"
-                  : "bg-surface-50 text-surface-600 hover:bg-surface-100"
-              }`}
-              style={activeTab === cat.id ? { 
-                backgroundColor: store.primaryColor || 'var(--color-primary-500)',
-              } : undefined}
+              onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }}
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-surface-100 text-surface-600 hover:bg-surface-200 transition-colors shrink-0"
             >
-              {cat.name}
+              <X className="w-4 h-4" />
             </button>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <>
+            {/* Categories Tabs - Scrollable */}
+            <div className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] flex items-center gap-2 pb-0.5">
+              {categories.filter(cat => menuItems.some(item => item.categoryId === cat.id)).map((cat) => (
+                <button
+                  key={cat.id}
+                  id={`tab-${cat.id}`}
+                  onClick={() => {
+                    isManualScrolling.current = true;
+                    setActiveTab(cat.id);
+                    document.getElementById(`category-${cat.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    
+                    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+                    scrollTimeout.current = setTimeout(() => {
+                      isManualScrolling.current = false;
+                    }, 1000);
+                  }}
+                  className={`whitespace-nowrap px-4 py-2 font-semibold text-sm transition-all rounded-full ${
+                    activeTab === cat.id
+                      ? "text-white"
+                      : "bg-surface-50 text-surface-600 hover:bg-surface-100"
+                  }`}
+                  style={activeTab === cat.id ? { 
+                    backgroundColor: store.primaryColor || 'var(--color-primary-500)',
+                  } : undefined}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
 
-        {/* Filter only */}
-        <div className="flex items-center border-s border-surface-100 ps-2 relative">
-          <button 
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`w-9 h-9 border flex items-center justify-center transition-all rounded-full ${isFilterOpen ? 'bg-surface-900 text-white border-surface-900' : 'bg-surface-50 border-surface-100 text-surface-500 hover:bg-surface-100'}`}
-          >
-            <Filter className="w-3.5 h-3.5" />
-          </button>
-          
-          {isFilterOpen && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setIsFilterOpen(false)} />
-              <div className="absolute top-11 end-0 w-40 bg-white border border-surface-100 rounded-2xl shadow-xl z-50 py-1.5 animate-zoom-in overflow-hidden">
-                <h4 className="px-3.5 py-1.5 text-[10px] font-bold text-surface-400 border-b border-surface-50 mb-1">ترتيب حسب</h4>
-                <div className="flex flex-col">
-                  {[
-                    { id: 'default', label: 'الافتراضي' },
-                    { id: 'price_desc', label: 'الأعلى سعراً' },
-                    { id: 'price_asc', label: 'الأقل سعراً' },
-                    { id: 'popular', label: 'الأكثر طلباً' }
-                  ].map(option => (
-                    <button
-                      key={option.id}
-                      onClick={() => {
-                        setSortBy(option.id as any);
-                        setIsFilterOpen(false);
-                      }}
-                      className={`w-full text-start px-3.5 py-2.5 text-xs transition-colors ${sortBy === option.id ? 'bg-primary-50 text-primary-700 font-bold' : 'text-surface-600 hover:bg-surface-50'}`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
+            {/* Search button */}
+            <div className="flex items-center border-s border-surface-100 ps-2">
+              <button 
+                onClick={() => { setIsSearchOpen(true); setTimeout(() => searchInputRef.current?.focus(), 100); }}
+                className="w-9 h-9 border flex items-center justify-center transition-all rounded-full bg-surface-50 border-surface-100 text-surface-500 hover:bg-surface-100"
+              >
+                <Search className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Menu Items — Matching Menuo card style */}
       <div className="space-y-8">
         {categories.map((category) => {
           let items = menuItems.filter((item) => item.categoryId === category.id);
-          if (items.length === 0) return null;
-
-          if (sortBy === 'price_asc') {
-            items = [...items].sort((a, b) => Number(a.price) - Number(b.price));
-          } else if (sortBy === 'price_desc') {
-            items = [...items].sort((a, b) => Number(b.price) - Number(a.price));
+          
+          // Apply search filter
+          if (searchQuery.trim()) {
+            const q = searchQuery.trim().toLowerCase();
+            items = items.filter((item) => 
+              item.name.toLowerCase().includes(q) || 
+              (item.description && item.description.toLowerCase().includes(q))
+            );
           }
+          
+          if (items.length === 0) return null;
 
           return (
             <div key={category.id} id={`category-${category.id}`} className="scroll-mt-28">
@@ -313,7 +320,7 @@ export function StorefrontView({
                   <div 
                     key={item.id} 
                     onClick={() => handleOpenProduct(item)}
-                    className="bg-white border border-surface-100 rounded-2xl overflow-hidden flex flex-row cursor-pointer hover:shadow-md transition-all group"
+                    className="bg-white border border-surface-100 rounded-2xl overflow-hidden flex flex-row cursor-pointer transition-all group hover:border-surface-200"
                   >
                     {/* Image */}
                     {item.image || store.logo ? (
@@ -354,7 +361,7 @@ export function StorefrontView({
                           }
                         </span>
                         <span 
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors shadow-sm"
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-colors"
                           style={{ backgroundColor: store.primaryColor || 'var(--color-primary-600)' }}
                         >
                           <Plus className="w-4 h-4" />

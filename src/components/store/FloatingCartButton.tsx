@@ -18,10 +18,9 @@ export function FloatingCartButton({ currency = "EGP", primaryColor }: Props) {
   return (
     <button
       onClick={() => setIsCartOpen(true)}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-md h-14 rounded-2xl text-white font-bold flex items-center justify-between px-5 shadow-xl animate-float-cart-in transition-transform"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-md h-14 rounded-2xl text-white font-bold flex items-center justify-between px-5 animate-float-cart-in transition-transform"
       style={{
         backgroundColor: primaryColor || "var(--color-primary-600)",
-        boxShadow: `0 8px 30px ${primaryColor ? primaryColor + "55" : "rgba(0,0,0,0.2)"}`,
       }}
     >
       <div className="flex items-center gap-2">

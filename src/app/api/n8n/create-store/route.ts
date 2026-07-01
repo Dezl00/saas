@@ -41,8 +41,14 @@ export async function POST(request: Request) {
         
         // البحث عن المستخدم باستخدام رقم الهاتف
         let user = await tx.user.findFirst({
-            where: { phone: phone_number }
+            where: { phone: phone_number },
+            include: { store: true } // نجلب متجره لنتأكد
         });
+
+        // إذا كان المستخدم موجوداً ولديه متجر بالفعل، نرفض الطلب
+        if (user && user.store) {
+            throw new Error('USER_ALREADY_HAS_STORE');
+        }
 
         // إذا لم يكن موجوداً نقوم بإنشائه
         if (!user) {
@@ -93,15 +99,21 @@ export async function POST(request: Request) {
         success: true,
         message: 'تم إنشاء المتجر بنجاح',
         data: {
-            storeUrl: `https://${cleanSlug}.yourdomain.com`, // استبدل yourdomain.com برابط منصتك الحقيقي
+            storeUrl: `https://${cleanSlug}.menura.site`, // رابط المنصة الحقيقي
             adminEmail: result.user.email,
             adminPassword: phone_number, // كلمة المرور هي رقم هاتف العميل
-            storeName: result.store.name
+            storeName: result.store.name,
+            whatsappNumber: result.store.whatsappNumber
         }
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating store via N8N:', error);
+    
+    if (error.message === 'USER_ALREADY_HAS_STORE') {
+        return NextResponse.json({ error: 'User with this phone number already owns a store' }, { status: 400 });
+    }
+
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

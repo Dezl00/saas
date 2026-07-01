@@ -142,6 +142,11 @@ model Store {
   showDefaultProducts  Boolean @default(true)
   fontFamily           String  @default("Tajawal")
 
+  // Working Hours & Map
+  workingHours  Json?
+  mapLatitude   String?
+  mapLongitude  String?
+
   // Relations
   userId         String          @unique
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)

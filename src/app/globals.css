@@ -282,3 +282,23 @@ body {
   animation: floatCartIn 0.3s ease-out;
 }
 
+/* ===== Hamburger Menu Dropdown ===== */
+@keyframes slideInMenu {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slide-in-menu {
+  animation: slideInMenu 0.2s ease-out;
+}
+
+/* ===== Search Expand ===== */
+@keyframes searchExpand {
+  from { opacity: 0; transform: scaleX(0.8); transform-origin: right; }
+  to { opacity: 1; transform: scaleX(1); transform-origin: right; }
+}
+
+.animate-search-expand {
+  animation: searchExpand 0.25s ease-out;
+}
+

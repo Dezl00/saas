@@ -177,17 +177,17 @@ export function CartSidebar({
           ) : (
             !isCheckout ? (
               items.map((item) => (
-                <div key={item.id} className="flex gap-4 bg-white border border-surface-100 rounded-3xl p-3 shadow-sm transition-all hover:shadow-md">
+                <div key={item.id} className="flex gap-4 bg-white border border-surface-100 rounded-3xl p-3 transition-all">
                   {item.image ? (
                     <Image
                       src={item.image}
                       alt={item.name}
                       width={80}
                       height={80}
-                      className="w-20 h-20 object-cover rounded-2xl border-none shadow-sm"
+                      className="w-20 h-20 object-cover rounded-2xl border-none"
                     />
                   ) : (
-                    <div className="w-20 h-20 bg-surface-100 flex items-center justify-center rounded-2xl border-none shadow-sm">
+                    <div className="w-20 h-20 bg-surface-100 flex items-center justify-center rounded-2xl border-none">
                       <ShoppingBag className="w-8 h-8 text-surface-300" />
                     </div>
                   )}
